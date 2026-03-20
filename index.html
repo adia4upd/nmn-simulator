@@ -288,77 +288,6 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
-/* Checklist specific */
-.cl-date {
-  font-size: 0.75rem; color: var(--text3); margin-bottom: 1.5rem;
-  padding-bottom: 0.8rem; border-bottom: 1px solid var(--border);
-}
-.cl-alert {
-  background: rgba(229,60,60,0.08); border: 1px solid rgba(229,60,60,0.2);
-  border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 2rem;
-  font-size: 0.85rem; color: #F06060; font-weight: 600; line-height: 1.6;
-}
-.cl-section {
-  margin-bottom: 2rem;
-}
-.cl-section-title {
-  font-size: 0.82rem; font-weight: 700; color: var(--gold); margin-bottom: 1rem;
-  padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
-}
-.cl-info-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-  background: var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1.5rem;
-}
-.cl-info-row {
-  display: contents;
-}
-.cl-info-label {
-  background: var(--bg-card2); padding: 10px 14px; font-size: 0.78rem;
-  font-weight: 600; color: var(--text2);
-}
-.cl-info-value {
-  background: var(--bg-card); padding: 10px 14px; font-size: 0.78rem; color: var(--text);
-}
-.cl-item {
-  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
-  margin-bottom: 12px; overflow: hidden; transition: border-color 0.3s;
-}
-.cl-item:hover { border-color: var(--border2); }
-.cl-item-header {
-  display: flex; align-items: center; gap: 12px; padding: 14px 16px;
-  cursor: pointer; user-select: none;
-}
-.cl-num {
-  font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 800;
-  color: var(--gold); min-width: 28px; height: 28px; border-radius: 8px;
-  background: var(--gold-dim); display: flex; align-items: center; justify-content: center;
-}
-.cl-title { font-size: 0.88rem; font-weight: 600; color: var(--text); flex: 1; }
-.cl-status {
-  font-size: 0.6rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;
-  letter-spacing: 0.5px; text-transform: uppercase;
-}
-.cl-status.pending { background: rgba(229,184,32,0.12); color: var(--gold); }
-.cl-status.done { background: rgba(80,200,120,0.12); color: #50C878; }
-.cl-arrow {
-  font-size: 0.7rem; color: var(--text4); transition: transform 0.3s;
-}
-.cl-item.open .cl-arrow { transform: rotate(180deg); }
-.cl-item-body {
-  display: none; padding: 0 16px 14px 56px;
-  font-size: 0.8rem; color: var(--text2); line-height: 1.7;
-}
-.cl-item.open .cl-item-body { display: block; }
-.cl-example {
-  font-size: 0.75rem; color: var(--text3); margin-top: 6px;
-  padding: 8px 12px; background: var(--bg-card2); border-radius: 8px;
-}
-.cl-toggle-btn {
-  display: inline-block; margin-left: auto; padding: 3px 10px;
-  border: 1px solid var(--border); border-radius: 6px; background: transparent;
-  color: var(--text3); font-size: 0.65rem; cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
-}
-.cl-toggle-btn:hover { border-color: var(--gold); color: var(--gold); }
 
 /* Landing Page */
 .hero {
@@ -520,11 +449,6 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
 
   .main-tabs { border-radius: 10px; }
   .main-tab { font-size: 0.78rem; padding: 12px 8px; }
-  .cl-item-header { padding: 12px 12px; gap: 10px; }
-  .cl-title { font-size: 0.82rem; }
-  .cl-item-body { padding: 0 12px 12px 48px; font-size: 0.75rem; }
-  .cl-info-grid { grid-template-columns: 1fr; }
-  .cl-alert { font-size: 0.78rem; padding: 0.8rem 1rem; }
 }
 
 /* Tablet tweaks */
@@ -563,7 +487,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
   <div class="main-tabs anim" style="animation-delay:0.03s">
     <button class="main-tab active" onclick="switchTab('landing')">제품소개</button>
     <button class="main-tab" onclick="switchTab('sim')">수익 시뮬레이터</button>
-    <button class="main-tab" onclick="switchTab('checklist')">보상플랜</button>
+
   </div>
 
   <!-- Tab 0: 랜딩페이지 -->
@@ -1046,189 +970,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
 
   </div> <!-- end tab-sim -->
 
-  <!-- Tab 2: 보상플랜 체크리스트 -->
-  <div id="tab-checklist" class="tab-panel">
 
-    <div class="cl-date">24.03.18 이원재 - 신규법인 추가로 인한 보상플랜 내용 정리</div>
-
-    <!-- 65% 실시간 배분 게이지 -->
-    <div style="background:var(--bg-card);border:1.5px solid rgba(229,184,32,0.3);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;" id="gauge-box">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <div style="font-size:0.72rem;color:var(--gold);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;">매출 대비 배분 현황</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;" id="gauge-total">65%</div>
-      </div>
-      <!-- 게이지 바 -->
-      <div style="position:relative;height:36px;background:var(--border2);border-radius:8px;overflow:hidden;margin-bottom:8px;">
-        <div id="bar-commission" style="position:absolute;left:0;top:0;height:100%;background:var(--gold);transition:width 0.4s;border-radius:8px 0 0 8px;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:0.6rem;font-weight:700;color:var(--bg);"></div>
-        <div id="bar-center" style="position:absolute;top:0;height:100%;background:var(--hermes);transition:left 0.4s,width 0.4s;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:0.55rem;font-weight:700;color:#fff;"></div>
-        <div id="bar-reserve" style="position:absolute;top:0;height:100%;background:rgba(255,255,255,0.06);transition:left 0.4s,width 0.4s;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:0.55rem;font-weight:700;color:var(--text3);border-radius:0 8px 8px 0;"></div>
-        <!-- 65% 마지노선 -->
-        <div style="position:absolute;left:65%;top:-2px;bottom:-2px;width:2px;background:#ff4444;z-index:2;"></div>
-        <div style="position:absolute;left:65%;top:-14px;font-size:0.5rem;color:#ff4444;font-weight:700;transform:translateX(-50%);">65%</div>
-      </div>
-      <!-- 수치 -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;" id="gauge-cards">
-        <div style="background:var(--bg-card2);border-radius:8px;padding:8px;text-align:center;">
-          <div style="font-size:0.5rem;color:var(--text3);letter-spacing:1px;">추천보너스</div>
-          <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--gold);" id="g-comm">62%</div>
-        </div>
-        <div style="background:var(--bg-card2);border-radius:8px;padding:8px;text-align:center;">
-          <div style="font-size:0.5rem;color:var(--text3);letter-spacing:1px;">센터 Fee</div>
-          <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--hermes);" id="g-center">3%</div>
-        </div>
-        <div style="background:var(--bg-card2);border-radius:8px;padding:8px;text-align:center;">
-          <div style="font-size:0.5rem;color:var(--text3);letter-spacing:1px;">회사 유보</div>
-          <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--text);" id="g-reserve">35%</div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- 수수료율 슬라이더 -->
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;">
-      <div style="font-size:0.72rem;color:var(--gold);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;">대수별 추천보너스 수수료 조절</div>
-      <div id="rate-sliders"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
-        <div style="font-size:0.75rem;color:var(--text2);">추천보너스 합계: <strong style="color:var(--gold);" id="rate-sum">62%</strong></div>
-        <button onclick="resetRates()" style="padding:6px 14px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text3);font-size:0.65rem;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">기본값 초기화</button>
-      </div>
-    </div>
-
-    <!-- 센터 Fee -->
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;">
-      <div style="font-size:0.72rem;color:var(--hermes);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">센터 Fee</div>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <input type="range" min="0" max="10" value="2" step="0.5" id="sl-center" oninput="updatePlan()" style="flex:1;">
-        <span style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--hermes);min-width:40px;text-align:right;" id="v-center">2%</span>
-      </div>
-      <div style="font-size:0.65rem;color:var(--text3);margin-top:8px;">매출에서 선차감 → 플랫폼 운영비</div>
-    </div>
-
-    <!-- 출금 수수료 (표시만) -->
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;">
-      <div>
-        <div style="font-size:0.68rem;color:var(--text3);font-weight:600;">출금 수수료</div>
-        <div style="font-size:0.6rem;color:var(--text4);margin-top:2px;">65% 배분과 별도 · USDT 출금 시 차감</div>
-      </div>
-      <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text3);">1%</div>
-    </div>
-
-    <!-- $300 매출 시뮬 -->
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;">
-      <div style="font-size:0.72rem;color:var(--gold);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">실제 배분 시뮬레이션</div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-        <span style="font-size:0.8rem;color:var(--text2);">하부 매출금액:</span>
-        <button onclick="setSimAmt(300)" id="sim300" class="tier-btn s1" style="flex:0;padding:8px 20px;font-size:0.8rem;">$300</button>
-        <button onclick="setSimAmt(3000)" id="sim3000" class="tier-btn" style="flex:0;padding:8px 20px;font-size:0.8rem;">$3,000</button>
-      </div>
-      <div id="sim-table"></div>
-    </div>
-
-    <!-- 나머지 체크리스트 -->
-    <div class="cl-section">
-      <div class="cl-section-title" style="display:flex;align-items:center;">
-        기타 전산개발 항목
-        <button class="cl-toggle-btn" onclick="toggleAllItems()">전체 펼치기/접기</button>
-      </div>
-
-      <div class="cl-item" onclick="toggleItem(this)">
-        <div class="cl-item-header">
-          <div class="cl-num">1</div>
-          <div class="cl-title">승급 볼륨 등 조건</div>
-          <span class="cl-status done">설계완료</span>
-          <span class="cl-arrow">▼</span>
-        </div>
-        <div class="cl-item-body">
-          Level = 수익 받는 대수. 올라갈수록 더 많은 대수에서 수익
-          <div class="cl-example" style="margin-top:10px;" id="cl-upgrade-table"></div>
-        </div>
-      </div>
-
-      <div class="cl-item" onclick="toggleItem(this)">
-        <div class="cl-item-header">
-          <div class="cl-num">2</div>
-          <div class="cl-title">유지 조건</div>
-          <span class="cl-status done">설계완료</span>
-          <span class="cl-arrow">▼</span>
-        </div>
-        <div class="cl-item-body">
-          승급 GV의 50%를 유지선으로 설정
-          <div class="cl-example" style="margin-top:10px;">
-            ① 개인 월 <strong style="color:var(--gold);">300 PV</strong> 이상<br>
-            ② 승급 GV의 <strong style="color:var(--gold);">50%</strong> 이상 유지<br><br>
-            <strong>미달 시:</strong> 1개월 경고 → 2개월 연속 시 1단계 강등<br>
-            재승급 → 원래 조건 100% 달성 시 즉시 복원
-          </div>
-        </div>
-      </div>
-
-      <div class="cl-item" onclick="toggleItem(this)">
-        <div class="cl-item-header">
-          <div class="cl-num">3</div>
-          <div class="cl-title">직급별 수당 구조</div>
-          <span class="cl-status done">설계완료</span>
-          <span class="cl-arrow">▼</span>
-        </div>
-        <div class="cl-item-body" id="cl-titles-body">
-        </div>
-      </div>
-
-      <div class="cl-item" onclick="toggleItem(this)">
-        <div class="cl-item-header">
-          <div class="cl-num">4</div>
-          <div class="cl-title">계보도 표시 내용</div>
-          <span class="cl-status done">설계완료</span>
-          <span class="cl-arrow">▼</span>
-        </div>
-        <div class="cl-item-body">
-          <div class="cl-example">
-            ① 이름 ② 등급+호칭 ③ 직추천 수 ④ 월 개인PV ⑤ 월 GV ⑥ 가입일<br><br>
-            ※ 트리 최대 내 수익 대수까지 펼쳐보기<br>
-            ※ 비활성(유지 미달) 회원 → 회색 처리
-          </div>
-        </div>
-      </div>
-
-      <div class="cl-item" onclick="toggleItem(this)">
-        <div class="cl-item-header">
-          <div class="cl-num">5</div>
-          <div class="cl-title">상위→하위 정보 열람 범위</div>
-          <span class="cl-status done">설계완료</span>
-          <span class="cl-arrow">▼</span>
-        </div>
-        <div class="cl-item-body">
-          <div class="cl-example">
-            <strong>직추천(1대):</strong> 이름, 연락처, 등급, PV, GV, 가입일<br>
-            <strong>2대~내 수익 대수:</strong> 이름, 등급, PV, GV (연락처 비공개)<br>
-            <strong>초과:</strong> 열람 불가 (GV 합산만 반영)<br><br>
-            ※ Lv.6+ → 리더 특권 전체 하위 열람<br>
-            ※ 출금·수당 내역은 본인만 확인
-          </div>
-        </div>
-      </div>
-
-      <div class="cl-item" onclick="toggleItem(this)">
-        <div class="cl-item-header">
-          <div class="cl-num">6</div>
-          <div class="cl-title">공유수당 유무</div>
-          <span class="cl-status done">설계완료</span>
-          <span class="cl-arrow">▼</span>
-        </div>
-        <div class="cl-item-body">
-          <strong style="color:var(--gold);">L3~L7 적용 · 3% (1/n)</strong> — 추천인원 조건 달성 시
-          <div class="cl-example" style="margin-top:8px;">
-            <strong>지급 방식:</strong> 매출의 3%를 해당 직급 자격자 수(n)로 균등 배분<br><br>
-            <strong>조건:</strong> 각 직급별 추천인원 충족 시 자격 부여<br>
-            · L3: 1명이상 / L4: 1명이상 / L5: 1명이상<br>
-            · L6: 2명이상 / L7: 3명이상<br><br>
-            <strong>예시:</strong> L5 자격자가 4명이면 → 3% ÷ 4 = 0.75%씩 지급
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-  </div> <!-- end tab-checklist -->
 
   <div class="footer anim" style="animation-delay:0.3s">
     <strong>PREMIUM NMN ALPHA · 수익 구조 요약</strong><br>
@@ -1249,17 +991,6 @@ const R = [
 ];
 
 // 마케팅표 데이터
-const LEVELS = [
-  {lv:'L1', teamSales:300, gen:1, rollup:5, minRef:1, share:0, bonus:0, rollupCond:''},
-  {lv:'L2', teamSales:3000, gen:2, rollup:5, minRef:1, share:0, bonus:0, rollupCond:''},
-  {lv:'L3', teamSales:30000, gen:3, rollup:5, minRef:1, share:20, bonus:0, rollupCond:''},
-  {lv:'L4', teamSales:100000, gen:4, rollup:5, minRef:1, share:20, bonus:0, rollupCond:''},
-  {lv:'L5', teamSales:300000, gen:5, rollup:5, minRef:1, share:20, bonus:00, rollupCond:''},
-  {lv:'L6', teamSales:500000, gen:6, rollup:3, minRef:2, share:20, bonus:0, rollupCond:'롤업보너스'},
-  {lv:'L7', teamSales:700000, gen:7, rollup:3, minRef:3, share:20, bonus:0, rollupCond:'롤업보너스'},
-];
-// 롤업보너스 조건: $300가입=1대까지, $3000가입=5대까지
-// 공유수당: 총 1%, L3~L7 자격자에게 각 20% 배분 (n/1)
 
 function setMe(v) {
   me = v;
@@ -1316,7 +1047,6 @@ function calc() {
   document.getElementById('s2').textContent = '$'+sub.toLocaleString();
   document.getElementById('s3').textContent = ppl.toLocaleString()+'명';
   document.getElementById('s5').textContent = '$'+tSales.toLocaleString();
-  document.getElementById('s4').textContent = '$'+(totRef+totSponsor).toLocaleString();
 
   // ===== ① 추천 계산기 =====
   const refEl = document.getElementById('calc-referral');
@@ -1449,6 +1179,7 @@ function calc() {
 
   // ===== 종합 수익 =====
   const grandTotal = totAll + sharePool + totalAwards;
+  document.getElementById('s4').textContent = '$'+grandTotal.toLocaleString();
   const totalEl = document.getElementById('calc-total');
   totalEl.innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;">
@@ -1485,20 +1216,11 @@ function switchTab(tab) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
-  const idx = tab === 'landing' ? 0 : tab === 'sim' ? 1 : 2;
+  const idx = tab === 'landing' ? 0 : 1;
   document.querySelectorAll('.main-tab')[idx].classList.add('active');
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
-// Checklist accordion
-function toggleItem(el) {
-  el.classList.toggle('open');
-}
-function toggleAllItems() {
-  const items = document.querySelectorAll('.cl-item');
-  const allOpen = [...items].every(i => i.classList.contains('open'));
-  items.forEach(i => allOpen ? i.classList.remove('open') : i.classList.add('open'));
-}
 
 // ===== Interactive 65% Plan =====
 const DEFAULT_RATES = [5,5,5,5,5,3,3];
@@ -1506,182 +1228,10 @@ let rates = [...DEFAULT_RATES];
 let simAmt = 300;
 const LIMIT = 65;
 
-const titles = ['Level 1','Level 2','Level 3','Level 4','Level 5','Level 6','Level 7'];
-const titlesKr = ['L1','L2','L3','L4','L5','L6','L7'];
-const upgradeReq = [1,1,1,1,1,2,3];
-const upgradeGV = [300,3000,30000,100000,300000,500000,700000];
 
-function buildSliders() {
-  const box = document.getElementById('rate-sliders');
-  let h = '';
-  for (let i = 0; i < 7; i++) {
-    h += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-      <span style="font-size:0.72rem;color:var(--text2);min-width:32px;font-weight:600;">${i+1}대</span>
-      <input type="range" min="0" max="35" value="${rates[i]}" step="1" id="sl-r${i}" oninput="onRateChange(${i})" style="flex:1;">
-      <span style="font-family:'Outfit',sans-serif;font-size:0.95rem;font-weight:700;color:var(--gold);min-width:38px;text-align:right;" id="v-r${i}">${rates[i]}%</span>
-    </div>`;
-  }
-  box.innerHTML = h;
-}
 
-function onRateChange(idx) {
-  rates[idx] = parseInt(document.getElementById('sl-r'+idx).value);
-  const commSum = rates.reduce((a,b)=>a+b,0);
-  const centerFee = parseFloat(document.getElementById('sl-center').value);
-  const total = commSum + centerFee;
 
-  // Auto-adjust: if over 65%, reduce this slider back
-  if (total > LIMIT) {
-    const maxAllowed = LIMIT - centerFee - rates.reduce((a,b,i)=> i===idx? a : a+b, 0);
-    rates[idx] = Math.max(0, Math.floor(maxAllowed));
-    document.getElementById('sl-r'+idx).value = rates[idx];
-  }
-  updatePlan();
-}
 
-function resetRates() {
-  rates = [...DEFAULT_RATES];
-  for (let i=0;i<7;i++) {
-    document.getElementById('sl-r'+i).value = rates[i];
-  }
-  document.getElementById('sl-center').value = 2;
-  updatePlan();
-}
-
-function setSimAmt(v) {
-  simAmt = v;
-  document.getElementById('sim300').className = v===300?'tier-btn s1':'tier-btn';
-  document.getElementById('sim3000').className = v===3000?'tier-btn s2':'tier-btn';
-  updatePlan();
-}
-
-function updatePlan() {
-  const commSum = rates.reduce((a,b)=>a+b,0);
-  const centerFee = parseFloat(document.getElementById('sl-center').value);
-  const total = commSum + centerFee;
-  const reserve = 100 - total;
-  const remain = LIMIT - total;
-
-  // Update slider labels
-  for (let i=0;i<7;i++) {
-    document.getElementById('v-r'+i).textContent = rates[i]+'%';
-  }
-  document.getElementById('v-center').textContent = centerFee+'%';
-  document.getElementById('rate-sum').textContent = commSum+'%';
-
-  // Gauge
-  const isOver = total > LIMIT;
-  const totalColor = isOver ? '#ff4444' : 'var(--gold)';
-  document.getElementById('gauge-total').style.color = totalColor;
-  document.getElementById('gauge-total').textContent = total.toFixed(1) + '%';
-  document.getElementById('gauge-box').style.borderColor = isOver ? 'rgba(255,68,68,0.5)' : 'rgba(229,184,32,0.3)';
-
-  // Bars
-  const commW = commSum;
-  const centerW = centerFee;
-  document.getElementById('bar-commission').style.width = commW+'%';
-  document.getElementById('bar-commission').textContent = '추천 '+commSum+'%';
-  document.getElementById('bar-center').style.left = commW+'%';
-  document.getElementById('bar-center').style.width = centerW+'%';
-  document.getElementById('bar-center').textContent = centerFee > 1.5 ? centerFee+'%' : '';
-  document.getElementById('bar-reserve').style.left = (commW+centerW)+'%';
-  document.getElementById('bar-reserve').style.width = reserve+'%';
-  document.getElementById('bar-reserve').textContent = reserve > 5 ? '유보 '+reserve+'%' : '';
-
-  // Cards
-  document.getElementById('g-comm').textContent = commSum+'%';
-  document.getElementById('g-center').textContent = centerFee+'%';
-  document.getElementById('g-reserve').textContent = reserve+'%';
-  // Sim table
-  let cumRate = 0;
-  let simH = `<table style="width:100%;min-width:auto;font-size:0.72rem;">
-    <tr style="border-bottom:1px solid var(--border);">
-      <th style="color:var(--gold);padding:6px 4px;font-size:0.58rem;">대수</th>
-      <th style="color:var(--gold);padding:6px 4px;font-size:0.58rem;">수수료</th>
-      <th style="color:var(--gold);padding:6px 4px;font-size:0.58rem;">1인당</th>
-      <th style="color:var(--gold);padding:6px 4px;font-size:0.58rem;">누적률</th>
-    </tr>`;
-  for (let i=0;i<7;i++) {
-    cumRate += rates[i];
-    const perPerson = Math.round(simAmt * rates[i] / 100);
-    simH += `<tr>
-      <td style="padding:5px 4px;font-weight:700;">${i+1}대</td>
-      <td style="padding:5px 4px;">${rates[i]}%</td>
-      <td style="padding:5px 4px;color:var(--gold);font-weight:700;">$${perPerson.toLocaleString()}</td>
-      <td style="padding:5px 4px;color:var(--text3);">${cumRate}%</td>
-    </tr>`;
-  }
-  const centerAmt = Math.round(simAmt * centerFee / 100);
-  const reserveAmt = simAmt - Math.round(simAmt*commSum/100) - centerAmt;
-  simH += `<tr style="border-top:2px solid var(--border);">
-    <td colspan="2" style="padding:6px 4px;font-weight:700;color:var(--hermes);">센터 Fee ${centerFee}%</td>
-    <td style="padding:6px 4px;color:var(--hermes);font-weight:700;">$${centerAmt}</td>
-    <td style="padding:6px 4px;color:var(--text3);">${(commSum+centerFee)}%</td>
-  </tr>`;
-  simH += `<tr style="border-top:1px solid var(--border);">
-    <td colspan="2" style="padding:6px 4px;font-weight:700;">회사 유보</td>
-    <td style="padding:6px 4px;font-weight:700;">$${reserveAmt}</td>
-    <td style="padding:6px 4px;color:var(--text3);">${reserve}%</td>
-  </tr></table>`;
-  document.getElementById('sim-table').innerHTML = simH;
-
-  // Upgrade table
-  let upH = `<table style="width:100%;min-width:auto;font-size:0.72rem;">
-    <tr style="border-bottom:1px solid var(--border);">
-      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">직급</th>
-      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">대수</th>
-      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">최대수익률</th>
-      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">팀누적매출</th>
-      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">추천인원</th>
-      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">롤업</th>
-    </tr>`;
-  let cumR = 0;
-  for (let i=0;i<7;i++) {
-    cumR += rates[i];
-    const lv = LEVELS[i];
-    const highlight = i===1 ? 'background:rgba(229,184,32,0.05);' : '';
-    upH += `<tr style="${highlight}">
-      <td style="padding:4px;font-weight:700;">${lv.lv}</td>
-      <td style="padding:4px;">${lv.gen}대</td>
-      <td style="padding:4px;color:var(--gold);font-weight:700;">${cumR}%</td>
-      <td style="padding:4px;">$${lv.teamSales.toLocaleString()}</td>
-      <td style="padding:4px;">${lv.minRef}명이상</td>
-      <td style="padding:4px;color:${lv.rollup?'var(--gold)':'var(--text4)'};">${lv.rollup?lv.rollup+'%':'-'}</td>
-    </tr>`;
-  }
-  upH += '</table>';
-  upH += `<div style="margin-top:8px;font-size:0.65rem;color:var(--text3);line-height:1.6;">
-    ※ $300 가입 → 롤업 1대까지 | $3,000 가입 → 롤업 1~5대까지 | 6~7대 조건부<br>
-    ※ 팀누적매출 + 추천인원 조건 달성 시 승급</div>`;
-  document.getElementById('cl-upgrade-table').innerHTML = upH;
-
-  // Titles table (with rollup, share, bonus)
-  let tH = `<div class="cl-example"><table style="width:100%;min-width:auto;font-size:0.72rem;">
-    <tr style="border-bottom:1px solid var(--border);">
-      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">직급</th>
-      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">대수 → 수익률</th>
-      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">롤업</th>
-      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">공유수당</th>
-      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">시상</th>
-    </tr>`;
-  cumR = 0;
-  for (let i=0;i<7;i++) {
-    cumR += rates[i];
-    const lv = LEVELS[i];
-    tH += `<tr>
-      <td style="padding:4px;font-weight:700;">${lv.lv}</td>
-      <td style="padding:4px;">${lv.gen}대 → <strong>${cumR}%</strong></td>
-      <td style="padding:4px;">${lv.rollup?lv.rollup+'%':'-'}</td>
-      <td style="padding:4px;color:${lv.share?'var(--gold)':'var(--text4)'};">${lv.share?lv.share+'%':'-'}</td>
-      <td style="padding:4px;font-size:0.65rem;color:var(--text3);">${i>=2?'대상':'—'}</td>
-    </tr>`;
-  }
-  tH += '</table></div>';
-  document.getElementById('cl-titles-body').innerHTML = '직급별 롤업보너스 · 공유수당 · 시상 현황' + tH;
-}
-
-buildSliders();
-updatePlan();
 </script>
 </body>
 </html>
