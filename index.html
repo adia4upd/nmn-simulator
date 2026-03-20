@@ -1008,7 +1008,7 @@ function setSub(v) {
 function calc() {
   const n = parseInt(document.getElementById('rec').value);
   document.getElementById('rd').textContent = n + '명';
-  const rollupMaxGen = me===300 ? 1 : 5; // 롤업조건: $300=1대, $3000=5대
+  const baseMax = me===300 ? 1 : 5; // 롤업조건: $300=1대, $3000=5대
 
   // Build generation data
   const genRates = [5,5,5,5,5,3,3]; // 후원 롤업 1대~7대
@@ -1077,18 +1077,21 @@ function calc() {
   let sh = `<thead><tr><th>대수</th><th>롤업%</th><th>인원</th><th>매출</th><th>누적매출</th><th>인당수익</th><th>총수익</th><th>누적수익</th><th>상태</th></tr></thead><tbody>`;
   let cumSales=0, cumSpon=0, mx=0;
   for (const r of rows) {
-    cumSales += r.sales;
-    cumSpon += r.sponRev;
     if(r.sponRev > mx) mx = r.sponRev;
+  }
+  cumSales=0; cumSpon=0;
+  for (const r of rows) {
+    cumSales += r.sales;
+    if(r.sponOn) cumSpon += r.sponRev;
     let statusTag = '';
     if (r.cond === 'auto') statusTag = '<span class="tag tag-on">자동적용</span>';
     else if (r.cond === 'locked') statusTag = '<span class="tag tag-off">미해당</span>';
     else statusTag = '<span class="tag" style="background:rgba(243,112,33,0.12);color:var(--hermes);">조건부</span>';
-    const cls = r.sponOn ? 'act' : (r.cond==='level' ? 'act' : 'off');
-    const showVal = r.sponOn || r.cond==='level';
-    const potSpon = r.cnt * r.perSpon;
-    if(showVal && !r.sponOn) cumSales += r.sales;
-    sh += `<tr class="${cls}" style="${r.cond==='level'?'opacity:0.5;':''}"><td style="font-weight:700">${r.label}</td><td class="mono">${r.sponRate}%</td><td class="mono">${r.cnt.toLocaleString()}</td><td class="mono" style="color:var(--text2)">${showVal?'$'+r.sales.toLocaleString():'-'}</td><td class="mono" style="color:var(--hermes)">${showVal?'$'+cumSales.toLocaleString():'-'}</td><td class="mono">${showVal?'$'+r.perSpon.toLocaleString():'-'}</td><td class="mono">${showVal?(r.sponOn?'$'+r.sponRev.toLocaleString():'($'+potSpon.toLocaleString()+')'):'-'}</td><td class="mono" style="color:var(--gold)">${r.sponOn?'$'+cumSpon.toLocaleString():'-'}</td><td>${statusTag}</td></tr>`;
+    const cls = r.cond==='locked' ? 'off' : 'act';
+    const show = r.cond !== 'locked';
+    const potRev = (r.cnt * r.perSpon);
+    const revDisplay = show ? (r.sponOn ? '$'+r.sponRev.toLocaleString() : '($'+potRev.toLocaleString()+')') : '-';
+    sh += `<tr class="${cls}"><td style="font-weight:700">${r.label}</td><td class="mono">${r.sponRate}%</td><td class="mono">${r.cnt.toLocaleString()}</td><td class="mono" style="color:var(--text2)">${show?'$'+r.sales.toLocaleString():'-'}</td><td class="mono" style="color:var(--hermes)">${show?'$'+cumSales.toLocaleString():'-'}</td><td class="mono">${show?'$'+r.perSpon.toLocaleString():'-'}</td><td class="mono">${revDisplay}</td><td class="mono" style="color:var(--gold)">${r.sponOn?'$'+cumSpon.toLocaleString():'-'}</td><td>${statusTag}</td></tr>`;
   }
   sh += `<tr class="totr"><td colspan="6">후원 수익 합계</td><td colspan="3" style="color:var(--gold);">$${totSponsor.toLocaleString()}</td></tr></tbody>`;
   document.getElementById('calc-sponsor').innerHTML = sh;
