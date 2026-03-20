@@ -787,7 +787,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
         <div class="p-card card-a">
           <div class="p-header">
             <span class="p-badge">1 BOX</span>
-            <span class="p-gen">1개월분</span>
+            <span class="p-gen">후원 롤업 1대</span>
           </div>
           <div class="p-body">
             <div class="p-cell">
@@ -804,7 +804,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
         <div class="p-card card-b">
           <div class="p-header">
             <span class="p-badge">10 BOX</span>
-            <span class="p-gen">10개월분</span>
+            <span class="p-gen">후원 롤업 1~5대</span>
           </div>
           <div class="p-body">
             <div class="p-cell">
@@ -843,7 +843,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
     <div class="p-card card-a">
       <div class="p-header">
         <span class="p-badge">1 BOX</span>
-        <span class="p-gen">L1 (1대까지)</span>
+        <span class="p-gen">롤업 1대까지</span>
       </div>
       <div class="p-body">
         <div class="p-cell">
@@ -860,7 +860,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
     <div class="p-card card-b">
       <div class="p-header">
         <span class="p-badge">10 BOX</span>
-        <span class="p-gen">L2 (5대까지)</span>
+        <span class="p-gen">롤업 1~5대까지</span>
       </div>
       <div class="p-body">
         <div class="p-cell">
@@ -968,15 +968,15 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
   <!-- 설정 -->
   <div class="config-grid anim" style="animation-delay:0.15s">
     <div class="cfg-card">
-      <div class="section-title">내 사업자 등급 (대수 결정)</div>
+      <div class="section-title">본인 매출 (롤업 범위 결정)</div>
       <div class="tier-btns">
         <button class="tier-btn s1" id="my300" onclick="setMe(300)">
           <span class="price">$300</span>
-          <span class="sub">L1 (1대까지)</span>
+          <span class="sub">후원 롤업 1대까지</span>
         </button>
         <button class="tier-btn" id="my3000" onclick="setMe(3000)">
           <span class="price">$3,000</span>
-          <span class="sub">L2 (5대까지)</span>
+          <span class="sub">후원 롤업 1~5대까지</span>
         </button>
       </div>
     </div>
@@ -1005,7 +1005,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
 
   <!-- 요약 -->
   <div class="summary anim" style="animation-delay:0.2s">
-    <div class="sc"><div class="sl">시작 직급</div><div class="sv c-gold" id="s1">L1</div></div>
+    <div class="sc"><div class="sl">롤업 범위</div><div class="sv c-gold" id="s1">L1</div></div>
     <div class="sc"><div class="sl">하부 1인 매출</div><div class="sv c-orange" id="s2">$300</div></div>
     <div class="sc"><div class="sl">총 하위 인원</div><div class="sv c-white" id="s3">3명</div></div>
     <div class="sc"><div class="sl">총 매출</div><div class="sv c-white" id="s5">$900</div></div>
@@ -1232,7 +1232,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
 
   <div class="footer anim" style="animation-delay:0.3s">
     <strong>PREMIUM NMN ALPHA · 수익 구조 요약</strong><br>
-    직접추천 30% · 후원 롤업 ($300→1대 / $3,000→5대 / 6~7대 조건부)<br>
+    직접추천 30%(고정) + 후원 롤업 1~7대(5/5/5/5/5/3/3%) · $300→1대 / $3,000→5대 / 6~7대 조건부<br>
     롤업보너스 3~5% · 공유수당 1%(L3~L7 20% n/1) · 시상 각 1% 100분율 배분(50:30:20)<br>
     매출은 USDT(테더)로 익일 지급 · JAPAN FAMILY CARE · MADE IN JAPAN
   </div>
@@ -1243,7 +1243,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
 let me = 300, sub = 300;
 
 const R = [
-  {g:1,l:'1대',p:30},{g:2,l:'2대',p:5},{g:3,l:'3대',p:5},
+  {g:1,l:'1대',p:5},{g:2,l:'2대',p:5},{g:3,l:'3대',p:5},
   {g:4,l:'4대',p:5},{g:5,l:'5대',p:5},{g:6,l:'6대',p:3},
   {g:7,l:'7대',p:3}
 ];
@@ -1280,7 +1280,7 @@ function calc() {
   const rollupMaxGen = me===300 ? 1 : 5; // 롤업조건: $300=1대, $3000=5대
 
   // Build generation data
-  const genRates = [30,5,5,5,5,3,3]; // 1대~7대
+  const genRates = [5,5,5,5,5,3,3]; // 후원 롤업 1대~7대
   let rows=[], totRef=0, totSponsor=0, ppl=0, tSales=0;
 
   for (let i=0; i<7; i++) {
@@ -1288,17 +1288,16 @@ function calc() {
     const cnt = Math.pow(n, g);
     const perRef = g===1 ? Math.round(sub * 30 / 100) : 0;
     const refRev = g===1 ? cnt * perRef : 0;
-    const sponRate = g>=2 ? genRates[i] : 0;
+    const sponRate = genRates[i]; // 1대부터 후원 롤업 적용
     const perSpon = Math.round(sub * sponRate / 100);
     // 롤업 조건: 기본대수 내 = 자동, 6~7대 = L6/L7 조건부
     let sponOn = false;
-    if (g === 1) sponOn = true; // 직접추천 항상
-    else if (g <= baseMax) sponOn = true; // 기본 대수 내
-    else if (g === 6 || g === 7) sponOn = true; // 6,7대 조건부 (표시는 하되 조건 안내)
-    else sponOn = false;
-    const sponRev = (g>=2 && sponOn) ? cnt * perSpon : 0;
+    let cond = 'locked';
+    if (g <= baseMax) { sponOn = true; cond = 'auto'; }
+    else if (g <= 5) { sponOn = false; cond = 'locked'; }
+    else { sponOn = true; cond = 'level'; } // 6,7대 조건부 (값은 표시)
+    const sponRev = sponOn ? cnt * perSpon : 0;
     const sales = cnt * sub;
-    const cond = g <= baseMax ? 'auto' : (g <= 5 ? 'locked' : 'level'); // auto=자동, locked=미해당, level=조건부
     ppl += cnt;
     tSales += sales;
     totRef += refRev;
@@ -1313,11 +1312,11 @@ function calc() {
   const totAll = totRef + totSponsor;
 
   // Summary cards
-  document.getElementById('s1').textContent = (me===300?'L1 (1대)':'L2 (5대)');
+  document.getElementById('s1').textContent = (me===300?'롤업 1대':'롤업 1~5대');
   document.getElementById('s2').textContent = '$'+sub.toLocaleString();
   document.getElementById('s3').textContent = ppl.toLocaleString()+'명';
   document.getElementById('s5').textContent = '$'+tSales.toLocaleString();
-  document.getElementById('s4').textContent = '$'+totAll.toLocaleString();
+  document.getElementById('s4').textContent = '$'+(totRef+totSponsor).toLocaleString();
 
   // ===== ① 추천 계산기 =====
   const refEl = document.getElementById('calc-referral');
@@ -1339,13 +1338,15 @@ function calc() {
         <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);margin-top:4px;">$${directTotal.toLocaleString()}</div>
       </div>
     </div>
-    <div style="font-size:0.72rem;color:var(--text2);">하부 매출 $${sub.toLocaleString()} × 30% = <strong style="color:var(--gold);">$${directPer.toLocaleString()}</strong> × ${directCnt}명 = <strong style="color:var(--gold);">$${directTotal.toLocaleString()}</strong></div>`;
+    <div style="font-size:0.72rem;color:var(--text2);line-height:1.7;">
+      직접추천 30%는 <strong style="color:var(--gold);">누구에게나 고정</strong> (가입금액 무관)<br>
+      하부 매출 $${sub.toLocaleString()} × 30% = <strong style="color:var(--gold);">$${directPer.toLocaleString()}</strong> × ${directCnt}명 = <strong style="color:var(--gold);">$${directTotal.toLocaleString()}</strong>
+    </div>`;
 
   // ===== ② 후원 계산기 =====
-  let sh = `<thead><tr><th>대수</th><th>%</th><th>인원</th><th>매출</th><th>누적매출</th><th>인당수익</th><th>총수익</th><th>누적수익</th><th>상태</th></tr></thead><tbody>`;
+  let sh = `<thead><tr><th>대수</th><th>롤업%</th><th>인원</th><th>매출</th><th>누적매출</th><th>인당수익</th><th>총수익</th><th>누적수익</th><th>상태</th></tr></thead><tbody>`;
   let cumSales=0, cumSpon=0, mx=0;
   for (const r of rows) {
-    if(r.g===1) { cumSales += r.sales; continue; }
     cumSales += r.sales;
     cumSpon += r.sponRev;
     if(r.sponRev > mx) mx = r.sponRev;
@@ -1353,20 +1354,23 @@ function calc() {
     if (r.cond === 'auto') statusTag = '<span class="tag tag-on">자동적용</span>';
     else if (r.cond === 'locked') statusTag = '<span class="tag tag-off">미해당</span>';
     else statusTag = '<span class="tag" style="background:rgba(243,112,33,0.12);color:var(--hermes);">조건부</span>';
-    const cls = r.sponOn ? 'act' : 'off';
-    sh += `<tr class="${cls}"><td style="font-weight:700">${r.label}</td><td class="mono">${r.sponRate}%</td><td class="mono">${r.cnt.toLocaleString()}</td><td class="mono" style="color:var(--text2)">${r.sponOn?'$'+r.sales.toLocaleString():'-'}</td><td class="mono" style="color:var(--hermes)">${r.sponOn?'$'+cumSales.toLocaleString():'-'}</td><td class="mono">${r.sponOn?'$'+r.perSpon.toLocaleString():'-'}</td><td class="mono">${r.sponOn?'$'+r.sponRev.toLocaleString():'-'}</td><td class="mono" style="color:var(--gold)">${r.sponOn?'$'+cumSpon.toLocaleString():'-'}</td><td>${statusTag}</td></tr>`;
+    const cls = r.sponOn ? 'act' : (r.cond==='level' ? 'act' : 'off');
+    const showVal = r.sponOn || r.cond==='level';
+    const potSpon = r.cnt * r.perSpon;
+    if(showVal && !r.sponOn) cumSales += r.sales;
+    sh += `<tr class="${cls}" style="${r.cond==='level'?'opacity:0.5;':''}"><td style="font-weight:700">${r.label}</td><td class="mono">${r.sponRate}%</td><td class="mono">${r.cnt.toLocaleString()}</td><td class="mono" style="color:var(--text2)">${showVal?'$'+r.sales.toLocaleString():'-'}</td><td class="mono" style="color:var(--hermes)">${showVal?'$'+cumSales.toLocaleString():'-'}</td><td class="mono">${showVal?'$'+r.perSpon.toLocaleString():'-'}</td><td class="mono">${showVal?(r.sponOn?'$'+r.sponRev.toLocaleString():'($'+potSpon.toLocaleString()+')'):'-'}</td><td class="mono" style="color:var(--gold)">${r.sponOn?'$'+cumSpon.toLocaleString():'-'}</td><td>${statusTag}</td></tr>`;
   }
   sh += `<tr class="totr"><td colspan="6">후원 수익 합계</td><td colspan="3" style="color:var(--gold);">$${totSponsor.toLocaleString()}</td></tr></tbody>`;
   document.getElementById('calc-sponsor').innerHTML = sh;
   
   // 조건 안내
   const condNote = me===300 
-    ? '현재 $300 가입 → <strong style="color:var(--gold);">1대까지 자동적용</strong> · 2~5대 미해당 · 6대(L6: 팀매출 $500K+추천2명) · 7대(L7: 팀매출 $700K+추천3명)'
-    : '현재 $3,000 가입 → <strong style="color:var(--gold);">1~5대까지 자동적용</strong> · 6대(L6: 팀매출 $500K+추천2명) · 7대(L7: 팀매출 $700K+추천3명)';
+    ? '<strong style="color:var(--gold);">$300 가입 → 후원 롤업 1대까지 자동적용</strong><br>2~5대: 미해당<br>6대: L6 조건 (팀누적매출 $500,000 + 추천 2명이상) 달성 시 적용<br>7대: L7 조건 (팀누적매출 $700,000 + 추천 3명이상) 달성 시 적용<br><span style="color:var(--text3);">※ 괄호( ) 금액은 조건 달성 시 예상 수익</span>'
+    : '<strong style="color:var(--gold);">$3,000 가입 → 후원 롤업 1대~5대까지 자동적용</strong><br>6대: L6 조건 (팀누적매출 $500,000 + 추천 2명이상) 달성 시 적용<br>7대: L7 조건 (팀누적매출 $700,000 + 추천 3명이상) 달성 시 적용<br><span style="color:var(--text3);">※ 괄호( ) 금액은 조건 달성 시 예상 수익</span>';
   document.getElementById('spon-note').innerHTML = condNote;
 
   // Bar chart
-  document.getElementById('bars').innerHTML = rows.filter(r=>r.g>=2).map(r=>{
+  document.getElementById('bars').innerHTML = rows.map(r=>{
     const w = mx>0 && r.sponOn ? Math.max(4,(r.sponRev/mx)*100) : 4;
     const barCls = r.sponOn ? 'on' : 'dim';
     const valCls = r.sponOn ? '' : 'dim';
@@ -1497,7 +1501,7 @@ function toggleAllItems() {
 }
 
 // ===== Interactive 65% Plan =====
-const DEFAULT_RATES = [30,5,5,5,5,3,3];
+const DEFAULT_RATES = [5,5,5,5,5,3,3];
 let rates = [...DEFAULT_RATES];
 let simAmt = 300;
 const LIMIT = 65;
@@ -1647,7 +1651,7 @@ function updatePlan() {
   }
   upH += '</table>';
   upH += `<div style="margin-top:8px;font-size:0.65rem;color:var(--text3);line-height:1.6;">
-    ※ $300 가입 → L1 (1대까지) | $3,000 가입 → L2 (5대까지)<br>
+    ※ $300 가입 → 롤업 1대까지 | $3,000 가입 → 롤업 1~5대까지 | 6~7대 조건부<br>
     ※ 팀누적매출 + 추천인원 조건 달성 시 승급</div>`;
   document.getElementById('cl-upgrade-table').innerHTML = upH;
 
