@@ -843,7 +843,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
     <div class="p-card card-a">
       <div class="p-header">
         <span class="p-badge">1 BOX</span>
-        <span class="p-gen">L1 시작 · 7대</span>
+        <span class="p-gen">L1 (1대까지)</span>
       </div>
       <div class="p-body">
         <div class="p-cell">
@@ -860,7 +860,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
     <div class="p-card card-b">
       <div class="p-header">
         <span class="p-badge">10 BOX</span>
-        <span class="p-gen">L2 시작 · 7대</span>
+        <span class="p-gen">L2 (5대까지)</span>
       </div>
       <div class="p-body">
         <div class="p-cell">
@@ -972,11 +972,11 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
       <div class="tier-btns">
         <button class="tier-btn s1" id="my300" onclick="setMe(300)">
           <span class="price">$300</span>
-          <span class="sub">L1 시작 (7대)</span>
+          <span class="sub">L1 (1대까지)</span>
         </button>
         <button class="tier-btn" id="my3000" onclick="setMe(3000)">
           <span class="price">$3,000</span>
-          <span class="sub">L2 시작 (7대)</span>
+          <span class="sub">L2 (5대까지)</span>
         </button>
       </div>
     </div>
@@ -1022,6 +1022,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
   <div class="dc anim" style="margin-bottom:1.5rem;overflow-x:auto;">
     <div class="section-title" style="color:var(--hermes);">② 후원 계산기 (2대~7대 롤업보너스)</div>
     <table id="calc-sponsor"></table>
+    <div style="font-size:0.7rem;color:var(--text2);margin-top:10px;padding:10px 12px;background:var(--bg-card2);border-radius:8px;line-height:1.6;" id="spon-note"></div>
     <div class="bar-chart" id="bars" style="margin-top:1rem;"></div>
   </div>
 
@@ -1231,7 +1232,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
 
   <div class="footer anim" style="animation-delay:0.3s">
     <strong>PREMIUM NMN ALPHA · 수익 구조 요약</strong><br>
-    직접추천 30% · 후원 7대 무조건 적용 (30+5+5+5+5+3+3 = 56%)<br>
+    직접추천 30% · 후원 롤업 ($300→1대 / $3,000→5대 / 6~7대 조건부)<br>
     롤업보너스 3~5% · 공유수당 1%(L3~L7 20% n/1) · 시상 각 1% 100분율 배분(50:30:20)<br>
     매출은 USDT(테더)로 익일 지급 · JAPAN FAMILY CARE · MADE IN JAPAN
   </div>
@@ -1289,13 +1290,20 @@ function calc() {
     const refRev = g===1 ? cnt * perRef : 0;
     const sponRate = g>=2 ? genRates[i] : 0;
     const perSpon = Math.round(sub * sponRate / 100);
-    const sponRev = g>=2 ? cnt * perSpon : 0;
+    // 롤업 조건: 기본대수 내 = 자동, 6~7대 = L6/L7 조건부
+    let sponOn = false;
+    if (g === 1) sponOn = true; // 직접추천 항상
+    else if (g <= baseMax) sponOn = true; // 기본 대수 내
+    else if (g === 6 || g === 7) sponOn = true; // 6,7대 조건부 (표시는 하되 조건 안내)
+    else sponOn = false;
+    const sponRev = (g>=2 && sponOn) ? cnt * perSpon : 0;
     const sales = cnt * sub;
+    const cond = g <= baseMax ? 'auto' : (g <= 5 ? 'locked' : 'level'); // auto=자동, locked=미해당, level=조건부
     ppl += cnt;
     tSales += sales;
     totRef += refRev;
     totSponsor += sponRev;
-    rows.push({g, cnt, sales, perRef, refRev, sponRate, perSpon, sponRev, label: g+'대'});
+    rows.push({g, cnt, sales, perRef, refRev, sponRate, perSpon, sponRev, sponOn, cond, label: g+'대'});
   }
 
   // 공유수당: 매출 1%, L3~L7 자격자에게 20%씩 (n/1)
@@ -1305,7 +1313,7 @@ function calc() {
   const totAll = totRef + totSponsor;
 
   // Summary cards
-  document.getElementById('s1').textContent = (me===300?'L1':'L2') + ' (7대)';
+  document.getElementById('s1').textContent = (me===300?'L1 (1대)':'L2 (5대)');
   document.getElementById('s2').textContent = '$'+sub.toLocaleString();
   document.getElementById('s3').textContent = ppl.toLocaleString()+'명';
   document.getElementById('s5').textContent = '$'+tSales.toLocaleString();
@@ -1334,22 +1342,35 @@ function calc() {
     <div style="font-size:0.72rem;color:var(--text2);">하부 매출 $${sub.toLocaleString()} × 30% = <strong style="color:var(--gold);">$${directPer.toLocaleString()}</strong> × ${directCnt}명 = <strong style="color:var(--gold);">$${directTotal.toLocaleString()}</strong></div>`;
 
   // ===== ② 후원 계산기 =====
-  let sh = `<thead><tr><th>대수</th><th>%</th><th>인원</th><th>매출</th><th>누적매출</th><th>인당수익</th><th>총수익</th><th>누적수익</th></tr></thead><tbody>`;
+  let sh = `<thead><tr><th>대수</th><th>%</th><th>인원</th><th>매출</th><th>누적매출</th><th>인당수익</th><th>총수익</th><th>누적수익</th><th>상태</th></tr></thead><tbody>`;
   let cumSales=0, cumSpon=0, mx=0;
   for (const r of rows) {
-    if(r.g===1) { cumSales += r.sales; continue; } // 1대는 추천이므로 후원에서 제외
+    if(r.g===1) { cumSales += r.sales; continue; }
     cumSales += r.sales;
     cumSpon += r.sponRev;
     if(r.sponRev > mx) mx = r.sponRev;
-    sh += `<tr class="act"><td style="font-weight:700">${r.label}</td><td class="mono">${r.sponRate}%</td><td class="mono">${r.cnt.toLocaleString()}</td><td class="mono" style="color:var(--text2)">$${r.sales.toLocaleString()}</td><td class="mono" style="color:var(--hermes)">$${cumSales.toLocaleString()}</td><td class="mono">$${r.perSpon.toLocaleString()}</td><td class="mono">$${r.sponRev.toLocaleString()}</td><td class="mono" style="color:var(--gold)">$${cumSpon.toLocaleString()}</td></tr>`;
+    let statusTag = '';
+    if (r.cond === 'auto') statusTag = '<span class="tag tag-on">자동적용</span>';
+    else if (r.cond === 'locked') statusTag = '<span class="tag tag-off">미해당</span>';
+    else statusTag = '<span class="tag" style="background:rgba(243,112,33,0.12);color:var(--hermes);">조건부</span>';
+    const cls = r.sponOn ? 'act' : 'off';
+    sh += `<tr class="${cls}"><td style="font-weight:700">${r.label}</td><td class="mono">${r.sponRate}%</td><td class="mono">${r.cnt.toLocaleString()}</td><td class="mono" style="color:var(--text2)">${r.sponOn?'$'+r.sales.toLocaleString():'-'}</td><td class="mono" style="color:var(--hermes)">${r.sponOn?'$'+cumSales.toLocaleString():'-'}</td><td class="mono">${r.sponOn?'$'+r.perSpon.toLocaleString():'-'}</td><td class="mono">${r.sponOn?'$'+r.sponRev.toLocaleString():'-'}</td><td class="mono" style="color:var(--gold)">${r.sponOn?'$'+cumSpon.toLocaleString():'-'}</td><td>${statusTag}</td></tr>`;
   }
-  sh += `<tr class="totr"><td colspan="6">후원 수익 합계</td><td colspan="2" style="color:var(--gold);">$${totSponsor.toLocaleString()}</td></tr></tbody>`;
+  sh += `<tr class="totr"><td colspan="6">후원 수익 합계</td><td colspan="3" style="color:var(--gold);">$${totSponsor.toLocaleString()}</td></tr></tbody>`;
   document.getElementById('calc-sponsor').innerHTML = sh;
+  
+  // 조건 안내
+  const condNote = me===300 
+    ? '현재 $300 가입 → <strong style="color:var(--gold);">1대까지 자동적용</strong> · 2~5대 미해당 · 6대(L6: 팀매출 $500K+추천2명) · 7대(L7: 팀매출 $700K+추천3명)'
+    : '현재 $3,000 가입 → <strong style="color:var(--gold);">1~5대까지 자동적용</strong> · 6대(L6: 팀매출 $500K+추천2명) · 7대(L7: 팀매출 $700K+추천3명)';
+  document.getElementById('spon-note').innerHTML = condNote;
 
   // Bar chart
   document.getElementById('bars').innerHTML = rows.filter(r=>r.g>=2).map(r=>{
-    const w = mx>0 ? Math.max(4,(r.sponRev/mx)*100) : 4;
-    return `<div class="bar-col"><div class="bl">${r.label} ${r.sponRate}%</div><div class="br on" style="width:${w}%"></div><div class="bv">$${r.sponRev.toLocaleString()}</div></div>`;
+    const w = mx>0 && r.sponOn ? Math.max(4,(r.sponRev/mx)*100) : 4;
+    const barCls = r.sponOn ? 'on' : 'dim';
+    const valCls = r.sponOn ? '' : 'dim';
+    return `<div class="bar-col"><div class="bl">${r.label} ${r.sponRate}%</div><div class="br ${barCls}" style="width:${w}%"></div><div class="bv ${valCls}">${r.sponOn?'$'+r.sponRev.toLocaleString():'-'}</div></div>`;
   }).join('');
 
   // ===== ③ 공유 계산기 =====
@@ -1626,7 +1647,7 @@ function updatePlan() {
   }
   upH += '</table>';
   upH += `<div style="margin-top:8px;font-size:0.65rem;color:var(--text3);line-height:1.6;">
-    ※ $300 가입 → L1 시작 (7대) | $3,000 가입 → L2 시작 (7대)<br>
+    ※ $300 가입 → L1 (1대까지) | $3,000 가입 → L2 (5대까지)<br>
     ※ 팀누적매출 + 추천인원 조건 달성 시 승급</div>`;
   document.getElementById('cl-upgrade-table').innerHTML = upH;
 
