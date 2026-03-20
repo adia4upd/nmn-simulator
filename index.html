@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NMN 수익 시뮬레이터</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0c;
+  --bg-card: #131316;
+  --bg-card2: #1a1a1f;
+  --bg-input: #222228;
+  --gold: #E5B820;
+  --gold-light: #F0C830;
+  --gold-dim: rgba(229,184,32,0.12);
+  --gold-glow: rgba(229,184,32,0.30);
+  --gold-deep: #C49A10;
+  --hermes: #F37021;
+  --hermes-light: #F68A4B;
+  --hermes-dim: rgba(243,112,33,0.10);
+  --text: #F5F5F5;
+  --text2: #C0C0C8;
+  --text3: #8888A0;
+  --text4: #606070;
+  --border: #1e1e24;
+  --border2: #2a2a32;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+.bg-texture {
+  position: fixed; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 700px 500px at 10% 0%, rgba(212,168,67,0.03), transparent),
+    radial-gradient(ellipse 500px 400px at 90% 100%, rgba(243,112,33,0.02), transparent);
+}
+
+.wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+/* Header */
+header { text-align: center; padding: 2.5rem 0 1.5rem; }
+header .logo-row {
+  display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 10px;
+}
+header .logo-icon {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--bg);
+}
+header .brand {
+  font-family: 'Outfit', sans-serif; font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--text);
+}
+header .brand .alpha {
+  font-size: 0.4em; font-weight: 500; letter-spacing: 4px; color: var(--gold);
+  vertical-align: super; margin-left: 6px;
+}
+header .tagline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem; color: var(--text3); letter-spacing: 3px; text-transform: uppercase; font-weight: 400;
+}
+header .line {
+  width: 50px; height: 2px; margin: 1rem auto 0;
+  background: var(--gold); border-radius: 2px;
+}
+
+/* Product guide cards */
+.product-cards {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2.5rem 0;
+}
+@media (max-width: 680px) { .product-cards { grid-template-columns: 1fr; } }
+
+.p-card {
+  border-radius: 14px; overflow: hidden; background: var(--bg-card);
+}
+.p-card.card-a { border: 1px solid rgba(212,168,67,0.25); }
+.p-card.card-b { border: 1px solid rgba(243,112,33,0.25); }
+
+.p-header {
+  padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;
+}
+.card-a .p-header { background: linear-gradient(135deg, rgba(212,168,67,0.12), rgba(212,168,67,0.03)); }
+.card-b .p-header { background: linear-gradient(135deg, rgba(243,112,33,0.12), rgba(243,112,33,0.03)); }
+
+.p-badge {
+  font-family: 'Outfit', sans-serif; font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+}
+.card-a .p-badge { color: var(--gold); }
+.card-b .p-badge { color: var(--hermes); }
+
+.p-gen {
+  font-size: 0.65rem; font-weight: 600; padding: 3px 12px; border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+.card-a .p-gen { background: var(--gold-dim); color: var(--gold-light); }
+.card-b .p-gen { background: var(--hermes-dim); color: var(--hermes-light); }
+
+.p-body {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border);
+}
+.p-cell { background: var(--bg-card); padding: 1rem 1.2rem; }
+.p-lbl {
+  font-size: 0.62rem; color: var(--text3); text-transform: uppercase;
+  letter-spacing: 1.5px; font-weight: 500;
+}
+.p-val { font-family: 'Outfit', sans-serif; font-weight: 700; margin-top: 6px; color: var(--text); }
+.p-val.big { font-size: 1.8rem; }
+.p-val.sm { font-size: 0.9rem; color: var(--text2); }
+.p-val.sm2 { font-size: 0.82rem; margin-top: 3px; }
+.card-a .p-val.colored { color: var(--gold); }
+.card-b .p-val.colored { color: var(--hermes); }
+
+/* Info strip */
+.info-strip {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 2.5rem;
+}
+.is-cell { background: var(--bg-card); padding: 0.9rem 1.2rem; }
+.is-lbl { font-size: 0.6rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500; }
+.is-val { font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 600; margin-top: 4px; color: var(--text); }
+
+/* Example box */
+.example-box {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 1.5rem; margin-bottom: 2.5rem;
+}
+.section-title {
+  font-size: 0.72rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 1rem; font-weight: 500;
+}
+.ex-row {
+  display: flex; align-items: center; gap: 10px; padding: 10px 0;
+  border-bottom: 1px solid var(--border); font-size: 0.9rem; flex-wrap: wrap;
+}
+.ex-row:last-of-type { border-bottom: none; }
+.ex-arrow { color: var(--text4); font-size: 1.1rem; }
+.ex-tag {
+  display: inline-block; font-size: 0.65rem; padding: 3px 10px; border-radius: 20px;
+  font-weight: 700; letter-spacing: 0.5px;
+}
+.ex-tag.t-gold { background: var(--gold-dim); color: var(--gold); }
+.ex-tag.t-orange { background: var(--hermes-dim); color: var(--hermes); }
+.ex-m { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--text); }
+.ex-m.hi { color: var(--gold); }
+.ex-note {
+  margin-top: 14px; font-size: 0.82rem; color: var(--text2); line-height: 1.7;
+}
+
+/* Config */
+.config-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;
+}
+@media (max-width: 780px) { .config-grid { grid-template-columns: 1fr; } }
+
+.cfg-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem;
+  transition: border-color 0.3s;
+}
+.cfg-card:hover { border-color: var(--border2); }
+
+/* Buttons */
+.tier-btns { display: flex; gap: 10px; }
+.tier-btn {
+  flex: 1; padding: 0.85rem 0.5rem; border: 1.5px solid var(--border); border-radius: 10px;
+  background: transparent; color: var(--text3); cursor: pointer; transition: all 0.3s; text-align: center;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.tier-btn:hover { border-color: var(--border2); background: var(--bg-card2); }
+.tier-btn .price { font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 700; display: block; }
+.tier-btn .sub { font-size: 0.7rem; margin-top: 4px; opacity: 0.7; }
+.tier-btn.s1 { border-color: var(--gold); background: var(--gold-dim); color: var(--gold); }
+.tier-btn.s2 { border-color: var(--hermes); background: var(--hermes-dim); color: var(--hermes); }
+
+/* Slider */
+.slider-wrap label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.9rem; color: var(--text2); margin-bottom: 12px;
+}
+.slider-wrap label span {
+  font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--gold);
+}
+input[type=range] {
+  -webkit-appearance: none; width: 100%; height: 5px;
+  background: var(--border2); border-radius: 3px; outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--gold); cursor: pointer; box-shadow: 0 0 10px var(--gold-glow);
+}
+.ticks {
+  display: flex; justify-content: space-between;
+  font-size: 0.65rem; color: var(--text4); margin-top: 8px;
+}
+
+/* Summary */
+.summary {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 1px; background: var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 2.5rem;
+}
+@media (max-width: 680px) { .summary { grid-template-columns: repeat(2, 1fr); } }
+.sc { background: var(--bg-card); padding: 1.2rem 1rem; text-align: center; }
+.sc .sl { font-size: 0.62rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-weight: 500; }
+.sc .sv { font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 700; }
+.sv.c-gold { color: var(--gold); }
+.sv.c-orange { color: var(--hermes); }
+.sv.c-white { color: var(--text); }
+
+/* Detail */
+.detail-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;
+}
+@media (max-width: 780px) { .detail-grid { grid-template-columns: 1fr; } }
+.dc {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem;
+}
+
+/* Table */
+table { width: 100%; border-collapse: collapse; }
+table th {
+  font-size: 0.62rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1px;
+  text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--border); font-weight: 500;
+}
+table td { font-size: 0.85rem; padding: 9px 6px; border-bottom: 1px solid var(--border); color: var(--text2); }
+table tr:last-child td { border-bottom: none; }
+table tr.act td { color: var(--text); }
+table tr.off td { opacity: 0.25; }
+table tr.totr td {
+  border-top: 2px solid var(--gold); color: var(--gold);
+  font-weight: 700; font-family: 'Outfit', sans-serif; padding-top: 14px;
+}
+td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
+.tag {
+  display: inline-block; font-size: 0.58rem; padding: 2px 8px; border-radius: 20px;
+  font-weight: 700; letter-spacing: 0.5px;
+}
+.tag-on { background: var(--gold-dim); color: var(--gold); }
+.tag-off { background: rgba(55,55,63,0.4); color: var(--text4); }
+
+/* Bar chart - horizontal rows */
+.bar-chart {
+  display: flex; flex-direction: column; gap: 8px; padding: 0;
+}
+.bar-col {
+  display: flex; align-items: center; gap: 10px;
+}
+.bl {
+  font-size: 0.7rem; color: var(--text2); min-width: 50px; text-align: right; line-height: 1.2; font-weight: 600;
+}
+.br {
+  height: 24px; border-radius: 4px; min-width: 4px;
+  transition: width 0.5s cubic-bezier(0.23,1,0.32,1);
+}
+.br.on { background: linear-gradient(90deg, var(--gold-deep), var(--gold-light)); box-shadow: 0 0 14px var(--gold-dim); }
+.br.dim { background: var(--border2); }
+.bv { font-family: 'Outfit', sans-serif; font-size: 0.68rem; font-weight: 700; color: var(--gold); white-space: nowrap; }
+.bv.dim { color: var(--text4); }
+
+/* Footer */
+.footer {
+  text-align: center; font-size: 0.78rem; color: var(--text4); margin-top: 2rem;
+  padding: 1.5rem; border-top: 1px solid var(--border); line-height: 1.8;
+}
+.footer strong { color: var(--text3); }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+.anim { animation: fadeUp 0.5s ease forwards; }
+
+/* Main Tabs */
+.main-tabs {
+  display: flex; gap: 0; margin: 0 0 2rem; border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.main-tab {
+  flex: 1; padding: 14px 16px; background: var(--bg-card); border: none;
+  color: var(--text3); font-family: 'Noto Sans KR', sans-serif; font-size: 0.88rem;
+  font-weight: 600; cursor: pointer; transition: all 0.3s; text-align: center;
+  border-right: 1px solid var(--border); letter-spacing: 0.5px;
+}
+.main-tab:last-child { border-right: none; }
+.main-tab:hover { background: var(--bg-card2); color: var(--text2); }
+.main-tab.active {
+  background: linear-gradient(135deg, rgba(229,184,32,0.15), rgba(229,184,32,0.05));
+  color: var(--gold); border-bottom: 2px solid var(--gold);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Checklist specific */
+.cl-date {
+  font-size: 0.75rem; color: var(--text3); margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem; border-bottom: 1px solid var(--border);
+}
+.cl-alert {
+  background: rgba(229,60,60,0.08); border: 1px solid rgba(229,60,60,0.2);
+  border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 2rem;
+  font-size: 0.85rem; color: #F06060; font-weight: 600; line-height: 1.6;
+}
+.cl-section {
+  margin-bottom: 2rem;
+}
+.cl-section-title {
+  font-size: 0.82rem; font-weight: 700; color: var(--gold); margin-bottom: 1rem;
+  padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+}
+.cl-info-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 1.5rem;
+}
+.cl-info-row {
+  display: contents;
+}
+.cl-info-label {
+  background: var(--bg-card2); padding: 10px 14px; font-size: 0.78rem;
+  font-weight: 600; color: var(--text2);
+}
+.cl-info-value {
+  background: var(--bg-card); padding: 10px 14px; font-size: 0.78rem; color: var(--text);
+}
+.cl-item {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+  margin-bottom: 12px; overflow: hidden; transition: border-color 0.3s;
+}
+.cl-item:hover { border-color: var(--border2); }
+.cl-item-header {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+  cursor: pointer; user-select: none;
+}
+.cl-num {
+  font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 800;
+  color: var(--gold); min-width: 28px; height: 28px; border-radius: 8px;
+  background: var(--gold-dim); display: flex; align-items: center; justify-content: center;
+}
+.cl-title { font-size: 0.88rem; font-weight: 600; color: var(--text); flex: 1; }
+.cl-status {
+  font-size: 0.6rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+.cl-status.pending { background: rgba(229,184,32,0.12); color: var(--gold); }
+.cl-status.done { background: rgba(80,200,120,0.12); color: #50C878; }
+.cl-arrow {
+  font-size: 0.7rem; color: var(--text4); transition: transform 0.3s;
+}
+.cl-item.open .cl-arrow { transform: rotate(180deg); }
+.cl-item-body {
+  display: none; padding: 0 16px 14px 56px;
+  font-size: 0.8rem; color: var(--text2); line-height: 1.7;
+}
+.cl-item.open .cl-item-body { display: block; }
+.cl-example {
+  font-size: 0.75rem; color: var(--text3); margin-top: 6px;
+  padding: 8px 12px; background: var(--bg-card2); border-radius: 8px;
+}
+.cl-toggle-btn {
+  display: inline-block; margin-left: auto; padding: 3px 10px;
+  border: 1px solid var(--border); border-radius: 6px; background: transparent;
+  color: var(--text3); font-size: 0.65rem; cursor: pointer; font-family: 'Noto Sans KR', sans-serif;
+}
+.cl-toggle-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Landing Page */
+.hero {
+  text-align: center; padding: 3rem 0 2.5rem; position: relative;
+}
+.hero-badge {
+  display: inline-block; padding: 6px 18px; border-radius: 30px;
+  background: var(--gold-dim); color: var(--gold); font-size: 0.65rem;
+  font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.5rem;
+}
+.hero-title {
+  font-family: 'Outfit', sans-serif; font-size: clamp(2.2rem, 6vw, 3.8rem);
+  font-weight: 800; letter-spacing: 1px; line-height: 1.15; margin-bottom: 1rem;
+  color: var(--text);
+}
+.hero-title .accent { color: var(--gold); }
+.hero-title .sub-accent { color: var(--hermes); }
+.hero-sub {
+  font-size: 1rem; color: var(--text2); line-height: 1.7; max-width: 600px;
+  margin: 0 auto 2rem; font-weight: 400;
+}
+.hero-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 2.5rem;
+}
+.hero-stat {
+  background: var(--bg-card); padding: 1.5rem 1rem; text-align: center;
+}
+.hero-stat .hs-num {
+  font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800;
+}
+.hero-stat .hs-label {
+  font-size: 0.65rem; color: var(--text3); margin-top: 4px;
+  text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500;
+}
+.hero-cta {
+  display: inline-block; padding: 14px 40px; border-radius: 12px;
+  background: var(--gold); color: var(--bg); font-family: 'Outfit', sans-serif;
+  font-size: 1rem; font-weight: 700; border: none; cursor: pointer;
+  letter-spacing: 1px; transition: all 0.3s;
+}
+.hero-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+.features {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem;
+}
+.feat-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 1.5rem; transition: border-color 0.3s;
+}
+.feat-card:hover { border-color: var(--border2); }
+.feat-icon {
+  width: 44px; height: 44px; border-radius: 12px; display: flex;
+  align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 14px;
+}
+.feat-card h4 {
+  font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; color: var(--text);
+}
+.feat-card p {
+  font-size: 0.78rem; color: var(--text2); line-height: 1.6;
+}
+
+.science-section {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 2rem; margin-bottom: 2.5rem;
+}
+.science-section h3 {
+  font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700;
+  color: var(--gold); margin-bottom: 1.2rem;
+}
+.science-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+}
+.sci-item h5 {
+  font-size: 0.82rem; font-weight: 700; color: var(--text); margin-bottom: 6px;
+}
+.sci-item p {
+  font-size: 0.75rem; color: var(--text2); line-height: 1.6;
+}
+
+.trust-bar {
+  display: flex; justify-content: center; gap: 2rem; padding: 1.5rem 0;
+  margin-bottom: 2rem; flex-wrap: wrap;
+}
+.trust-item {
+  font-size: 0.68rem; color: var(--text3); font-weight: 500;
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.trust-item strong { color: var(--text2); }
+
+/* ===== Mobile Responsive ===== */
+@media (max-width: 480px) {
+  .wrap { padding: 1rem 0.8rem 3rem; }
+
+  header { padding: 1.5rem 0 1rem; }
+  header .logo-row { gap: 10px; }
+  header .logo-icon { width: 32px; height: 32px; font-size: 0.9rem; }
+  header .tagline { font-size: 0.65rem; letter-spacing: 2px; }
+
+  .product-cards { gap: 1rem; margin: 1.5rem 0; }
+  .p-header { padding: 10px 14px; }
+  .p-badge { font-size: 0.7rem !important; }
+  .p-gen { font-size: 0.58rem; padding: 2px 10px; }
+  .p-cell { padding: 0.8rem 1rem; }
+  .p-val.big { font-size: 1.5rem; }
+  .p-val.sm { font-size: 0.82rem; }
+  .p-val.sm2 { font-size: 0.75rem; }
+
+  .info-strip { margin-bottom: 1.5rem; }
+  .is-cell { padding: 0.7rem 1rem; }
+  .is-val { font-size: 0.82rem; }
+
+  .example-box { padding: 1rem; margin-bottom: 1.5rem; }
+  .section-title { font-size: 0.65rem; letter-spacing: 1px; }
+  .ex-row { font-size: 0.82rem; gap: 6px; padding: 8px 0; }
+  .ex-arrow { font-size: 0.9rem; }
+  .ex-tag { font-size: 0.6rem; padding: 2px 8px; }
+  .ex-note { font-size: 0.75rem; }
+
+  .config-grid { gap: 1rem; margin-bottom: 1.5rem; }
+  .cfg-card { padding: 1.2rem; }
+  .tier-btn { padding: 0.75rem 0.4rem; }
+  .tier-btn .price { font-size: 1.15rem; }
+  .tier-btn .sub { font-size: 0.62rem; }
+  .slider-wrap label { font-size: 0.82rem; }
+  .slider-wrap label span { font-size: 1.15rem; }
+
+  .summary { margin-bottom: 1.5rem; }
+  .sc { padding: 1rem 0.6rem; }
+  .sc .sl { font-size: 0.55rem; letter-spacing: 1px; }
+  .sc .sv { font-size: 1.2rem; }
+
+  .detail-grid { gap: 1rem; margin-bottom: 1.5rem; }
+  .dc { padding: 1rem; }
+
+  table th { font-size: 0.55rem; padding: 6px 4px; letter-spacing: 0.5px; }
+  table td { font-size: 0.75rem; padding: 7px 4px; }
+  td.mono { font-size: 0.75rem; }
+  .tag { font-size: 0.5rem; padding: 2px 6px; }
+
+  .bar-chart { gap: 6px; }
+  .bar-col { gap: 6px; }
+  .bl { font-size: 0.6rem; min-width: 42px; }
+  .bv { font-size: 0.58rem; }
+  .br { height: 20px; }
+
+  .footer { font-size: 0.68rem; padding: 1rem; }
+
+  .hero { padding: 2rem 0 1.5rem; }
+  .hero-title { font-size: 2rem; }
+  .hero-sub { font-size: 0.88rem; }
+  .hero-stats { grid-template-columns: repeat(3, 1fr); }
+  .hero-stat { padding: 1rem 0.5rem; }
+  .hero-stat .hs-num { font-size: 1.3rem; }
+  .features { grid-template-columns: 1fr; gap: 1rem; }
+  .science-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .science-section { padding: 1.2rem; }
+  .trust-bar { gap: 1rem; }
+
+  .main-tabs { border-radius: 10px; }
+  .main-tab { font-size: 0.78rem; padding: 12px 8px; }
+  .cl-item-header { padding: 12px 12px; gap: 10px; }
+  .cl-title { font-size: 0.82rem; }
+  .cl-item-body { padding: 0 12px 12px 48px; font-size: 0.75rem; }
+  .cl-info-grid { grid-template-columns: 1fr; }
+  .cl-alert { font-size: 0.78rem; padding: 0.8rem 1rem; }
+}
+
+/* Tablet tweaks */
+@media (min-width: 481px) and (max-width: 780px) {
+  .wrap { padding: 1.5rem 1rem 3rem; }
+  .product-cards { gap: 1rem; }
+  .config-grid { gap: 1rem; }
+
+  .ex-row { font-size: 0.85rem; }
+
+  table th { font-size: 0.58rem; }
+  table td { font-size: 0.8rem; }
+}
+
+/* Table horizontal scroll on very small screens */
+@media (max-width: 400px) {
+  .dc { padding: 0.8rem; overflow-x: auto; }
+  table { min-width: 640px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-texture"></div>
+
+<div class="wrap">
+
+  <header class="anim">
+    <div class="logo-row">
+      <div class="logo-icon">N</div>
+      <div class="brand">PREMIUM NMN<span class="alpha">ALPHA</span></div>
+    </div>
+  </header>
+
+  <!-- Main Tabs -->
+  <div class="main-tabs anim" style="animation-delay:0.03s">
+    <button class="main-tab active" onclick="switchTab('landing')">제품소개</button>
+    <button class="main-tab" onclick="switchTab('sim')">수익 시뮬레이터</button>
+    <button class="main-tab" onclick="switchTab('checklist')">보상플랜</button>
+  </div>
+
+  <!-- Tab 0: 랜딩페이지 -->
+  <div id="tab-landing" class="tab-panel active">
+
+    <div class="hero">
+      <div class="hero-badge">JAPAN FAMILY CARE · MADE IN JAPAN</div>
+      <div class="hero-title">
+        세포부터 다시<br><span class="accent">젊어지는</span> 시간<br>
+        <span style="font-size:0.5em;color:var(--text2);font-weight:400;">NMN 니코틴아미드 모노뉴클레오타이드</span>
+      </div>
+      <div class="hero-sub">
+        NAD+ 전구체 NMN으로 세포 에너지를 회복하고,<br>
+        노화의 시계를 되돌리는 프리미엄 항노화 솔루션
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hs-num" style="color:var(--gold);">99%</div>
+          <div class="hs-label">순도</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hs-num" style="color:var(--hermes);">10,000mg</div>
+          <div class="hs-label">1박스 함량</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hs-num" style="color:var(--text);">NAD+</div>
+          <div class="hs-label">부스터</div>
+        </div>
+      </div>
+      <button class="hero-cta" onclick="switchTab('sim')">수익 시뮬레이터 바로가기 →</button>
+    </div>
+
+    <!-- 나이별 NAD+ 감소 그래프 -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:2rem;margin-bottom:2.5rem;">
+      <h3 style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:0.5rem;">나이가 들수록 줄어드는 NAD+</h3>
+      <p style="font-size:0.78rem;color:var(--text2);margin-bottom:1.5rem;">40대부터 급격히 감소하여 60대에는 20대의 절반 이하로 떨어집니다</p>
+      <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+        <defs>
+          <linearGradient id="nadGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#E5B820" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#E5B820" stop-opacity="0.02"/>
+          </linearGradient>
+          <linearGradient id="nmnGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#50C878" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="#50C878" stop-opacity="0.02"/>
+          </linearGradient>
+        </defs>
+        <!-- Grid lines -->
+        <line x1="70" y1="40" x2="70" y2="250" stroke="#1e1e24" stroke-width="1"/>
+        <line x1="70" y1="250" x2="660" y2="250" stroke="#1e1e24" stroke-width="1"/>
+        <line x1="70" y1="82" x2="660" y2="82" stroke="#1e1e24" stroke-width="0.5" stroke-dasharray="4"/>
+        <line x1="70" y1="124" x2="660" y2="124" stroke="#1e1e24" stroke-width="0.5" stroke-dasharray="4"/>
+        <line x1="70" y1="166" x2="660" y2="166" stroke="#1e1e24" stroke-width="0.5" stroke-dasharray="4"/>
+        <line x1="70" y1="208" x2="660" y2="208" stroke="#1e1e24" stroke-width="0.5" stroke-dasharray="4"/>
+        <!-- Y axis labels -->
+        <text x="60" y="45" fill="#606070" font-size="11" text-anchor="end" font-family="Outfit,sans-serif">100%</text>
+        <text x="60" y="87" fill="#606070" font-size="11" text-anchor="end" font-family="Outfit,sans-serif">80%</text>
+        <text x="60" y="129" fill="#606070" font-size="11" text-anchor="end" font-family="Outfit,sans-serif">60%</text>
+        <text x="60" y="171" fill="#606070" font-size="11" text-anchor="end" font-family="Outfit,sans-serif">40%</text>
+        <text x="60" y="213" fill="#606070" font-size="11" text-anchor="end" font-family="Outfit,sans-serif">20%</text>
+        <!-- Y axis title -->
+        <text x="18" y="150" fill="#8888A0" font-size="10" text-anchor="middle" font-family="Noto Sans KR,sans-serif" transform="rotate(-90,18,150)">NAD+ 수치</text>
+        <!-- X axis labels -->
+        <text x="120" y="272" fill="#8888A0" font-size="11" text-anchor="middle" font-family="Outfit,sans-serif">20대</text>
+        <text x="218" y="272" fill="#8888A0" font-size="11" text-anchor="middle" font-family="Outfit,sans-serif">30대</text>
+        <text x="316" y="272" fill="#8888A0" font-size="11" text-anchor="middle" font-family="Outfit,sans-serif">40대</text>
+        <text x="414" y="272" fill="#8888A0" font-size="11" text-anchor="middle" font-family="Outfit,sans-serif">50대</text>
+        <text x="512" y="272" fill="#8888A0" font-size="11" text-anchor="middle" font-family="Outfit,sans-serif">60대</text>
+        <text x="610" y="272" fill="#8888A0" font-size="11" text-anchor="middle" font-family="Outfit,sans-serif">70대</text>
+        <!-- NAD+ decline area fill -->
+        <path d="M120,50 Q170,52 218,70 Q270,95 316,130 Q365,168 414,188 Q465,208 512,220 Q560,230 610,238 L610,250 L120,250 Z" fill="url(#nadGrad)"/>
+        <!-- NAD+ decline line -->
+        <path d="M120,50 Q170,52 218,70 Q270,95 316,130 Q365,168 414,188 Q465,208 512,220 Q560,230 610,238" fill="none" stroke="#E5B820" stroke-width="3" stroke-linecap="round"/>
+        <!-- NMN supplemented line (recovery) -->
+        <path d="M316,130 Q365,118 414,108 Q465,100 512,96 Q560,93 610,90" fill="none" stroke="#50C878" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="8,4"/>
+        <!-- NMN recovery area -->
+        <path d="M316,130 Q365,118 414,108 Q465,100 512,96 Q560,93 610,90 L610,238 Q560,230 512,220 Q465,208 414,188 Q365,168 316,130 Z" fill="url(#nmnGrad)"/>
+        <!-- Data points - decline -->
+        <circle cx="120" cy="50" r="6" fill="#E5B820"/>
+        <circle cx="218" cy="70" r="5" fill="#E5B820"/>
+        <circle cx="316" cy="130" r="5" fill="#E5B820"/>
+        <circle cx="414" cy="188" r="5" fill="#E5B820"/>
+        <circle cx="512" cy="220" r="5" fill="#E5B820"/>
+        <circle cx="610" cy="238" r="5" fill="#E5B820"/>
+        <!-- Data points - NMN recovery -->
+        <circle cx="316" cy="130" r="5" fill="#50C878"/>
+        <circle cx="414" cy="108" r="4" fill="#50C878"/>
+        <circle cx="512" cy="96" r="4" fill="#50C878"/>
+        <circle cx="610" cy="90" r="4" fill="#50C878"/>
+        <!-- Value labels on decline -->
+        <text x="120" y="40" fill="#E5B820" font-size="12" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="700">100%</text>
+        <text x="218" y="60" fill="#E5B820" font-size="11" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="600">85%</text>
+        <text x="316" y="120" fill="#E5B820" font-size="11" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="600">60%</text>
+        <text x="414" y="202" fill="#E5B820" font-size="11" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="600">35%</text>
+        <text x="512" y="236" fill="#E5B820" font-size="11" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="600">22%</text>
+        <text x="610" y="252" fill="#E5B820" font-size="11" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="600">15%</text>
+        <!-- NMN recovery label -->
+        <text x="610" y="80" fill="#50C878" font-size="11" text-anchor="middle" font-family="Outfit,sans-serif" font-weight="700">85%</text>
+        <!-- Annotation: NMN arrow -->
+        <text x="380" y="100" fill="#50C878" font-size="11" font-family="Noto Sans KR,sans-serif" font-weight="700">NMN 보충 시</text>
+        <path d="M350,105 L340,115" stroke="#50C878" stroke-width="1.5" fill="none" marker-end="none"/>
+        <!-- Annotation: decline point -->
+        <rect x="280" y="140" width="72" height="20" rx="4" fill="rgba(243,112,33,0.15)"/>
+        <text x="316" y="154" fill="#F37021" font-size="10" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-weight="700">급격한 감소</text>
+        <!-- Legend -->
+        <rect x="180" y="292" width="12" height="3" rx="1.5" fill="#E5B820"/>
+        <text x="198" y="296" fill="#C0C0C8" font-size="10" font-family="Noto Sans KR,sans-serif">자연 NAD+ 감소</text>
+        <rect x="340" y="292" width="12" height="3" rx="1.5" fill="#50C878" stroke-dasharray="4,2"/>
+        <line x1="340" y1="293.5" x2="352" y2="293.5" stroke="#50C878" stroke-width="2" stroke-dasharray="4,2"/>
+        <text x="360" y="296" fill="#C0C0C8" font-size="10" font-family="Noto Sans KR,sans-serif">NMN 보충 시 회복</text>
+      </svg>
+    </div>
+
+    <!-- 핵심 특징 3가지 -->
+    <div class="features">
+      <div class="feat-card">
+        <div class="feat-icon" style="background:var(--gold-dim);color:var(--gold);">⚡</div>
+        <h4>NAD+ 직접 전환</h4>
+        <p>NMN은 체내에서 NAD+로 가장 효율적으로 전환되는 전구체입니다. 세포 에너지 생산과 DNA 복구를 돕습니다.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:var(--hermes-dim);color:var(--hermes);">🧬</div>
+        <h4>시르투인 유전자 활성화</h4>
+        <p>장수 유전자로 불리는 시르투인(SIRT1~7)을 활성화시켜 세포 노화를 억제하고 대사 기능을 개선합니다.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon" style="background:rgba(80,200,120,0.1);color:#50C878;">🛡️</div>
+        <h4>임상 안전성 확인</h4>
+        <p>일본 게이오대 연구팀이 8주간 인체 임상에서 안전성을 확인했으며, 심각한 부작용이 보고되지 않았습니다.</p>
+      </div>
+    </div>
+
+    <!-- 과학적 근거 -->
+    <div class="science-section">
+      <h3>과학이 증명하는 NMN</h3>
+      <div class="science-grid">
+        <div class="sci-item">
+          <h5>하버드 의대 연구 (데이비드 싱클레어 교수)</h5>
+          <p>NMN을 투여한 실험쥐가 젊은 개체 수준의 체력과 대사 기능을 유지. 생물학적 나이 지표에서 극적인 역전을 보여줌.</p>
+        </div>
+        <div class="sci-item">
+          <h5>워싱턴 의대 연구 (이마이 신이치로 교수)</h5>
+          <p>생후 22개월(인간 60세) 쥐에 NMN 투여 → 세포가 생후 6개월(인간 20세) 수준으로 회복. 수명 16% 연장 확인.</p>
+        </div>
+        <div class="sci-item">
+          <h5>혈당 · 인슐린 개선</h5>
+          <p>NMN 보충이 혈중 인슐린 수치와 NAD+ 수치를 증가시켜 포도당 관리를 개선. 당뇨병 예방 가능성 시사.</p>
+        </div>
+        <div class="sci-item">
+          <h5>뇌 건강 · 혈관 탄성</h5>
+          <p>시르투인 활성화를 통해 알츠하이머 등 퇴행성 뇌질환에 긍정적 영향. 모세혈관 밀도 회복과 혈관 탄성 유지 효과.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- NMN 작용 메커니즘 -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:2rem;margin-bottom:2.5rem;">
+      <h3 style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:1.5rem;">NMN이 작용하는 원리</h3>
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem;">
+        <div style="background:var(--gold-dim);border:1px solid rgba(229,184,32,0.2);border-radius:10px;padding:12px 18px;text-align:center;">
+          <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:var(--gold);">NMN</div>
+          <div style="font-size:0.6rem;color:var(--text3);">섭취</div>
+        </div>
+        <div style="color:var(--text4);font-size:1.2rem;">→</div>
+        <div style="background:var(--hermes-dim);border:1px solid rgba(243,112,33,0.2);border-radius:10px;padding:12px 18px;text-align:center;">
+          <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:var(--hermes);">NAD+</div>
+          <div style="font-size:0.6rem;color:var(--text3);">전환</div>
+        </div>
+        <div style="color:var(--text4);font-size:1.2rem;">→</div>
+        <div style="background:rgba(80,200,120,0.08);border:1px solid rgba(80,200,120,0.2);border-radius:10px;padding:12px 18px;text-align:center;">
+          <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:#50C878;">시르투인</div>
+          <div style="font-size:0.6rem;color:var(--text3);">활성화</div>
+        </div>
+        <div style="color:var(--text4);font-size:1.2rem;">→</div>
+        <div style="background:rgba(100,149,237,0.08);border:1px solid rgba(100,149,237,0.2);border-radius:10px;padding:12px 18px;text-align:center;">
+          <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:#6495ED;">세포 회복</div>
+          <div style="font-size:0.6rem;color:var(--text3);">항노화</div>
+        </div>
+      </div>
+      <div style="font-size:0.78rem;color:var(--text2);line-height:1.7;text-align:center;">
+        나이가 들면 NAD+ 수치가 자연적으로 감소합니다.<br>
+        NMN 보충으로 NAD+ 수치를 회복시키면, 세포 에너지 생산 · DNA 복구 · 미토콘드리아 기능이 개선됩니다.
+      </div>
+    </div>
+
+    <!-- 자연 식품 속 NMN -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:2.5rem;">
+      <h3 style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:1rem;">자연 식품 속 NMN 함유량</h3>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <div style="text-align:center;padding:10px;background:var(--bg-card2);border-radius:10px;">
+          <div style="font-size:1.2rem;margin-bottom:4px;">🥦</div>
+          <div style="font-size:0.72rem;font-weight:600;color:var(--text);">브로콜리</div>
+          <div style="font-size:0.6rem;color:var(--text3);">0.25~1.12mg</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:var(--bg-card2);border-radius:10px;">
+          <div style="font-size:1.2rem;margin-bottom:4px;">🥑</div>
+          <div style="font-size:0.72rem;font-weight:600;color:var(--text);">아보카도</div>
+          <div style="font-size:0.6rem;color:var(--text3);">0.36~1.60mg</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:var(--bg-card2);border-radius:10px;">
+          <div style="font-size:1.2rem;margin-bottom:4px;">🥬</div>
+          <div style="font-size:0.72rem;font-weight:600;color:var(--text);">양배추</div>
+          <div style="font-size:0.6rem;color:var(--text3);">0.0~0.9mg</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:var(--bg-card2);border-radius:10px;">
+          <div style="font-size:1.2rem;margin-bottom:4px;">🍅</div>
+          <div style="font-size:0.72rem;font-weight:600;color:var(--text);">토마토</div>
+          <div style="font-size:0.6rem;color:var(--text3);">0.26~0.30mg</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:0.7rem;color:var(--text3);margin-top:12px;line-height:1.6;">
+        ※ 100g당 함유량 (mg) — 식품만으로는 유의미한 효과 기대 어려움<br>
+        <strong style="color:var(--gold);">프리미엄 NMN 1캡슐 = 브로콜리 약 40kg</strong>에 해당하는 NMN 함유
+      </div>
+    </div>
+
+    <!-- 제품 라인업 -->
+    <div style="margin-bottom:2.5rem;">
+      <h3 style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:1.2rem;text-align:center;">제품 라인업</h3>
+      <div class="product-cards" style="margin:0;">
+        <div class="p-card card-a">
+          <div class="p-header">
+            <span class="p-badge">1 BOX</span>
+            <span class="p-gen">1개월분</span>
+          </div>
+          <div class="p-body">
+            <div class="p-cell">
+              <div class="p-lbl">가격</div>
+              <div class="p-val big colored">$300</div>
+            </div>
+            <div class="p-cell">
+              <div class="p-lbl">배송</div>
+              <div class="p-val sm">일본→EMS 3일</div>
+              <div class="p-val sm2" style="color:var(--text3);">배송비 $20</div>
+            </div>
+          </div>
+        </div>
+        <div class="p-card card-b">
+          <div class="p-header">
+            <span class="p-badge">10 BOX</span>
+            <span class="p-gen">10개월분</span>
+          </div>
+          <div class="p-body">
+            <div class="p-cell">
+              <div class="p-lbl">가격</div>
+              <div class="p-val big colored">$3,000</div>
+            </div>
+            <div class="p-cell">
+              <div class="p-lbl">배송</div>
+              <div class="p-val sm">일본→EMS 3일</div>
+              <div class="p-val sm2 colored">배송비 무료</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trust -->
+    <div class="trust-bar">
+      <div class="trust-item"><strong>99%</strong> Pure NMN</div>
+      <div class="trust-item"><strong>Made in</strong> Japan</div>
+      <div class="trust-item"><strong>USDT</strong> 익일지급</div>
+      <div class="trust-item"><strong>GMP</strong> 인증 시설</div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:2rem;">
+      <button class="hero-cta" onclick="switchTab('sim')">수익 시뮬레이터 확인하기 →</button>
+    </div>
+
+  </div> <!-- end tab-landing -->
+
+  <!-- Tab 1: 시뮬레이터 -->
+  <div id="tab-sim" class="tab-panel">
+
+  <!-- 두 가지 매출 가이드 -->
+  <div class="product-cards anim" style="animation-delay:0.05s">
+    <div class="p-card card-a">
+      <div class="p-header">
+        <span class="p-badge">1 BOX</span>
+        <span class="p-gen">L1 시작 · 7대</span>
+      </div>
+      <div class="p-body">
+        <div class="p-cell">
+          <div class="p-lbl">가격</div>
+          <div class="p-val big colored">$300</div>
+        </div>
+        <div class="p-cell">
+          <div class="p-lbl">배송</div>
+          <div class="p-val sm">일본→EMS 3일</div>
+          <div class="p-val sm2" style="color:var(--text3);">배송비 $20</div>
+        </div>
+      </div>
+    </div>
+    <div class="p-card card-b">
+      <div class="p-header">
+        <span class="p-badge">10 BOX</span>
+        <span class="p-gen">L2 시작 · 7대</span>
+      </div>
+      <div class="p-body">
+        <div class="p-cell">
+          <div class="p-lbl">가격</div>
+          <div class="p-val big colored">$3,000</div>
+        </div>
+        <div class="p-cell">
+          <div class="p-lbl">배송</div>
+          <div class="p-val sm">일본→EMS 3일</div>
+          <div class="p-val sm2 colored">배송비 무료</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-strip anim" style="animation-delay:0.08s">
+    <div class="is-cell"><span class="is-lbl">제품</span><div class="is-val">NMN 항노화 (JAPAN FAMILY CARE)</div></div>
+    <div class="is-cell"><span class="is-lbl">정산</span><div class="is-val" style="color:var(--gold);">USDT 익일지급</div></div>
+  </div>
+
+  <!-- 마케팅 수익 분배표 -->
+  <div class="example-box anim" style="animation-delay:0.1s">
+    <div class="section-title">마케팅 수익 분배표</div>
+    <div style="overflow-x:auto;">
+      <table style="min-width:680px;">
+        <thead><tr>
+          <th>본인매출</th><th>직접추천</th><th>롤업조건</th><th>팀누적매출달성시</th><th>팀누적매출</th><th>추천인원</th><th>직급</th><th>후원대수</th><th>롤업보너스</th><th>공유수당1%</th><th>시상</th>
+        </tr></thead>
+        <tbody>
+          <tr class="act">
+            <td class="mono" style="font-weight:700;">$300</td>
+            <td class="mono" rowspan="2" style="color:var(--gold);font-weight:700;vertical-align:middle;">30%</td>
+            <td class="mono">1대까지</td>
+            <td></td>
+            <td class="mono">$300</td><td>1명이상</td>
+            <td class="mono" style="font-weight:700;">L1</td><td class="mono">1대</td>
+            <td class="mono">5%</td>
+            <td>-</td><td>-</td>
+          </tr>
+          <tr class="act">
+            <td class="mono" style="font-weight:700;">$3,000</td>
+            <td class="mono">5대까지</td>
+            <td></td>
+            <td class="mono">$3,000</td><td>1명이상</td>
+            <td class="mono" style="font-weight:700;">L2</td><td class="mono">2대</td>
+            <td class="mono">5%</td>
+            <td>-</td><td>-</td>
+          </tr>
+          <tr class="act">
+            <td></td><td></td><td></td><td></td>
+            <td class="mono">$30,000</td><td>1명이상</td>
+            <td class="mono" style="font-weight:700;">L3</td><td class="mono">3대</td>
+            <td class="mono">5%</td>
+            <td class="mono" style="color:var(--gold);">20%, n/1</td>
+            <td style="color:var(--text4);">-</td>
+          </tr>
+          <tr class="act">
+            <td></td><td></td><td></td><td></td>
+            <td class="mono">$100,000</td><td>1명이상</td>
+            <td class="mono" style="font-weight:700;">L4</td><td class="mono">4대</td>
+            <td class="mono">5%</td>
+            <td class="mono" style="color:var(--gold);">20%, n/1</td>
+            <td style="color:var(--text4);">-</td>
+          </tr>
+          <tr class="act">
+            <td></td><td></td><td></td>
+            <td></td>
+            <td class="mono">$300,000</td><td>1명이상</td>
+            <td class="mono" style="font-weight:700;">L5</td><td class="mono">5대</td>
+            <td class="mono">5%</td>
+            <td class="mono" style="color:var(--gold);">20%, n/1</td>
+            <td style="color:var(--text4);">-</td>
+          </tr>
+          <tr class="act">
+            <td></td><td></td><td></td>
+            <td style="font-size:0.7rem;color:var(--text3);">롤업보너스</td>
+            <td class="mono">$500,000</td><td>2명이상</td>
+            <td class="mono" style="font-weight:700;">L6</td><td class="mono">6대</td>
+            <td class="mono">3%</td>
+            <td class="mono" style="color:var(--gold);">20%, n/1</td>
+            <td style="color:var(--text4);">-</td>
+          </tr>
+          <tr class="act">
+            <td></td><td></td><td></td>
+            <td style="font-size:0.7rem;color:var(--text3);">롤업보너스</td>
+            <td class="mono">$700,000</td><td>3명이상</td>
+            <td class="mono" style="font-weight:700;">L7</td><td class="mono">7대</td>
+            <td class="mono">3%</td>
+            <td class="mono" style="color:var(--gold);">20%, n/1</td>
+            <td style="color:var(--text4);">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ex-note">
+      ※ 직접추천 30% = 하부 매출금액 × 30% (누구에게나 고정)<br>
+      ※ 후원수당: 2대~7대 (5%/5%/5%/5%/3%/3%) 직급별 적용 대수 확대<br>
+      ※ 롤업보너스 조건: $300가입=1대까지, $3,000가입=5대까지<br>
+      ※ 공유수당 1%: L3~L7 자격자에게 100분율 계산, 각 20% 배분 (n/1)<br>
+      ※ 최다추천시상: 총 매출의 1%를 100분율 배분 50:30:20 (1등:2등:3등)<br>
+      ※ 최대매출시상: 총 매출의 1%를 100분율 배분 50:30:20 (1등:2등:3등)
+    </div>
+  </div>
+
+  <!-- 설정 -->
+  <div class="config-grid anim" style="animation-delay:0.15s">
+    <div class="cfg-card">
+      <div class="section-title">내 사업자 등급 (대수 결정)</div>
+      <div class="tier-btns">
+        <button class="tier-btn s1" id="my300" onclick="setMe(300)">
+          <span class="price">$300</span>
+          <span class="sub">L1 시작 (7대)</span>
+        </button>
+        <button class="tier-btn" id="my3000" onclick="setMe(3000)">
+          <span class="price">$3,000</span>
+          <span class="sub">L2 시작 (7대)</span>
+        </button>
+      </div>
+    </div>
+    <div class="cfg-card">
+      <div class="section-title">하부 1인당 매출금액</div>
+      <div class="tier-btns">
+        <button class="tier-btn s1" id="sb300" onclick="setSub(300)">
+          <span class="price">$300</span>
+          <span class="sub">1 BOX</span>
+        </button>
+        <button class="tier-btn" id="sb3000" onclick="setSub(3000)">
+          <span class="price">$3,000</span>
+          <span class="sub">10 BOX</span>
+        </button>
+      </div>
+    </div>
+    <div class="cfg-card">
+      <div class="section-title">단계별 모집 인원</div>
+      <div class="slider-wrap">
+        <label>1인당 모집 <span id="rd">3명</span></label>
+        <input type="range" min="1" max="5" value="3" step="1" id="rec" oninput="calc()">
+        <div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 요약 -->
+  <div class="summary anim" style="animation-delay:0.2s">
+    <div class="sc"><div class="sl">시작 직급</div><div class="sv c-gold" id="s1">L1</div></div>
+    <div class="sc"><div class="sl">하부 1인 매출</div><div class="sv c-orange" id="s2">$300</div></div>
+    <div class="sc"><div class="sl">총 하위 인원</div><div class="sv c-white" id="s3">3명</div></div>
+    <div class="sc"><div class="sl">총 매출</div><div class="sv c-white" id="s5">$900</div></div>
+    <div class="sc"><div class="sl">월 예상 총 수익</div><div class="sv c-gold" id="s4">$270</div></div>
+  </div>
+
+  <!-- 1. 추천 계산기 -->
+  <div class="dc anim" style="margin-bottom:1.5rem;">
+    <div class="section-title" style="color:var(--gold);">① 추천 계산기 (직접추천 30%)</div>
+    <div id="calc-referral"></div>
+  </div>
+
+  <!-- 2. 후원 계산기 -->
+  <div class="dc anim" style="margin-bottom:1.5rem;overflow-x:auto;">
+    <div class="section-title" style="color:var(--hermes);">② 후원 계산기 (2대~7대 롤업보너스)</div>
+    <table id="calc-sponsor"></table>
+    <div class="bar-chart" id="bars" style="margin-top:1rem;"></div>
+  </div>
+
+  <!-- 3. 공유 계산기 -->
+  <div class="dc anim" style="margin-bottom:1.5rem;">
+    <div class="section-title" style="color:#50C878;">③ 공유 계산기 (1% · L3~L7 · 20% n/1)</div>
+    <div id="calc-share"></div>
+  </div>
+
+  <!-- 4. 시상 -->
+  <div class="dc anim" style="margin-bottom:1.5rem;">
+    <div class="section-title" style="color:var(--hermes);">④ 시상 (매출의 각 1%)</div>
+    <div id="calc-awards"></div>
+  </div>
+
+  <!-- 종합 수익 -->
+  <div class="dc anim" style="margin-bottom:2.5rem;">
+    <div class="section-title" style="color:var(--gold);">종합 수익 요약</div>
+    <div id="calc-total"></div>
+  </div>
+
+  </div> <!-- end tab-sim -->
+
+  <!-- Tab 2: 보상플랜 체크리스트 -->
+  <div id="tab-checklist" class="tab-panel">
+
+    <div class="cl-date">24.03.18 이원재 - 신규법인 추가로 인한 보상플랜 내용 정리</div>
+
+    <!-- 65% 실시간 배분 게이지 -->
+    <div style="background:var(--bg-card);border:1.5px solid rgba(229,184,32,0.3);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;" id="gauge-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div style="font-size:0.72rem;color:var(--gold);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;">매출 대비 배분 현황</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;" id="gauge-total">65%</div>
+      </div>
+      <!-- 게이지 바 -->
+      <div style="position:relative;height:36px;background:var(--border2);border-radius:8px;overflow:hidden;margin-bottom:8px;">
+        <div id="bar-commission" style="position:absolute;left:0;top:0;height:100%;background:var(--gold);transition:width 0.4s;border-radius:8px 0 0 8px;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:0.6rem;font-weight:700;color:var(--bg);"></div>
+        <div id="bar-center" style="position:absolute;top:0;height:100%;background:var(--hermes);transition:left 0.4s,width 0.4s;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:0.55rem;font-weight:700;color:#fff;"></div>
+        <div id="bar-reserve" style="position:absolute;top:0;height:100%;background:rgba(255,255,255,0.06);transition:left 0.4s,width 0.4s;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:0.55rem;font-weight:700;color:var(--text3);border-radius:0 8px 8px 0;"></div>
+        <!-- 65% 마지노선 -->
+        <div style="position:absolute;left:65%;top:-2px;bottom:-2px;width:2px;background:#ff4444;z-index:2;"></div>
+        <div style="position:absolute;left:65%;top:-14px;font-size:0.5rem;color:#ff4444;font-weight:700;transform:translateX(-50%);">65%</div>
+      </div>
+      <!-- 수치 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;" id="gauge-cards">
+        <div style="background:var(--bg-card2);border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:0.5rem;color:var(--text3);letter-spacing:1px;">추천보너스</div>
+          <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--gold);" id="g-comm">62%</div>
+        </div>
+        <div style="background:var(--bg-card2);border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:0.5rem;color:var(--text3);letter-spacing:1px;">센터 Fee</div>
+          <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--hermes);" id="g-center">3%</div>
+        </div>
+        <div style="background:var(--bg-card2);border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:0.5rem;color:var(--text3);letter-spacing:1px;">회사 유보</div>
+          <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--text);" id="g-reserve">35%</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 수수료율 슬라이더 -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;">
+      <div style="font-size:0.72rem;color:var(--gold);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;">대수별 추천보너스 수수료 조절</div>
+      <div id="rate-sliders"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+        <div style="font-size:0.75rem;color:var(--text2);">추천보너스 합계: <strong style="color:var(--gold);" id="rate-sum">62%</strong></div>
+        <button onclick="resetRates()" style="padding:6px 14px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text3);font-size:0.65rem;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">기본값 초기화</button>
+      </div>
+    </div>
+
+    <!-- 센터 Fee -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;">
+      <div style="font-size:0.72rem;color:var(--hermes);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">센터 Fee</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <input type="range" min="0" max="10" value="2" step="0.5" id="sl-center" oninput="updatePlan()" style="flex:1;">
+        <span style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--hermes);min-width:40px;text-align:right;" id="v-center">2%</span>
+      </div>
+      <div style="font-size:0.65rem;color:var(--text3);margin-top:8px;">매출에서 선차감 → 플랫폼 운영비</div>
+    </div>
+
+    <!-- 출금 수수료 (표시만) -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-size:0.68rem;color:var(--text3);font-weight:600;">출금 수수료</div>
+        <div style="font-size:0.6rem;color:var(--text4);margin-top:2px;">65% 배분과 별도 · USDT 출금 시 차감</div>
+      </div>
+      <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text3);">1%</div>
+    </div>
+
+    <!-- $300 매출 시뮬 -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;">
+      <div style="font-size:0.72rem;color:var(--gold);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">실제 배분 시뮬레이션</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <span style="font-size:0.8rem;color:var(--text2);">하부 매출금액:</span>
+        <button onclick="setSimAmt(300)" id="sim300" class="tier-btn s1" style="flex:0;padding:8px 20px;font-size:0.8rem;">$300</button>
+        <button onclick="setSimAmt(3000)" id="sim3000" class="tier-btn" style="flex:0;padding:8px 20px;font-size:0.8rem;">$3,000</button>
+      </div>
+      <div id="sim-table"></div>
+    </div>
+
+    <!-- 나머지 체크리스트 -->
+    <div class="cl-section">
+      <div class="cl-section-title" style="display:flex;align-items:center;">
+        기타 전산개발 항목
+        <button class="cl-toggle-btn" onclick="toggleAllItems()">전체 펼치기/접기</button>
+      </div>
+
+      <div class="cl-item" onclick="toggleItem(this)">
+        <div class="cl-item-header">
+          <div class="cl-num">1</div>
+          <div class="cl-title">승급 볼륨 등 조건</div>
+          <span class="cl-status done">설계완료</span>
+          <span class="cl-arrow">▼</span>
+        </div>
+        <div class="cl-item-body">
+          Level = 수익 받는 대수. 올라갈수록 더 많은 대수에서 수익
+          <div class="cl-example" style="margin-top:10px;" id="cl-upgrade-table"></div>
+        </div>
+      </div>
+
+      <div class="cl-item" onclick="toggleItem(this)">
+        <div class="cl-item-header">
+          <div class="cl-num">2</div>
+          <div class="cl-title">유지 조건</div>
+          <span class="cl-status done">설계완료</span>
+          <span class="cl-arrow">▼</span>
+        </div>
+        <div class="cl-item-body">
+          승급 GV의 50%를 유지선으로 설정
+          <div class="cl-example" style="margin-top:10px;">
+            ① 개인 월 <strong style="color:var(--gold);">300 PV</strong> 이상<br>
+            ② 승급 GV의 <strong style="color:var(--gold);">50%</strong> 이상 유지<br><br>
+            <strong>미달 시:</strong> 1개월 경고 → 2개월 연속 시 1단계 강등<br>
+            재승급 → 원래 조건 100% 달성 시 즉시 복원
+          </div>
+        </div>
+      </div>
+
+      <div class="cl-item" onclick="toggleItem(this)">
+        <div class="cl-item-header">
+          <div class="cl-num">3</div>
+          <div class="cl-title">직급별 수당 구조</div>
+          <span class="cl-status done">설계완료</span>
+          <span class="cl-arrow">▼</span>
+        </div>
+        <div class="cl-item-body" id="cl-titles-body">
+        </div>
+      </div>
+
+      <div class="cl-item" onclick="toggleItem(this)">
+        <div class="cl-item-header">
+          <div class="cl-num">4</div>
+          <div class="cl-title">계보도 표시 내용</div>
+          <span class="cl-status done">설계완료</span>
+          <span class="cl-arrow">▼</span>
+        </div>
+        <div class="cl-item-body">
+          <div class="cl-example">
+            ① 이름 ② 등급+호칭 ③ 직추천 수 ④ 월 개인PV ⑤ 월 GV ⑥ 가입일<br><br>
+            ※ 트리 최대 내 수익 대수까지 펼쳐보기<br>
+            ※ 비활성(유지 미달) 회원 → 회색 처리
+          </div>
+        </div>
+      </div>
+
+      <div class="cl-item" onclick="toggleItem(this)">
+        <div class="cl-item-header">
+          <div class="cl-num">5</div>
+          <div class="cl-title">상위→하위 정보 열람 범위</div>
+          <span class="cl-status done">설계완료</span>
+          <span class="cl-arrow">▼</span>
+        </div>
+        <div class="cl-item-body">
+          <div class="cl-example">
+            <strong>직추천(1대):</strong> 이름, 연락처, 등급, PV, GV, 가입일<br>
+            <strong>2대~내 수익 대수:</strong> 이름, 등급, PV, GV (연락처 비공개)<br>
+            <strong>초과:</strong> 열람 불가 (GV 합산만 반영)<br><br>
+            ※ Lv.6+ → 리더 특권 전체 하위 열람<br>
+            ※ 출금·수당 내역은 본인만 확인
+          </div>
+        </div>
+      </div>
+
+      <div class="cl-item" onclick="toggleItem(this)">
+        <div class="cl-item-header">
+          <div class="cl-num">6</div>
+          <div class="cl-title">공유수당 유무</div>
+          <span class="cl-status done">설계완료</span>
+          <span class="cl-arrow">▼</span>
+        </div>
+        <div class="cl-item-body">
+          <strong style="color:var(--gold);">L3~L7 적용 · 3% (1/n)</strong> — 추천인원 조건 달성 시
+          <div class="cl-example" style="margin-top:8px;">
+            <strong>지급 방식:</strong> 매출의 3%를 해당 직급 자격자 수(n)로 균등 배분<br><br>
+            <strong>조건:</strong> 각 직급별 추천인원 충족 시 자격 부여<br>
+            · L3: 1명이상 / L4: 1명이상 / L5: 1명이상<br>
+            · L6: 2명이상 / L7: 3명이상<br><br>
+            <strong>예시:</strong> L5 자격자가 4명이면 → 3% ÷ 4 = 0.75%씩 지급
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div> <!-- end tab-checklist -->
+
+  <div class="footer anim" style="animation-delay:0.3s">
+    <strong>PREMIUM NMN ALPHA · 수익 구조 요약</strong><br>
+    직접추천 30% · 후원 7대 무조건 적용 (30+5+5+5+5+3+3 = 56%)<br>
+    롤업보너스 3~5% · 공유수당 1%(L3~L7 20% n/1) · 시상 각 1% 100분율 배분(50:30:20)<br>
+    매출은 USDT(테더)로 익일 지급 · JAPAN FAMILY CARE · MADE IN JAPAN
+  </div>
+
+</div>
+
+<script>
+let me = 300, sub = 300;
+
+const R = [
+  {g:1,l:'1대',p:30},{g:2,l:'2대',p:5},{g:3,l:'3대',p:5},
+  {g:4,l:'4대',p:5},{g:5,l:'5대',p:5},{g:6,l:'6대',p:3},
+  {g:7,l:'7대',p:3}
+];
+
+// 마케팅표 데이터
+const LEVELS = [
+  {lv:'L1', teamSales:300, gen:1, rollup:5, minRef:1, share:0, bonus:0, rollupCond:''},
+  {lv:'L2', teamSales:3000, gen:2, rollup:5, minRef:1, share:0, bonus:0, rollupCond:''},
+  {lv:'L3', teamSales:30000, gen:3, rollup:5, minRef:1, share:20, bonus:0, rollupCond:''},
+  {lv:'L4', teamSales:100000, gen:4, rollup:5, minRef:1, share:20, bonus:0, rollupCond:''},
+  {lv:'L5', teamSales:300000, gen:5, rollup:5, minRef:1, share:20, bonus:00, rollupCond:''},
+  {lv:'L6', teamSales:500000, gen:6, rollup:3, minRef:2, share:20, bonus:0, rollupCond:'롤업보너스'},
+  {lv:'L7', teamSales:700000, gen:7, rollup:3, minRef:3, share:20, bonus:0, rollupCond:'롤업보너스'},
+];
+// 롤업보너스 조건: $300가입=1대까지, $3000가입=5대까지
+// 공유수당: 총 1%, L3~L7 자격자에게 각 20% 배분 (n/1)
+
+function setMe(v) {
+  me = v;
+  document.getElementById('my300').className = v===300?'tier-btn s1':'tier-btn';
+  document.getElementById('my3000').className = v===3000?'tier-btn s2':'tier-btn';
+  calc();
+}
+function setSub(v) {
+  sub = v;
+  document.getElementById('sb300').className = v===300?'tier-btn s1':'tier-btn';
+  document.getElementById('sb3000').className = v===3000?'tier-btn s2':'tier-btn';
+  calc();
+}
+
+function calc() {
+  const n = parseInt(document.getElementById('rec').value);
+  document.getElementById('rd').textContent = n + '명';
+  const rollupMaxGen = me===300 ? 1 : 5; // 롤업조건: $300=1대, $3000=5대
+
+  // Build generation data
+  const genRates = [30,5,5,5,5,3,3]; // 1대~7대
+  let rows=[], totRef=0, totSponsor=0, ppl=0, tSales=0;
+
+  for (let i=0; i<7; i++) {
+    const g = i+1;
+    const cnt = Math.pow(n, g);
+    const perRef = g===1 ? Math.round(sub * 30 / 100) : 0;
+    const refRev = g===1 ? cnt * perRef : 0;
+    const sponRate = g>=2 ? genRates[i] : 0;
+    const perSpon = Math.round(sub * sponRate / 100);
+    const sponRev = g>=2 ? cnt * perSpon : 0;
+    const sales = cnt * sub;
+    ppl += cnt;
+    tSales += sales;
+    totRef += refRev;
+    totSponsor += sponRev;
+    rows.push({g, cnt, sales, perRef, refRev, sponRate, perSpon, sponRev, label: g+'대'});
+  }
+
+  // 공유수당: 매출 1%, L3~L7 자격자에게 20%씩 (n/1)
+  const sharePool = Math.round(tSales * 0.01);
+  const sharePerLevel = Math.round(sharePool * 0.20);
+
+  const totAll = totRef + totSponsor;
+
+  // Summary cards
+  document.getElementById('s1').textContent = (me===300?'L1':'L2') + ' (7대)';
+  document.getElementById('s2').textContent = '$'+sub.toLocaleString();
+  document.getElementById('s3').textContent = ppl.toLocaleString()+'명';
+  document.getElementById('s5').textContent = '$'+tSales.toLocaleString();
+  document.getElementById('s4').textContent = '$'+totAll.toLocaleString();
+
+  // ===== ① 추천 계산기 =====
+  const refEl = document.getElementById('calc-referral');
+  const directCnt = Math.pow(n, 1);
+  const directPer = Math.round(sub * 30 / 100);
+  const directTotal = directCnt * directPer;
+  refEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
+      <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">직접추천 인원</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-top:4px;">${directCnt}명</div>
+      </div>
+      <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">1인당 수익</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);margin-top:4px;">$${directPer.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">추천 수익 합계</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);margin-top:4px;">$${directTotal.toLocaleString()}</div>
+      </div>
+    </div>
+    <div style="font-size:0.72rem;color:var(--text2);">하부 매출 $${sub.toLocaleString()} × 30% = <strong style="color:var(--gold);">$${directPer.toLocaleString()}</strong> × ${directCnt}명 = <strong style="color:var(--gold);">$${directTotal.toLocaleString()}</strong></div>`;
+
+  // ===== ② 후원 계산기 =====
+  let sh = `<thead><tr><th>대수</th><th>%</th><th>인원</th><th>매출</th><th>누적매출</th><th>인당수익</th><th>총수익</th><th>누적수익</th></tr></thead><tbody>`;
+  let cumSales=0, cumSpon=0, mx=0;
+  for (const r of rows) {
+    if(r.g===1) { cumSales += r.sales; continue; } // 1대는 추천이므로 후원에서 제외
+    cumSales += r.sales;
+    cumSpon += r.sponRev;
+    if(r.sponRev > mx) mx = r.sponRev;
+    sh += `<tr class="act"><td style="font-weight:700">${r.label}</td><td class="mono">${r.sponRate}%</td><td class="mono">${r.cnt.toLocaleString()}</td><td class="mono" style="color:var(--text2)">$${r.sales.toLocaleString()}</td><td class="mono" style="color:var(--hermes)">$${cumSales.toLocaleString()}</td><td class="mono">$${r.perSpon.toLocaleString()}</td><td class="mono">$${r.sponRev.toLocaleString()}</td><td class="mono" style="color:var(--gold)">$${cumSpon.toLocaleString()}</td></tr>`;
+  }
+  sh += `<tr class="totr"><td colspan="6">후원 수익 합계</td><td colspan="2" style="color:var(--gold);">$${totSponsor.toLocaleString()}</td></tr></tbody>`;
+  document.getElementById('calc-sponsor').innerHTML = sh;
+
+  // Bar chart
+  document.getElementById('bars').innerHTML = rows.filter(r=>r.g>=2).map(r=>{
+    const w = mx>0 ? Math.max(4,(r.sponRev/mx)*100) : 4;
+    return `<div class="bar-col"><div class="bl">${r.label} ${r.sponRate}%</div><div class="br on" style="width:${w}%"></div><div class="bv">$${r.sponRev.toLocaleString()}</div></div>`;
+  }).join('');
+
+  // ===== ③ 공유 계산기 =====
+  const shareEl = document.getElementById('calc-share');
+  shareEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+      <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">총 매출의 1%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:#50C878;margin-top:4px;">$${sharePool.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">대상</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-top:4px;">L3~L7</div>
+      </div>
+      <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">레벨당 배분</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:#50C878;margin-top:4px;">20%</div>
+      </div>
+    </div>
+    <div style="background:var(--bg-card2);border-radius:10px;padding:12px;margin-bottom:12px;">
+      <div style="font-size:0.72rem;color:var(--text2);line-height:1.8;">
+        총 매출 $${tSales.toLocaleString()} × 1% = <strong style="color:#50C878;">$${sharePool.toLocaleString()}</strong> (공유수당 풀)<br>
+        각 레벨(L3~L7)에 20%씩 배분 → 레벨당 <strong style="color:#50C878;">$${sharePerLevel.toLocaleString()}</strong><br>
+        해당 레벨 자격자 n명이 균등 배분 (1/n)
+      </div>
+    </div>
+    <table style="width:100%;font-size:0.75rem;">
+      <thead><tr>
+        <th>직급</th><th>배분율</th><th>레벨별 금액</th><th>자격자 1명일때</th><th>자격자 5명일때</th>
+      </tr></thead>
+      <tbody>
+        ${['L3','L4','L5','L6','L7'].map(lv => `<tr class="act">
+          <td style="font-weight:700;">${lv}</td>
+          <td class="mono">20%</td>
+          <td class="mono" style="color:#50C878;">$${sharePerLevel.toLocaleString()}</td>
+          <td class="mono" style="color:var(--gold);">$${sharePerLevel.toLocaleString()}</td>
+          <td class="mono" style="color:var(--text2);">$${Math.round(sharePerLevel/5).toLocaleString()}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+
+  // ===== ④ 시상 계산기 =====
+  const awardRefPool = Math.round(tSales * 0.01);
+  const awardSalesPool = Math.round(tSales * 0.01);
+  const awEl = document.getElementById('calc-awards');
+  awEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+      <div style="background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:14px;">
+        <div style="font-size:0.7rem;color:var(--hermes);font-weight:700;margin-bottom:10px;">최다추천시상 (총 매출의 1%를 100분율 배분)</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;color:var(--hermes);margin-bottom:10px;">$${awardRefPool.toLocaleString()}</div>
+        <div style="display:flex;gap:6px;">
+          <div style="flex:50;background:var(--hermes);border-radius:4px;padding:6px;text-align:center;font-size:0.62rem;font-weight:700;color:#fff;">1등 50%<br>$${Math.round(awardRefPool*0.5).toLocaleString()}</div>
+          <div style="flex:30;background:rgba(243,112,33,0.6);border-radius:4px;padding:6px;text-align:center;font-size:0.62rem;font-weight:700;color:#fff;">2등 30%<br>$${Math.round(awardRefPool*0.3).toLocaleString()}</div>
+          <div style="flex:20;background:rgba(243,112,33,0.35);border-radius:4px;padding:6px;text-align:center;font-size:0.62rem;font-weight:700;color:#fff;">3등 20%<br>$${Math.round(awardRefPool*0.2).toLocaleString()}</div>
+        </div>
+      </div>
+      <div style="background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:14px;">
+        <div style="font-size:0.7rem;color:var(--gold);font-weight:700;margin-bottom:10px;">최대매출시상 (총 매출의 1%를 100분율 배분)</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:10px;">$${awardSalesPool.toLocaleString()}</div>
+        <div style="display:flex;gap:6px;">
+          <div style="flex:50;background:var(--gold);border-radius:4px;padding:6px;text-align:center;font-size:0.62rem;font-weight:700;color:var(--bg);">1등 50%<br>$${Math.round(awardSalesPool*0.5).toLocaleString()}</div>
+          <div style="flex:30;background:rgba(229,184,32,0.6);border-radius:4px;padding:6px;text-align:center;font-size:0.62rem;font-weight:700;color:var(--bg);">2등 30%<br>$${Math.round(awardSalesPool*0.3).toLocaleString()}</div>
+          <div style="flex:20;background:rgba(229,184,32,0.35);border-radius:4px;padding:6px;text-align:center;font-size:0.62rem;font-weight:700;color:var(--bg);">3등 20%<br>$${Math.round(awardSalesPool*0.2).toLocaleString()}</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:0.68rem;color:var(--text3);line-height:1.6;">
+      ※ 각 시상 = 총 매출의 1%를 100분율로 배분 | 1등 50% : 2등 30% : 3등 20%
+    </div>`;
+
+  const totalAwards = awardRefPool + awardSalesPool;
+
+  // ===== 종합 수익 =====
+  const grandTotal = totAll + sharePool + totalAwards;
+  const totalEl = document.getElementById('calc-total');
+  totalEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;">
+      <div style="background:var(--bg-card2);padding:12px;text-align:center;">
+        <div style="font-size:0.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">① 추천 30%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--gold);margin-top:4px;">$${directTotal.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--bg-card2);padding:12px;text-align:center;">
+        <div style="font-size:0.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">② 후원 2~7대</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--hermes);margin-top:4px;">$${totSponsor.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--bg-card2);padding:12px;text-align:center;">
+        <div style="font-size:0.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">③ 공유 1%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:#50C878;margin-top:4px;">$${sharePool.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--bg-card2);padding:12px;text-align:center;">
+        <div style="font-size:0.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">④ 시상 2%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--hermes);margin-top:4px;">$${totalAwards.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--bg-card2);padding:12px;text-align:center;">
+        <div style="font-size:0.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">총 수익</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--gold);margin-top:4px;">$${grandTotal.toLocaleString()}</div>
+      </div>
+    </div>
+    <div style="font-size:0.7rem;color:var(--text3);line-height:1.6;">
+      총 매출 $${tSales.toLocaleString()} 대비 배분률: <strong style="color:var(--gold);">${(tSales>0?((grandTotal)/tSales*100).toFixed(1):0)}%</strong>
+    </div>`;
+}
+
+calc();
+
+// Tab switching
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  const idx = tab === 'landing' ? 0 : tab === 'sim' ? 1 : 2;
+  document.querySelectorAll('.main-tab')[idx].classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// Checklist accordion
+function toggleItem(el) {
+  el.classList.toggle('open');
+}
+function toggleAllItems() {
+  const items = document.querySelectorAll('.cl-item');
+  const allOpen = [...items].every(i => i.classList.contains('open'));
+  items.forEach(i => allOpen ? i.classList.remove('open') : i.classList.add('open'));
+}
+
+// ===== Interactive 65% Plan =====
+const DEFAULT_RATES = [30,5,5,5,5,3,3];
+let rates = [...DEFAULT_RATES];
+let simAmt = 300;
+const LIMIT = 65;
+
+const titles = ['Level 1','Level 2','Level 3','Level 4','Level 5','Level 6','Level 7'];
+const titlesKr = ['L1','L2','L3','L4','L5','L6','L7'];
+const upgradeReq = [1,1,1,1,1,2,3];
+const upgradeGV = [300,3000,30000,100000,300000,500000,700000];
+
+function buildSliders() {
+  const box = document.getElementById('rate-sliders');
+  let h = '';
+  for (let i = 0; i < 7; i++) {
+    h += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <span style="font-size:0.72rem;color:var(--text2);min-width:32px;font-weight:600;">${i+1}대</span>
+      <input type="range" min="0" max="35" value="${rates[i]}" step="1" id="sl-r${i}" oninput="onRateChange(${i})" style="flex:1;">
+      <span style="font-family:'Outfit',sans-serif;font-size:0.95rem;font-weight:700;color:var(--gold);min-width:38px;text-align:right;" id="v-r${i}">${rates[i]}%</span>
+    </div>`;
+  }
+  box.innerHTML = h;
+}
+
+function onRateChange(idx) {
+  rates[idx] = parseInt(document.getElementById('sl-r'+idx).value);
+  const commSum = rates.reduce((a,b)=>a+b,0);
+  const centerFee = parseFloat(document.getElementById('sl-center').value);
+  const total = commSum + centerFee;
+
+  // Auto-adjust: if over 65%, reduce this slider back
+  if (total > LIMIT) {
+    const maxAllowed = LIMIT - centerFee - rates.reduce((a,b,i)=> i===idx? a : a+b, 0);
+    rates[idx] = Math.max(0, Math.floor(maxAllowed));
+    document.getElementById('sl-r'+idx).value = rates[idx];
+  }
+  updatePlan();
+}
+
+function resetRates() {
+  rates = [...DEFAULT_RATES];
+  for (let i=0;i<7;i++) {
+    document.getElementById('sl-r'+i).value = rates[i];
+  }
+  document.getElementById('sl-center').value = 2;
+  updatePlan();
+}
+
+function setSimAmt(v) {
+  simAmt = v;
+  document.getElementById('sim300').className = v===300?'tier-btn s1':'tier-btn';
+  document.getElementById('sim3000').className = v===3000?'tier-btn s2':'tier-btn';
+  updatePlan();
+}
+
+function updatePlan() {
+  const commSum = rates.reduce((a,b)=>a+b,0);
+  const centerFee = parseFloat(document.getElementById('sl-center').value);
+  const total = commSum + centerFee;
+  const reserve = 100 - total;
+  const remain = LIMIT - total;
+
+  // Update slider labels
+  for (let i=0;i<7;i++) {
+    document.getElementById('v-r'+i).textContent = rates[i]+'%';
+  }
+  document.getElementById('v-center').textContent = centerFee+'%';
+  document.getElementById('rate-sum').textContent = commSum+'%';
+
+  // Gauge
+  const isOver = total > LIMIT;
+  const totalColor = isOver ? '#ff4444' : 'var(--gold)';
+  document.getElementById('gauge-total').style.color = totalColor;
+  document.getElementById('gauge-total').textContent = total.toFixed(1) + '%';
+  document.getElementById('gauge-box').style.borderColor = isOver ? 'rgba(255,68,68,0.5)' : 'rgba(229,184,32,0.3)';
+
+  // Bars
+  const commW = commSum;
+  const centerW = centerFee;
+  document.getElementById('bar-commission').style.width = commW+'%';
+  document.getElementById('bar-commission').textContent = '추천 '+commSum+'%';
+  document.getElementById('bar-center').style.left = commW+'%';
+  document.getElementById('bar-center').style.width = centerW+'%';
+  document.getElementById('bar-center').textContent = centerFee > 1.5 ? centerFee+'%' : '';
+  document.getElementById('bar-reserve').style.left = (commW+centerW)+'%';
+  document.getElementById('bar-reserve').style.width = reserve+'%';
+  document.getElementById('bar-reserve').textContent = reserve > 5 ? '유보 '+reserve+'%' : '';
+
+  // Cards
+  document.getElementById('g-comm').textContent = commSum+'%';
+  document.getElementById('g-center').textContent = centerFee+'%';
+  document.getElementById('g-reserve').textContent = reserve+'%';
+  // Sim table
+  let cumRate = 0;
+  let simH = `<table style="width:100%;min-width:auto;font-size:0.72rem;">
+    <tr style="border-bottom:1px solid var(--border);">
+      <th style="color:var(--gold);padding:6px 4px;font-size:0.58rem;">대수</th>
+      <th style="color:var(--gold);padding:6px 4px;font-size:0.58rem;">수수료</th>
+      <th style="color:var(--gold);padding:6px 4px;font-size:0.58rem;">1인당</th>
+      <th style="color:var(--gold);padding:6px 4px;font-size:0.58rem;">누적률</th>
+    </tr>`;
+  for (let i=0;i<7;i++) {
+    cumRate += rates[i];
+    const perPerson = Math.round(simAmt * rates[i] / 100);
+    simH += `<tr>
+      <td style="padding:5px 4px;font-weight:700;">${i+1}대</td>
+      <td style="padding:5px 4px;">${rates[i]}%</td>
+      <td style="padding:5px 4px;color:var(--gold);font-weight:700;">$${perPerson.toLocaleString()}</td>
+      <td style="padding:5px 4px;color:var(--text3);">${cumRate}%</td>
+    </tr>`;
+  }
+  const centerAmt = Math.round(simAmt * centerFee / 100);
+  const reserveAmt = simAmt - Math.round(simAmt*commSum/100) - centerAmt;
+  simH += `<tr style="border-top:2px solid var(--border);">
+    <td colspan="2" style="padding:6px 4px;font-weight:700;color:var(--hermes);">센터 Fee ${centerFee}%</td>
+    <td style="padding:6px 4px;color:var(--hermes);font-weight:700;">$${centerAmt}</td>
+    <td style="padding:6px 4px;color:var(--text3);">${(commSum+centerFee)}%</td>
+  </tr>`;
+  simH += `<tr style="border-top:1px solid var(--border);">
+    <td colspan="2" style="padding:6px 4px;font-weight:700;">회사 유보</td>
+    <td style="padding:6px 4px;font-weight:700;">$${reserveAmt}</td>
+    <td style="padding:6px 4px;color:var(--text3);">${reserve}%</td>
+  </tr></table>`;
+  document.getElementById('sim-table').innerHTML = simH;
+
+  // Upgrade table
+  let upH = `<table style="width:100%;min-width:auto;font-size:0.72rem;">
+    <tr style="border-bottom:1px solid var(--border);">
+      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">직급</th>
+      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">대수</th>
+      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">최대수익률</th>
+      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">팀누적매출</th>
+      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">추천인원</th>
+      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">롤업</th>
+    </tr>`;
+  let cumR = 0;
+  for (let i=0;i<7;i++) {
+    cumR += rates[i];
+    const lv = LEVELS[i];
+    const highlight = i===1 ? 'background:rgba(229,184,32,0.05);' : '';
+    upH += `<tr style="${highlight}">
+      <td style="padding:4px;font-weight:700;">${lv.lv}</td>
+      <td style="padding:4px;">${lv.gen}대</td>
+      <td style="padding:4px;color:var(--gold);font-weight:700;">${cumR}%</td>
+      <td style="padding:4px;">$${lv.teamSales.toLocaleString()}</td>
+      <td style="padding:4px;">${lv.minRef}명이상</td>
+      <td style="padding:4px;color:${lv.rollup?'var(--gold)':'var(--text4)'};">${lv.rollup?lv.rollup+'%':'-'}</td>
+    </tr>`;
+  }
+  upH += '</table>';
+  upH += `<div style="margin-top:8px;font-size:0.65rem;color:var(--text3);line-height:1.6;">
+    ※ $300 가입 → L1 시작 (7대) | $3,000 가입 → L2 시작 (7대)<br>
+    ※ 팀누적매출 + 추천인원 조건 달성 시 승급</div>`;
+  document.getElementById('cl-upgrade-table').innerHTML = upH;
+
+  // Titles table (with rollup, share, bonus)
+  let tH = `<div class="cl-example"><table style="width:100%;min-width:auto;font-size:0.72rem;">
+    <tr style="border-bottom:1px solid var(--border);">
+      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">직급</th>
+      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">대수 → 수익률</th>
+      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">롤업</th>
+      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">공유수당</th>
+      <th style="color:var(--gold);padding:5px 4px;font-size:0.58rem;">시상</th>
+    </tr>`;
+  cumR = 0;
+  for (let i=0;i<7;i++) {
+    cumR += rates[i];
+    const lv = LEVELS[i];
+    tH += `<tr>
+      <td style="padding:4px;font-weight:700;">${lv.lv}</td>
+      <td style="padding:4px;">${lv.gen}대 → <strong>${cumR}%</strong></td>
+      <td style="padding:4px;">${lv.rollup?lv.rollup+'%':'-'}</td>
+      <td style="padding:4px;color:${lv.share?'var(--gold)':'var(--text4)'};">${lv.share?lv.share+'%':'-'}</td>
+      <td style="padding:4px;font-size:0.65rem;color:var(--text3);">${i>=2?'대상':'—'}</td>
+    </tr>`;
+  }
+  tH += '</table></div>';
+  document.getElementById('cl-titles-body').innerHTML = '직급별 롤업보너스 · 공유수당 · 시상 현황' + tH;
+}
+
+buildSliders();
+updatePlan();
+</script>
+</body>
+</html>
