@@ -151,7 +151,7 @@ header .line {
 
 /* Config */
 .config-grid {
-  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;
 }
 @media (max-width: 780px) { .config-grid { grid-template-columns: 1fr; } }
 
@@ -890,7 +890,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
   </div>
 
   <!-- 설정 -->
-  <div class="config-grid anim" style="animation-delay:0.15s">
+  <div class="config-grid anim" style="margin-bottom:1rem;">
     <div class="cfg-card">
       <div class="section-title">본인 매출 (롤업 범위 결정)</div>
       <div class="tier-btns">
@@ -917,6 +917,8 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
         </button>
       </div>
     </div>
+  </div>
+  <div class="config-grid anim" style="margin-bottom:2.5rem;">
     <div class="cfg-card">
       <div class="section-title">단계별 모집 인원</div>
       <div class="slider-wrap">
@@ -925,11 +927,19 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
         <div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
       </div>
     </div>
+    <div class="cfg-card">
+      <div class="section-title">시뮬레이션 대수 (몇 대까지 계산)</div>
+      <div class="slider-wrap">
+        <label>계산 깊이 <span id="gd" style="color:var(--hermes);">7대</span></label>
+        <input type="range" min="1" max="7" value="7" step="1" id="gen-depth" oninput="calc()">
+        <div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+      </div>
+    </div>
   </div>
 
   <!-- 요약 -->
   <div class="summary anim" style="animation-delay:0.2s">
-    <div class="sc"><div class="sl">롤업 범위</div><div class="sv c-gold" id="s1">L1</div></div>
+    <div class="sc"><div class="sl">롤업 / 시뮬대수</div><div class="sv c-gold" id="s1">L1</div></div>
     <div class="sc"><div class="sl">하부 1인 매출</div><div class="sv c-orange" id="s2">$300</div></div>
     <div class="sc"><div class="sl">총 하위 인원</div><div class="sv c-white" id="s3">3명</div></div>
     <div class="sc"><div class="sl">총 매출</div><div class="sv c-white" id="s5">$900</div></div>
@@ -1007,14 +1017,16 @@ function setSub(v) {
 
 function calc() {
   const n = parseInt(document.getElementById('rec').value);
+  const simDepth = parseInt(document.getElementById('gen-depth').value);
   document.getElementById('rd').textContent = n + '명';
+  document.getElementById('gd').textContent = simDepth + '대';
   const baseMax = me===300 ? 1 : 5; // 롤업조건: $300=1대, $3000=5대
 
   // Build generation data
   const genRates = [5,5,5,5,5,3,3]; // 롤업 1대~7대
   let rows=[], totRef=0, totSponsor=0, ppl=0, tSales=0;
 
-  for (let i=0; i<7; i++) {
+  for (let i=0; i<simDepth; i++) {
     const g = i+1;
     const cnt = Math.pow(n, g);
     const perRef = g===1 ? Math.round(sub * 30 / 100) : 0;
@@ -1043,7 +1055,7 @@ function calc() {
   const totAll = totRef + totSponsor;
 
   // Summary cards
-  document.getElementById('s1').textContent = (me===300?'롤업 1대':'롤업 1~5대');
+  document.getElementById('s1').textContent = (me===300?'롤업 1대':'롤업 1~5대') + ' ('+simDepth+'대)';
   document.getElementById('s2').textContent = '$'+sub.toLocaleString();
   document.getElementById('s3').textContent = ppl.toLocaleString()+'명';
   document.getElementById('s5').textContent = '$'+tSales.toLocaleString();
