@@ -1108,8 +1108,8 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
     </div>
     <div class="ex-note">
       ※ 직접추천 30% = 하부 매출금액 × 30% (누구에게나 고정)<br>
-      ※ 추천라인 롤업: 전체매출 6% 백분율, 10%×6대 (1대~6대)<br>
-      ※ 후원라인 롤업: 전체매출 4% 백분율, 4%×10대 (1대~10대)<br>
+      ※ 추천라인 롤업: 전체매출 6% 백분율, 15%×6대 (2대~7대)<br>
+      ※ 후원라인 롤업: 전체매출 4% 백분율, 15%×7대 (1대~7대)<br>
       ※ 롤업보너스 조건: $300가입=1대까지, $3,000가입=5대까지<br>
       ※ 공유수당 1%: L3~L7 자격자에게 100분율 계산, 각 20% 배분 (n/1)<br>
       ※ 최다추천시상: 총 매출의 1%를 100분율 배분 50:30:20 (1등:2등:3등)<br>
@@ -1158,9 +1158,9 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
     <div class="cfg-card">
       <div class="section-title">시뮬레이션 대수 (몇 대까지 계산)</div>
       <div class="slider-wrap">
-        <label>계산 깊이 <span id="gd" style="color:var(--hermes);">10대</span></label>
-        <input type="range" min="1" max="10" value="10" step="1" id="gen-depth" oninput="calc()">
-        <div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+        <label>계산 깊이 <span id="gd" style="color:var(--hermes);">7대</span></label>
+        <input type="range" min="1" max="7" value="7" step="1" id="gen-depth" oninput="calc()">
+        <div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
       </div>
     </div>
   </div>
@@ -1182,13 +1182,13 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
 
   <!-- 2. 추천라인 롤업 -->
   <div class="dc anim" style="margin-bottom:1.5rem;">
-    <div class="section-title" style="color:var(--gold);">② 추천라인 롤업 (전체매출 6% · 10%×6대)</div>
+    <div class="section-title" style="color:var(--gold);">② 추천라인 롤업 (전체매출 6% · 15%×6대 · 2대~7대)</div>
     <div id="calc-refline"></div>
   </div>
 
   <!-- 3. 후원라인 롤업 -->
   <div class="dc anim" style="margin-bottom:1.5rem;overflow-x:auto;">
-    <div class="section-title" style="color:var(--hermes);">③ 후원라인 롤업 (전체매출 4% · 4%×10대)</div>
+    <div class="section-title" style="color:var(--hermes);">③ 후원라인 롤업 (전체매출 4% · 15%×7대 · 1대~7대)</div>
     <table id="calc-sponsor"></table>
     <div style="font-size:0.7rem;color:var(--text2);margin-top:10px;padding:10px 12px;background:var(--bg-card2);border-radius:8px;line-height:1.6;" id="spon-note"></div>
     <div class="bar-chart" id="bars" style="margin-top:1rem;"></div>
@@ -1230,7 +1230,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
 
   <div class="footer anim" style="animation-delay:0.3s">
     <strong>Value Tree · 수익 구조 요약</strong><br>
-    직접추천 30% + 추천롤업 6% + 후원롤업 4% + 공유 5% + 재구매 5% + 시상 4% = 54%<br>
+    직접추천 30% + 추천롤업 6%(15%×6대) + 후원롤업 4%(15%×7대) + 공유 5% + 재구매 5% + 시상 4% = 54%<br>
     센터 5%(미정) 포함시 59% · USDT 익일지급 · JAPAN FAMILY CARE<br>
     매출은 USDT(테더)로 익일 지급 · JAPAN FAMILY CARE · MADE IN JAPAN
   </div>
@@ -1269,11 +1269,11 @@ function calc() {
   const baseMax = me===300 ? 1 : 5; // 롤업조건: $300=1대, $3000=5대
 
   // Build generation data
-  const genRates = [4,4,4,4,4,4,4,4,4,4]; // 후원라인 롤업 4% × 10대
+  const genRates = [4,4,4,4,4,4,4]; // 후원라인 롤업 4%, 백분율 15%씩 × 7대
   let rows=[], totRef=0, totSponsor=0, ppl=0, tSales=0;
 
   // 추천라인 롤업: 전체매출 6%, 10% × 6대 (1대~6대)
-  const refLineRate = 10; // 각 대별 10%
+  const refLineRate = 15; // 각 대별 15%
   const refLinePool = 0.06; // 전체매출의 6%
   // 후원라인 롤업: 전체매출 4%, 4% × 10대
   const sponLinePool = 0.04; // 전체매출의 4%
@@ -1291,10 +1291,10 @@ function calc() {
     let cond = 'locked';
     if (g <= baseMax) { sponOn = true; cond = 'auto'; }
     else if (g <= 5) { sponOn = false; cond = 'locked'; }
-    else if (g <= 10) { sponOn = false; cond = 'level'; }
+    else if (g <= 7) { sponOn = false; cond = 'level'; }
     const sponRev = sponOn ? cnt * perSpon : 0;
     // 추천라인 롤업 (1대~6대)
-    const refLineOn = g <= 6;
+    const refLineOn = g >= 2 && g <= 7;
     const sales = cnt * sub;
     ppl += cnt;
     tSales += sales;
@@ -1351,12 +1351,12 @@ function calc() {
   const rlEl = document.getElementById('calc-refline');
   let rlH = '<table style="width:100%;font-size:0.75rem;"><thead><tr><th>대수</th><th>배분율</th><th>인원</th><th>금액</th></tr></thead><tbody>';
   let rlTotal = 0;
-  for (let i=0; i<Math.min(6,simDepth); i++) {
+  for (let i=1; i<Math.min(7,simDepth); i++) { // 2대(i=1)부터 7대(i=6)까지
     const r = rows[i];
     if(!r) continue;
     const amt = refLinePerGen;
     rlTotal += amt;
-    rlH += '<tr class="act"><td style="font-weight:700;">'+r.label+'</td><td class="mono">10%</td><td class="mono">'+r.cnt.toLocaleString()+'명</td><td class="mono" style="color:var(--gold);">$'+amt.toLocaleString()+'</td></tr>';
+    rlH += '<tr class="act"><td style="font-weight:700;">'+r.label+'</td><td class="mono">15%</td><td class="mono">'+r.cnt.toLocaleString()+'명</td><td class="mono" style="color:var(--gold);">$'+amt.toLocaleString()+'</td></tr>';
   }
   rlH += '<tr class="totr"><td colspan="2">추천라인 합계</td><td></td><td style="color:var(--gold);">$'+rlTotal.toLocaleString()+'</td></tr></tbody></table>';
   rlEl.innerHTML = `
@@ -1367,7 +1367,7 @@ function calc() {
       </div>
       <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">대수별 배분</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-top:4px;">10% × 6대</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-top:4px;">15% × 6대</div>
       </div>
       <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">대당 지급액</div>
@@ -1377,7 +1377,7 @@ function calc() {
 
   // ===== ③ 후원라인 롤업 (전체매출 4%, 4%×10대) =====
   const sponTotal = Math.round(tSales * sponLinePool);
-  const sponPerGen = Math.round(sponTotal * 0.04);
+  const sponPerGen = Math.round(sponTotal * 0.15); // 15%씩
   let sh = '<thead><tr><th>대수</th><th>롤업%</th><th>인원</th><th>매출</th><th>누적매출</th><th>인당수익</th><th>총수익</th><th>누적수익</th><th>상태</th></tr></thead><tbody>';
   let cumSales=0, cumSpon=0, mx=0, cumPot=0;
   for (const r of rows) { const p=r.cnt*r.perSpon; if(p>mx)mx=p; }
@@ -1529,7 +1529,7 @@ function switchTab(tab) {
 
 
 // ===== Interactive 65% Plan =====
-const DEFAULT_RATES = [4,4,4,4,4,4,4,4,4,4];
+const DEFAULT_RATES = [4,4,4,4,4,4,4];
 let rates = [...DEFAULT_RATES];
 let simAmt = 300;
 const LIMIT = 65;
