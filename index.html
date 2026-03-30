@@ -1062,7 +1062,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
           </tr>
           <tr class="act">
             <td></td><td></td><td></td><td></td>
-            <td class="mono">$30,000</td><td>1명이상</td>
+            <td class="mono">$10,000</td><td>1명이상</td>
             <td class="mono" style="font-weight:700;">L3</td><td class="mono">3대</td>
             <td class="mono">5%</td>
             <td class="mono" style="color:var(--gold);">20%, n/1</td>
@@ -1108,7 +1108,8 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
     </div>
     <div class="ex-note">
       ※ 직접추천 30% = 하부 매출금액 × 30% (누구에게나 고정)<br>
-      ※ 롤업수당: 1대~7대 (5%/5%/5%/5%/5%/3%/3%) 직급별 적용 대수 확대<br>
+      ※ 추천라인 롤업: 전체매출 6% 백분율, 10%×6대 (1대~6대)<br>
+      ※ 후원라인 롤업: 전체매출 4% 백분율, 4%×10대 (1대~10대)<br>
       ※ 롤업보너스 조건: $300가입=1대까지, $3,000가입=5대까지<br>
       ※ 공유수당 1%: L3~L7 자격자에게 100분율 계산, 각 20% 배분 (n/1)<br>
       ※ 최다추천시상: 총 매출의 1%를 100분율 배분 50:30:20 (1등:2등:3등)<br>
@@ -1157,9 +1158,9 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
     <div class="cfg-card">
       <div class="section-title">시뮬레이션 대수 (몇 대까지 계산)</div>
       <div class="slider-wrap">
-        <label>계산 깊이 <span id="gd" style="color:var(--hermes);">7대</span></label>
-        <input type="range" min="1" max="7" value="7" step="1" id="gen-depth" oninput="calc()">
-        <div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+        <label>계산 깊이 <span id="gd" style="color:var(--hermes);">10대</span></label>
+        <input type="range" min="1" max="10" value="10" step="1" id="gen-depth" oninput="calc()">
+        <div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
       </div>
     </div>
   </div>
@@ -1175,27 +1176,45 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
 
   <!-- 1. 추천 계산기 -->
   <div class="dc anim" style="margin-bottom:1.5rem;">
-    <div class="section-title" style="color:var(--gold);">① 추천 계산기 (직접추천 30%)</div>
+    <div class="section-title" style="color:var(--gold);">① 직접추천 보너스 (30%)</div>
     <div id="calc-referral"></div>
   </div>
 
-  <!-- 2. 롤업 계산기 -->
+  <!-- 2. 추천라인 롤업 -->
+  <div class="dc anim" style="margin-bottom:1.5rem;">
+    <div class="section-title" style="color:var(--gold);">② 추천라인 롤업 (전체매출 6% · 10%×6대)</div>
+    <div id="calc-refline"></div>
+  </div>
+
+  <!-- 3. 후원라인 롤업 -->
   <div class="dc anim" style="margin-bottom:1.5rem;overflow-x:auto;">
-    <div class="section-title" style="color:var(--hermes);">② 롤업 계산기 (1대~7대 롤업보너스)</div>
+    <div class="section-title" style="color:var(--hermes);">③ 후원라인 롤업 (전체매출 4% · 4%×10대)</div>
     <table id="calc-sponsor"></table>
     <div style="font-size:0.7rem;color:var(--text2);margin-top:10px;padding:10px 12px;background:var(--bg-card2);border-radius:8px;line-height:1.6;" id="spon-note"></div>
     <div class="bar-chart" id="bars" style="margin-top:1rem;"></div>
   </div>
 
-  <!-- 3. 공유 계산기 -->
+  <!-- 4. 공유 보너스 -->
   <div class="dc anim" style="margin-bottom:1.5rem;">
-    <div class="section-title" style="color:#50C878;">③ 공유 계산기 (1% · L3~L7 · 20% n/1)</div>
+    <div class="section-title" style="color:#50C878;">④ 공유 보너스 (전체매출 5% · L3~L7 · 20%×5)</div>
     <div id="calc-share"></div>
   </div>
 
-  <!-- 4. 시상 -->
+  <!-- 5. 센터 지원금 (미정) -->
+  <div class="dc anim" style="margin-bottom:1.5rem;opacity:0.5;">
+    <div class="section-title" style="color:var(--text3);">⑤ 센터 지원금 (본인 산하 매출 5%) — 미정</div>
+    <div style="font-size:0.78rem;color:var(--text4);padding:1rem;background:var(--bg-card2);border-radius:8px;">조건부 항목 · 추후 확정 예정</div>
+  </div>
+
+  <!-- 6. 재구매/오토쉽 보너스 -->
   <div class="dc anim" style="margin-bottom:1.5rem;">
-    <div class="section-title" style="color:var(--hermes);">④ 시상 (매출의 각 1%)</div>
+    <div class="section-title" style="color:var(--gold);">⑥ 재구매/오토쉽 보너스 (재구매 매출 5% · n/1)</div>
+    <div id="calc-repurchase"></div>
+  </div>
+
+  <!-- 7~10. 시상 -->
+  <div class="dc anim" style="margin-bottom:1.5rem;">
+    <div class="section-title" style="color:var(--hermes);">⑦~⑩ 시상 (전체매출 각 1% · 50:30:20)</div>
     <div id="calc-awards"></div>
   </div>
 
@@ -1211,8 +1230,8 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 600; }
 
   <div class="footer anim" style="animation-delay:0.3s">
     <strong>LUMIVIA · 수익 구조 요약</strong><br>
-    직접추천 30%(고정) + 롤업 1~7대(5/5/5/5/5/3/3%) · $300→1대 / $3,000→5대 / 6~7대 조건부<br>
-    롤업보너스 3~5% · 공유수당 1%(L3~L7 20% n/1) · 시상 각 1% 100분율 배분(50:30:20)<br>
+    직접추천 30% + 추천롤업 6% + 후원롤업 4% + 공유 5% + 재구매 5% + 시상 4% = 54%<br>
+    센터 5%(미정) 포함시 59% · USDT 익일지급 · JAPAN FAMILY CARE<br>
     매출은 USDT(테더)로 익일 지급 · JAPAN FAMILY CARE · MADE IN JAPAN
   </div>
 
@@ -1250,44 +1269,60 @@ function calc() {
   const baseMax = me===300 ? 1 : 5; // 롤업조건: $300=1대, $3000=5대
 
   // Build generation data
-  const genRates = [5,5,5,5,5,3,3]; // 롤업 1대~7대
+  const genRates = [4,4,4,4,4,4,4,4,4,4]; // 후원라인 롤업 4% × 10대
   let rows=[], totRef=0, totSponsor=0, ppl=0, tSales=0;
 
-  for (let i=0; i<7; i++) {
+  // 추천라인 롤업: 전체매출 6%, 10% × 6대 (1대~6대)
+  const refLineRate = 10; // 각 대별 10%
+  const refLinePool = 0.06; // 전체매출의 6%
+  // 후원라인 롤업: 전체매출 4%, 4% × 10대
+  const sponLinePool = 0.04; // 전체매출의 4%
+
+  for (let i=0; i<simDepth; i++) {
     const g = i+1;
     const cnt = Math.pow(n, g);
+    // 직접추천 30% (1대에만)
     const perRef = g===1 ? Math.round(sub * 30 / 100) : 0;
     const refRev = g===1 ? cnt * perRef : 0;
-    const sponRate = genRates[i]; // 1대부터 롤업 적용
+    // 후원라인 롤업 4% × 10대
+    const sponRate = genRates[i];
     const perSpon = Math.round(sub * sponRate / 100);
-    // 롤업 조건: 기본대수 내 = 자동, 6~7대 = L6/L7 조건부
     let sponOn = false;
     let cond = 'locked';
     if (g <= baseMax) { sponOn = true; cond = 'auto'; }
     else if (g <= 5) { sponOn = false; cond = 'locked'; }
-    else { sponOn = false; cond = 'level'; } // 6,7대 조건부 (표시O, 합계X)
+    else if (g <= 10) { sponOn = false; cond = 'level'; }
     const sponRev = sponOn ? cnt * perSpon : 0;
+    // 추천라인 롤업 (1대~6대)
+    const refLineOn = g <= 6;
     const sales = cnt * sub;
     ppl += cnt;
     tSales += sales;
     totRef += refRev;
     totSponsor += sponRev;
-    rows.push({g, cnt, sales, perRef, refRev, sponRate, perSpon, sponRev, sponOn, cond, label: g+'대'});
+    rows.push({g, cnt, sales, perRef, refRev, sponRate, perSpon, sponRev, sponOn, cond, refLineOn, label: g+'대'});
   }
 
-  // 공유수당: 매출 1%, L3~L7 자격자에게 20%씩 (n/1)
-  const sharePool = Math.round(tSales * 0.01);
+  // 추천라인 롤업 계산 (전체매출 6%를 백분율로 6대에 분배)
+  const refLineTotal = Math.round(tSales * refLinePool);
+  const refLinePerGen = Math.round(refLineTotal * (refLineRate / 100));
+
+  // 공유수당: 전체매출 5%, L3~L7 자격자에게 20%씩
+  const sharePool = Math.round(tSales * 0.05);
   const sharePerLevel = Math.round(sharePool * 0.20);
+
+  // 재구매/오토쉽: 5% (n/1) - 시뮬에서는 표시만
+  const repurchasePool = Math.round(tSales * 0.05);
 
   const totAll = totRef + totSponsor;
 
   // Summary cards
-  document.getElementById('s1').textContent = (me===300?'롤업 1대':'롤업 1~5대') + ' ('+simDepth+'대)';
+  document.getElementById('s1').textContent = (me===300?'롤업 1대':'롤업 1~5대');
   document.getElementById('s2').textContent = '$'+sub.toLocaleString();
   document.getElementById('s3').textContent = ppl.toLocaleString()+'명';
   document.getElementById('s5').textContent = '$'+tSales.toLocaleString();
 
-  // ===== ① 추천 계산기 =====
+  // ===== ① 직접추천 보너스 =====
   const refEl = document.getElementById('calc-referral');
   const directCnt = Math.pow(n, 1);
   const directPer = Math.round(sub * 30 / 100);
@@ -1312,18 +1347,43 @@ function calc() {
       하부 매출 $${sub.toLocaleString()} × 30% = <strong style="color:var(--gold);">$${directPer.toLocaleString()}</strong> × ${directCnt}명 = <strong style="color:var(--gold);">$${directTotal.toLocaleString()}</strong>
     </div>`;
 
-  // ===== ② 롤업 계산기 =====
-  let sh = `<thead><tr><th>대수</th><th>롤업%</th><th>인원</th><th>매출</th><th>누적매출</th><th>인당수익</th><th>총수익</th><th>누적수익</th><th>상태</th></tr></thead><tbody>`;
-  let cumSales=0, cumSpon=0, mx=0;
-  for (const r of rows) {
-    const potRev = r.cnt * r.perSpon;
-    if(potRev > mx) mx = potRev;
+  // ===== ② 추천라인 롤업 (전체매출 6%, 10%×6대) =====
+  const rlEl = document.getElementById('calc-refline');
+  let rlH = '<table style="width:100%;font-size:0.75rem;"><thead><tr><th>대수</th><th>배분율</th><th>인원</th><th>금액</th></tr></thead><tbody>';
+  let rlTotal = 0;
+  for (let i=0; i<Math.min(6,simDepth); i++) {
+    const r = rows[i];
+    if(!r) continue;
+    const amt = refLinePerGen;
+    rlTotal += amt;
+    rlH += '<tr class="act"><td style="font-weight:700;">'+r.label+'</td><td class="mono">10%</td><td class="mono">'+r.cnt.toLocaleString()+'명</td><td class="mono" style="color:var(--gold);">$'+amt.toLocaleString()+'</td></tr>';
   }
-  cumSales=0; cumSpon=0;
-  let cumPot = 0;
+  rlH += '<tr class="totr"><td colspan="2">추천라인 합계</td><td></td><td style="color:var(--gold);">$'+rlTotal.toLocaleString()+'</td></tr></tbody></table>';
+  rlEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
+      <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">전체 매출의 6%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);margin-top:4px;">$${refLineTotal.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">대수별 배분</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-top:4px;">10% × 6대</div>
+      </div>
+      <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">대당 지급액</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);margin-top:4px;">$${refLinePerGen.toLocaleString()}</div>
+      </div>
+    </div>` + rlH;
+
+  // ===== ③ 후원라인 롤업 (전체매출 4%, 4%×10대) =====
+  const sponTotal = Math.round(tSales * sponLinePool);
+  const sponPerGen = Math.round(sponTotal * 0.04);
+  let sh = '<thead><tr><th>대수</th><th>롤업%</th><th>인원</th><th>매출</th><th>누적매출</th><th>인당수익</th><th>총수익</th><th>누적수익</th><th>상태</th></tr></thead><tbody>';
+  let cumSales=0, cumSpon=0, mx=0, cumPot=0;
+  for (const r of rows) { const p=r.cnt*r.perSpon; if(p>mx)mx=p; }
   for (const r of rows) {
     cumSales += r.sales;
-    const potRev = (r.cnt * r.perSpon);
+    const potRev = r.cnt * r.perSpon;
     cumPot += potRev;
     if(r.sponOn) cumSpon += r.sponRev;
     let statusTag = '';
@@ -1333,33 +1393,26 @@ function calc() {
     const dim = r.cond==='locked' ? 'opacity:0.3;' : '';
     const revDisplay = r.sponOn ? '$'+r.sponRev.toLocaleString() : '($'+potRev.toLocaleString()+')';
     const cumDisplay = r.sponOn ? '$'+cumSpon.toLocaleString() : '($'+cumPot.toLocaleString()+')';
-    sh += `<tr style="${dim}"><td style="font-weight:700">${r.label}</td><td class="mono">${r.sponRate}%</td><td class="mono">${r.cnt.toLocaleString()}</td><td class="mono" style="color:var(--text2)">$${r.sales.toLocaleString()}</td><td class="mono" style="color:var(--hermes)">$${cumSales.toLocaleString()}</td><td class="mono">$${r.perSpon.toLocaleString()}</td><td class="mono">${revDisplay}</td><td class="mono" style="color:var(--gold)">${cumDisplay}</td><td>${statusTag}</td></tr>`;
+    sh += '<tr style="'+dim+'"><td style="font-weight:700">'+r.label+'</td><td class="mono">'+r.sponRate+'%</td><td class="mono">'+r.cnt.toLocaleString()+'</td><td class="mono" style="color:var(--text2)">$'+r.sales.toLocaleString()+'</td><td class="mono" style="color:var(--hermes)">$'+cumSales.toLocaleString()+'</td><td class="mono">$'+r.perSpon.toLocaleString()+'</td><td class="mono">'+revDisplay+'</td><td class="mono" style="color:var(--gold)">'+cumDisplay+'</td><td>'+statusTag+'</td></tr>';
   }
-  sh += `<tr class="totr"><td colspan="6">롤업 수익 합계</td><td colspan="3" style="color:var(--gold);">$${totSponsor.toLocaleString()}</td></tr></tbody>`;
+  sh += '<tr class="totr"><td colspan="6">후원라인 수익 합계</td><td colspan="3" style="color:var(--gold);">$'+totSponsor.toLocaleString()+'</td></tr></tbody>';
   document.getElementById('calc-sponsor').innerHTML = sh;
-  
-  // 조건 안내
   const condNote = me===300 
-    ? '<strong style="color:var(--gold);">$300 가입 → 롤업 1대까지 자동적용</strong><br>2~5대: 미해당<br>6대: L6 조건 (팀누적매출 $500,000 + 추천 2명이상) 달성 시 적용<br>7대: L7 조건 (팀누적매출 $700,000 + 추천 3명이상) 달성 시 적용<br><span style="color:var(--text3);">※ 괄호( ) 금액은 조건 달성 시 예상 수익</span>'
-    : '<strong style="color:var(--gold);">$3,000 가입 → 롤업 1대~5대까지 자동적용</strong><br>6대: L6 조건 (팀누적매출 $500,000 + 추천 2명이상) 달성 시 적용<br>7대: L7 조건 (팀누적매출 $700,000 + 추천 3명이상) 달성 시 적용<br><span style="color:var(--text3);">※ 괄호( ) 금액은 조건 달성 시 예상 수익</span>';
+    ? '<strong style="color:var(--gold);">$300 가입 → 후원 롤업 1대까지 자동적용</strong><br>2~5대: 미해당 · 6~10대: 조건부 (팀누적매출+추천인원 달성 시)'
+    : '<strong style="color:var(--gold);">$3,000 가입 → 후원 롤업 1~5대까지 자동적용</strong><br>6~10대: 조건부 (팀누적매출+추천인원 달성 시)';
   document.getElementById('spon-note').innerHTML = condNote;
-
-  // Bar chart
   document.getElementById('bars').innerHTML = rows.map(r=>{
-    const potRev = r.cnt * r.perSpon;
-    const displayRev = r.sponOn ? r.sponRev : potRev;
-    const w = mx>0 ? Math.max(4,(displayRev/mx)*100) : 4;
-    const barCls = r.sponOn ? 'on' : 'dim';
-    const dimStyle = r.cond==='locked' ? 'opacity:0.3;' : '';
-    return `<div class="bar-col" style="${dimStyle}"><div class="bl">${r.label} ${r.sponRate}%</div><div class="br ${barCls}" style="width:${w}%"></div><div class="bv ${r.sponOn?'':'dim'}">$${displayRev.toLocaleString()}</div></div>`;
+    const potRev=r.cnt*r.perSpon; const displayRev=r.sponOn?r.sponRev:potRev;
+    const w=mx>0?Math.max(4,(displayRev/mx)*100):4;
+    const dimStyle=r.cond==='locked'?'opacity:0.3;':'';
+    return '<div class="bar-col" style="'+dimStyle+'"><div class="bl">'+r.label+' '+r.sponRate+'%</div><div class="br '+(r.sponOn?'on':'dim')+'" style="width:'+w+'%"></div><div class="bv '+(r.sponOn?'':'dim')+'">$'+displayRev.toLocaleString()+'</div></div>';
   }).join('');
 
-  // ===== ③ 공유 계산기 =====
-  const shareEl = document.getElementById('calc-share');
-  shareEl.innerHTML = `
+  // ===== ④ 공유 보너스 (전체매출 5%, 20%×5레벨) =====
+  document.getElementById('calc-share').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
       <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">총 매출의 1%</div>
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">전체 매출의 5%</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:#50C878;margin-top:4px;">$${sharePool.toLocaleString()}</div>
       </div>
       <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
@@ -1367,92 +1420,98 @@ function calc() {
         <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-top:4px;">L3~L7</div>
       </div>
       <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">레벨당 배분</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:#50C878;margin-top:4px;">20%</div>
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">레벨당 20%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:#50C878;margin-top:4px;">$${sharePerLevel.toLocaleString()}</div>
       </div>
     </div>
-    <div style="background:var(--bg-card2);border-radius:10px;padding:12px;margin-bottom:12px;">
-      <div style="font-size:0.72rem;color:var(--text2);line-height:1.8;">
-        총 매출 $${tSales.toLocaleString()} × 1% = <strong style="color:#50C878;">$${sharePool.toLocaleString()}</strong> (공유수당 풀)<br>
-        각 레벨(L3~L7)에 20%씩 배분 → 레벨당 <strong style="color:#50C878;">$${sharePerLevel.toLocaleString()}</strong><br>
-        해당 레벨 자격자 n명이 균등 배분 (1/n)
-      </div>
-    </div>
-    <table style="width:100%;font-size:0.75rem;">
-      <thead><tr>
-        <th>직급</th><th>배분율</th><th>레벨별 금액</th><th>자격자 1명일때</th><th>자격자 5명일때</th>
-      </tr></thead>
-      <tbody>
-        ${['L3','L4','L5','L6','L7'].map(lv => `<tr class="act">
-          <td style="font-weight:700;">${lv}</td>
-          <td class="mono">20%</td>
-          <td class="mono" style="color:#50C878;">$${sharePerLevel.toLocaleString()}</td>
-          <td class="mono" style="color:var(--gold);">$${sharePerLevel.toLocaleString()}</td>
-          <td class="mono" style="color:var(--text2);">$${Math.round(sharePerLevel/5).toLocaleString()}</td>
-        </tr>`).join('')}
-      </tbody>
-    </table>`;
-
-  // ===== ④ 시상 계산기 =====
-  const awardRefPool = Math.round(tSales * 0.01);
-  const awardSalesPool = Math.round(tSales * 0.01);
-  const awEl = document.getElementById('calc-awards');
-  awEl.innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
-      <div style="background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:14px;">
-        <div style="font-size:0.7rem;color:var(--hermes);font-weight:700;margin-bottom:10px;">최다추천시상 (총 매출의 1%를 100분율 배분)</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;color:var(--hermes);margin-bottom:10px;">$${awardRefPool.toLocaleString()}</div>
-        <div style="display:flex;gap:6px;">
-          <div style="flex:50;background:var(--hermes);border-radius:4px;padding:6px;text-align:center;font-size:0.62rem;font-weight:700;color:#fff;">1등 50%<br>$${Math.round(awardRefPool*0.5).toLocaleString()}</div>
-          <div style="flex:30;background:rgba(243,112,33,0.6);border-radius:4px;padding:6px;text-align:center;font-size:0.62rem;font-weight:700;color:#fff;">2등 30%<br>$${Math.round(awardRefPool*0.3).toLocaleString()}</div>
-          <div style="flex:20;background:rgba(243,112,33,0.35);border-radius:4px;padding:6px;text-align:center;font-size:0.62rem;font-weight:700;color:#fff;">3등 20%<br>$${Math.round(awardRefPool*0.2).toLocaleString()}</div>
-        </div>
-      </div>
-      <div style="background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:14px;">
-        <div style="font-size:0.7rem;color:var(--gold);font-weight:700;margin-bottom:10px;">최대매출시상 (총 매출의 1%를 100분율 배분)</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:10px;">$${awardSalesPool.toLocaleString()}</div>
-        <div style="display:flex;gap:6px;">
-          <div style="flex:50;background:var(--gold);border-radius:4px;padding:6px;text-align:center;font-size:0.62rem;font-weight:700;color:var(--bg);">1등 50%<br>$${Math.round(awardSalesPool*0.5).toLocaleString()}</div>
-          <div style="flex:30;background:rgba(229,184,32,0.6);border-radius:4px;padding:6px;text-align:center;font-size:0.62rem;font-weight:700;color:var(--bg);">2등 30%<br>$${Math.round(awardSalesPool*0.3).toLocaleString()}</div>
-          <div style="flex:20;background:rgba(229,184,32,0.35);border-radius:4px;padding:6px;text-align:center;font-size:0.62rem;font-weight:700;color:var(--bg);">3등 20%<br>$${Math.round(awardSalesPool*0.2).toLocaleString()}</div>
-        </div>
-      </div>
-    </div>
-    <div style="font-size:0.68rem;color:var(--text3);line-height:1.6;">
-      ※ 각 시상 = 총 매출의 1%를 100분율로 배분 | 1등 50% : 2등 30% : 3등 20%
+    <div style="font-size:0.72rem;color:var(--text2);line-height:1.8;">
+      총 매출 $${tSales.toLocaleString()} × 5% = <strong style="color:#50C878;">$${sharePool.toLocaleString()}</strong><br>
+      L3~L7 각 레벨에 20%씩 → 레벨당 <strong style="color:#50C878;">$${sharePerLevel.toLocaleString()}</strong> (자격자 n명이 1/n 균등 배분)
     </div>`;
 
-  const totalAwards = awardRefPool + awardSalesPool;
+  // ===== ⑥ 재구매/오토쉽 =====
+  document.getElementById('calc-repurchase').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px;">
+      <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">재구매 매출 5%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);margin-top:4px;">$${repurchasePool.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--bg-card2);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">배분 방식</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-top:4px;">n/1 균등</div>
+      </div>
+    </div>
+    <div style="font-size:0.72rem;color:var(--text2);">재구매 회원 대상 · 지속 구매 보상 · 매출의 5%를 재구매 회원 수(n)로 나눠 지급</div>`;
+
+  // ===== ⑦~⑩ 시상 (매월+누적, 각 1%) =====
+  const pool1 = Math.round(tSales * 0.01);
+  const awEl = document.getElementById('calc-awards');
+  const mkAward = (title, color, pool) => `
+    <div style="background:var(--bg-card2);border:1px solid var(--border);border-radius:10px;padding:12px;">
+      <div style="font-size:0.68rem;color:${color};font-weight:700;margin-bottom:8px;">${title} (1%)</div>
+      <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:${color};margin-bottom:8px;">$${pool.toLocaleString()}</div>
+      <div style="display:flex;gap:4px;">
+        <div style="flex:50;background:${color};border-radius:4px;padding:5px;text-align:center;font-size:0.58rem;font-weight:700;color:#fff;">1등 50%<br>$${Math.round(pool*0.5).toLocaleString()}</div>
+        <div style="flex:30;background:${color};opacity:0.6;border-radius:4px;padding:5px;text-align:center;font-size:0.58rem;font-weight:700;color:#fff;">2등 30%<br>$${Math.round(pool*0.3).toLocaleString()}</div>
+        <div style="flex:20;background:${color};opacity:0.35;border-radius:4px;padding:5px;text-align:center;font-size:0.58rem;font-weight:700;color:#fff;">3등 20%<br>$${Math.round(pool*0.2).toLocaleString()}</div>
+      </div>
+    </div>`;
+  awEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+      ${mkAward('⑦ 매월 최대매출','var(--gold)',pool1)}
+      ${mkAward('⑧ 매월 최다추천','var(--hermes)',pool1)}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+      ${mkAward('⑨ 누적 최대매출','#6495ED',pool1)}
+      ${mkAward('⑩ 누적 최다추천','#50C878',pool1)}
+    </div>
+    <div style="font-size:0.68rem;color:var(--text3);">※ 각 시상 = 전체매출 1%를 100분율 배분 (50:30:20) · 상위 3명</div>`;
+
+  const totalAwards = pool1 * 4;
 
   // ===== 종합 수익 =====
-  const grandTotal = totAll + sharePool + totalAwards;
+  const grandTotal = totAll + refLineTotal + sharePool + repurchasePool + totalAwards;
   document.getElementById('s4').textContent = '$'+grandTotal.toLocaleString();
-  const totalEl = document.getElementById('calc-total');
-  totalEl.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;">
-      <div style="background:var(--bg-card2);padding:12px;text-align:center;">
-        <div style="font-size:0.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">① 추천 30%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--gold);margin-top:4px;">$${directTotal.toLocaleString()}</div>
+  document.getElementById('calc-total').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:8px;">
+      <div style="background:var(--bg-card2);padding:10px;text-align:center;">
+        <div style="font-size:0.52rem;color:var(--text3);letter-spacing:1px;">① 직접추천</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:var(--gold);margin-top:3px;">$${directTotal.toLocaleString()}</div>
       </div>
-      <div style="background:var(--bg-card2);padding:12px;text-align:center;">
-        <div style="font-size:0.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">② 롤업 1~7대</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--hermes);margin-top:4px;">$${totSponsor.toLocaleString()}</div>
+      <div style="background:var(--bg-card2);padding:10px;text-align:center;">
+        <div style="font-size:0.52rem;color:var(--text3);letter-spacing:1px;">② 추천롤업 6%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:var(--gold);margin-top:3px;">$${refLineTotal.toLocaleString()}</div>
       </div>
-      <div style="background:var(--bg-card2);padding:12px;text-align:center;">
-        <div style="font-size:0.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">③ 공유 1%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:#50C878;margin-top:4px;">$${sharePool.toLocaleString()}</div>
+      <div style="background:var(--bg-card2);padding:10px;text-align:center;">
+        <div style="font-size:0.52rem;color:var(--text3);letter-spacing:1px;">③ 후원롤업 4%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:var(--hermes);margin-top:3px;">$${totSponsor.toLocaleString()}</div>
       </div>
-      <div style="background:var(--bg-card2);padding:12px;text-align:center;">
-        <div style="font-size:0.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">④ 시상 2%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--hermes);margin-top:4px;">$${totalAwards.toLocaleString()}</div>
+      <div style="background:var(--bg-card2);padding:10px;text-align:center;">
+        <div style="font-size:0.52rem;color:var(--text3);letter-spacing:1px;">④ 공유 5%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:#50C878;margin-top:3px;">$${sharePool.toLocaleString()}</div>
       </div>
-      <div style="background:var(--bg-card2);padding:12px;text-align:center;">
-        <div style="font-size:0.55rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">총 수익</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:var(--gold);margin-top:4px;">$${grandTotal.toLocaleString()}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;">
+      <div style="background:var(--bg-card2);padding:10px;text-align:center;">
+        <div style="font-size:0.52rem;color:var(--text3);letter-spacing:1px;">⑥ 재구매 5%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:var(--gold);margin-top:3px;">$${repurchasePool.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--bg-card2);padding:10px;text-align:center;">
+        <div style="font-size:0.52rem;color:var(--text3);letter-spacing:1px;">⑦~⑩ 시상 4%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:var(--hermes);margin-top:3px;">$${totalAwards.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--bg-card2);padding:10px;text-align:center;">
+        <div style="font-size:0.52rem;color:var(--text3);letter-spacing:1px;">⑤ 센터 (미정)</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text4);margin-top:3px;">—</div>
+      </div>
+      <div style="background:var(--bg-card2);padding:10px;text-align:center;">
+        <div style="font-size:0.52rem;color:var(--gold);letter-spacing:1px;font-weight:700;">총 수익</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:800;color:var(--gold);margin-top:3px;">$${grandTotal.toLocaleString()}</div>
       </div>
     </div>
     <div style="font-size:0.7rem;color:var(--text3);line-height:1.6;">
       총 매출 $${tSales.toLocaleString()} 대비 배분률: <strong style="color:var(--gold);">${(tSales>0?((grandTotal)/tSales*100).toFixed(1):0)}%</strong>
+      <span style="color:var(--text4);margin-left:8px;">(센터 5% 미포함)</span>
     </div>`;
 }
 
@@ -1470,7 +1529,7 @@ function switchTab(tab) {
 
 
 // ===== Interactive 65% Plan =====
-const DEFAULT_RATES = [5,5,5,5,5,3,3];
+const DEFAULT_RATES = [4,4,4,4,4,4,4,4,4,4];
 let rates = [...DEFAULT_RATES];
 let simAmt = 300;
 const LIMIT = 65;
