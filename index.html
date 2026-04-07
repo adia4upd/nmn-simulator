@@ -1835,11 +1835,11 @@ function calcAwards(totalSales) {
   const mkAward = (title, color, pool) => `
     <div style="background:rgba(22,22,22,0.7);border:1px solid var(--border);border-radius:10px;padding:12px;">
       <div style="font-size:0.68rem;color:${color};font-weight:700;margin-bottom:8px;">${title} (1%)</div>
-      <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:8px;">$${pool.toLocaleString()}</div>
+      <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:${color};margin-bottom:8px;">$${pool.toLocaleString()}</div>
       <div style="display:flex;gap:4px;">
-        <div style="flex:50;background:${color};border-radius:4px;padding:6px 5px;text-align:center;font-size:0.7rem;font-weight:800;color:#000;line-height:1.5;">1등 50%<br>$${Math.round(pool*0.5).toLocaleString()}</div>
-        <div style="flex:30;background:${color};filter:brightness(0.72);border-radius:4px;padding:6px 5px;text-align:center;font-size:0.7rem;font-weight:800;color:#fff;line-height:1.5;">2등 30%<br>$${Math.round(pool*0.3).toLocaleString()}</div>
-        <div style="flex:20;background:${color};filter:brightness(0.48);border-radius:4px;padding:6px 5px;text-align:center;font-size:0.7rem;font-weight:800;color:#fff;line-height:1.5;">3등 20%<br>$${Math.round(pool*0.2).toLocaleString()}</div>
+        <div style="flex:50;background:${color};border-radius:4px;padding:6px 5px;text-align:center;font-size:0.7rem;font-weight:800;color:var(--gold);line-height:1.5;">1등 50%<br>$${Math.round(pool*0.5).toLocaleString()}</div>
+        <div style="flex:30;background:${color};filter:brightness(0.72);border-radius:4px;padding:6px 5px;text-align:center;font-size:0.7rem;font-weight:800;color:var(--gold);line-height:1.5;">2등 30%<br>$${Math.round(pool*0.3).toLocaleString()}</div>
+        <div style="flex:20;background:${color};filter:brightness(0.48);border-radius:4px;padding:6px 5px;text-align:center;font-size:0.7rem;font-weight:800;color:var(--gold);line-height:1.5;">3등 20%<br>$${Math.round(pool*0.2).toLocaleString()}</div>
       </div>
     </div>`;
   document.getElementById('calc-awards').innerHTML = `
