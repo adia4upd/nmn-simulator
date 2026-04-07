@@ -1521,16 +1521,6 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
       </div>
     </div>
   </div>
-  <div class="config-grid anim" style="margin-bottom:2.5rem;grid-template-columns:1fr;">
-    <div class="cfg-card">
-      <div class="section-title">⑥ 재구매 인원 (독립 풀)</div>
-      <div class="slider-wrap">
-        <label>재구매 인원 <span id="rpd" style="color:var(--gold);">10명</span></label>
-        <input type="range" min="1" max="50" value="10" step="1" id="repurchase-cnt" oninput="calc()">
-        <div class="ticks"><span>1</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span></div>
-      </div>
-    </div>
-  </div>
 
   <!-- 요약 -->
   <div class="summary anim" style="animation-delay:0.2s">
@@ -1808,9 +1798,8 @@ function calcShare(rows) {
 }
 
 // ─── ⑥ 재구매/오토쉽 (재구매자 독립 풀 · 5% ÷ n명) ───
-function calcRepurchase(totalSales) {
-  const n         = parseInt(document.getElementById('repurchase-cnt').value);
-  document.getElementById('rpd').textContent = n + '명';
+function calcRepurchase(totalSales, totalPeople) {
+  const n = totalPeople;
   const rpSales   = n * rpSub;                             // 재구매 총 매출
   const pool      = Math.round(rpSales * CFG.repurchase);  // 재구매 매출 × 5%
   const perPerson = n > 0 ? Math.round(pool / n) : 0;     // 1인당 수령 (= rpSub × 5%)
@@ -1818,7 +1807,7 @@ function calcRepurchase(totalSales) {
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">재구매 인원</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">${n}명</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">${n.toLocaleString()}명</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">1인당 재구매가</div>
@@ -1834,8 +1823,8 @@ function calcRepurchase(totalSales) {
       </div>
     </div>
     <div style="font-size:0.78rem;color:var(--text2);line-height:1.8;">
-      재구매 ${n}명 × $${rpSub.toLocaleString()} = <strong style="color:var(--text);">$${rpSales.toLocaleString()}</strong> × 5% = <strong style="color:var(--gold);">$${pool.toLocaleString()}</strong><br>
-      재구매자 ${n}명이 균등 배분 → 1인당 <strong style="color:var(--gold);">$${perPerson.toLocaleString()}</strong> · 전체 시뮬과 독립된 별도 풀
+      재구매 <strong style="color:var(--text);">${n.toLocaleString()}명</strong> (기준설정값 총 하위 인원 자동 반영) × $${rpSub.toLocaleString()} = <strong style="color:var(--text);">$${rpSales.toLocaleString()}</strong> × 5% = <strong style="color:var(--gold);">$${pool.toLocaleString()}</strong><br>
+      재구매자 ${n.toLocaleString()}명이 균등 배분 → 1인당 <strong style="color:var(--gold);">$${perPerson.toLocaleString()}</strong> · 전체 시뮬과 독립된 별도 풀
     </div>`;
   return pool;
 }
@@ -1933,7 +1922,7 @@ function calc() {
   const refLine    = calcRefLine(rows);
   const sponsor    = calcSponsor(rows);
   const share      = calcShare(rows);
-  const repurchase = calcRepurchase(totalSales);
+  const repurchase = calcRepurchase(totalSales, totalPeople);
   const awards     = calcAwards(totalSales);
 
   // 종합
