@@ -1595,203 +1595,187 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
 </div>
 
 <script>
+// ─── 상태 ───
 let me = 300, sub = 300;
 
-const R = [
-  {g:1,l:'1대',p:5},{g:2,l:'2대',p:5},{g:3,l:'3대',p:5},
-  {g:4,l:'4대',p:5},{g:5,l:'5대',p:5},{g:6,l:'6대',p:3},
-  {g:7,l:'7대',p:3}
+// ─── CONFIG (한 곳에서 관리) ───
+const CFG = {
+  direct:       0.30,  // ① 직접추천 30%
+  refLinePool:  0.06,  // ② 추천라인 롤업 — 전체매출의 6%
+  refLineRate:  0.15,  // ② 추천라인 — 대수별 15%씩
+  refLineGens:  7,     // ② 추천라인 — 1대~7대
+  sponPool:     0.04,  // ③ 후원라인 롤업 — 전체매출의 4%
+  sponRate:     0.15,  // ③ 후원라인 — 대수별 15%씩
+  sponGens:     7,     // ③ 후원라인 — 1대~7대
+  sharePool:    0.05,  // ④ 공유 보너스 — 전체매출의 5%
+  shareRate:    0.20,  // ④ 공유 보너스 — 레벨당 20%
+  shareStart:   3,     // ④ 공유 보너스 — L3부터
+  shareEnd:     7,     // ④ 공유 보너스 — L7까지
+  repurchase:   0.05,  // ⑥ 재구매/오토쉽 — 5%
+  awardRate:    0.01,  // ⑦~⑩ 시상 — 각 1%
+  awardCount:   4,     // ⑦~⑩ 시상 — 4개
+};
+
+// ─── 직급 달성조건 ───
+const RANKS = [
+  { level: 'L1', min: 300 },
+  { level: 'L2', min: 3000 },
+  { level: 'L3', min: 10000 },
+  { level: 'L4', min: 100000 },
+  { level: 'L5', min: 300000 },
+  { level: 'L6', min: 500000 },
+  { level: 'L7', min: 700000 },
 ];
 
-// 마케팅표 데이터
-
-function setMe(v) {
-  me = v;
-  document.getElementById('my300').className = v===300?'tier-btn s1':'tier-btn';
-  document.getElementById('my3000').className = v===3000?'tier-btn s2':'tier-btn';
-  calc();
-}
-function setSub(v) {
-  sub = v;
-  document.getElementById('sb300').className = v===300?'tier-btn s1':'tier-btn';
-  document.getElementById('sb3000').className = v===3000?'tier-btn s2':'tier-btn';
-  calc();
-}
-
-function calc() {
-  const n = parseInt(document.getElementById('rec').value);
-  const simDepth = parseInt(document.getElementById('gen-depth').value);
-  document.getElementById('rd').textContent = n + '명';
-  document.getElementById('gd').textContent = simDepth + '대';
-  const baseMax = me===300 ? 1 : 5; // 롤업조건: $300=1대, $3000=5대
-
-  // Build generation data
-  const genRates = [4,4,4,4,4,4,4]; // 후원라인 롤업 4%, 백분율 15%씩 × 7대
-  let rows=[], totRef=0, totSponsor=0, ppl=0, tSales=0;
-
-  // 추천라인 롤업: 전체매출 6%, 10% × 6대 (1대~6대)
-  const refLineRate = 15; // 각 대별 15%
-  const refLinePool = 0.06; // 전체매출의 6%
-  // 후원라인 롤업: 전체매출 4%, 4% × 10대
-  const sponLinePool = 0.04; // 전체매출의 4%
-
-  for (let i=0; i<simDepth; i++) {
-    const g = i+1;
+// ─── 공통: 대수별 데이터 빌드 ───
+function buildGenData(n, simDepth) {
+  const baseMax = me === 300 ? 1 : 5; // 후원롤업 자동적용 대수
+  const rows = [];
+  let totalPeople = 0, totalSales = 0;
+  for (let i = 0; i < simDepth; i++) {
+    const g = i + 1;
     const cnt = Math.pow(n, g);
-    // 직접추천 30% (1대에만)
-    const perRef = g===1 ? Math.round(sub * 30 / 100) : 0;
-    const refRev = g===1 ? cnt * perRef : 0;
-    // 후원라인 롤업 4% × 10대
-    const sponRate = genRates[i];
-    const perSpon = Math.round(sub * sponRate / 100);
-    let sponOn = false;
-    let cond = 'locked';
-    if (g <= baseMax) { sponOn = true; cond = 'auto'; }
-    else if (g <= 5) { sponOn = false; cond = 'locked'; }
-    else if (g <= 7) { sponOn = false; cond = 'level'; }
-    const sponRev = sponOn ? cnt * perSpon : 0;
-    // 추천라인 롤업 (1대~6대)
-    const refLineOn = g >= 2 && g <= 7;
     const sales = cnt * sub;
-    ppl += cnt;
-    tSales += sales;
-    totRef += refRev;
-    totSponsor += sponRev;
-    rows.push({g, cnt, sales, perRef, refRev, sponRate, perSpon, sponRev, sponOn, cond, refLineOn, label: g+'대'});
+    totalPeople += cnt;
+    totalSales += sales;
+    let cond = 'locked';
+    if (g <= baseMax)      cond = 'auto';
+    else if (g <= 5)       cond = 'locked';
+    else if (g <= CFG.sponGens) cond = 'level';
+    rows.push({ g, cnt, sales, sponOn: cond === 'auto', cond });
   }
+  return { rows, totalPeople, totalSales };
+}
 
-  // 추천라인 롤업 계산 (전체매출 6%를 백분율로 6대에 분배)
-  const refLineTotal = Math.round(tSales * refLinePool);
-  const refLinePerGen = Math.round(refLineTotal * (refLineRate / 100));
-
-  // 공유수당: 전체매출 5%, L3~L7 자격자에게 20%씩
-  const sharePool = Math.round(tSales * 0.05);
-  const sharePerLevel = Math.round(sharePool * 0.20);
-
-  // 재구매/오토쉽: 5% (n/1) - 시뮬에서는 표시만
-  const repurchasePool = Math.round(tSales * 0.05);
-
-  const totAll = totRef + totSponsor;
-
-  // Summary cards
-  document.getElementById('s1').textContent = (me===300?'롤업 1대':'롤업 1~5대');
-  document.getElementById('s2').textContent = '$'+sub.toLocaleString();
-  document.getElementById('s3').textContent = ppl.toLocaleString()+'명';
-  document.getElementById('s5').textContent = '$'+tSales.toLocaleString();
-
-  // ===== ① 직접추천 보너스 =====
-  const refEl = document.getElementById('calc-referral');
-  const directCnt = Math.pow(n, 1);
-  const directPer = Math.round(sub * 30 / 100);
-  const directTotal = directCnt * directPer;
-  refEl.innerHTML = `
+// ─── ① 직접추천 (30%) ───
+function calcDirect(n) {
+  const cnt      = n;
+  const perPerson = Math.round(sub * CFG.direct);
+  const total    = cnt * perPerson;
+  document.getElementById('calc-referral').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">직접추천 인원</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">${directCnt}명</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">${cnt}명</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">1인당 수익</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${directPer.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${perPerson.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">추천 수익 합계</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${directTotal.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${total.toLocaleString()}</div>
       </div>
     </div>
     <div style="font-size:0.78rem;color:var(--text);line-height:1.7;">
       직접추천 30%는 <strong style="color:var(--gold);">누구에게나 고정</strong> (가입금액 무관)<br>
-      하부 매출 $${sub.toLocaleString()} × 30% = <strong style="color:var(--gold);">$${directPer.toLocaleString()}</strong> × ${directCnt}명 = <strong style="color:var(--gold);">$${directTotal.toLocaleString()}</strong>
+      하부 매출 $${sub.toLocaleString()} × 30% = <strong style="color:var(--gold);">$${perPerson.toLocaleString()}</strong> × ${cnt}명 = <strong style="color:var(--gold);">$${total.toLocaleString()}</strong>
     </div>`;
+  return total;
+}
 
-  // ===== ② 추천라인 롤업 (전체매출 6%, 10%×6대) =====
-  const rlEl = document.getElementById('calc-refline');
-  let rlH = '<table style="width:100%;font-size:0.75rem;"><thead><tr><th>대수</th><th>배분율</th><th>인원</th><th>금액</th></tr></thead><tbody>';
-  let rlTotal = 0;
-  for (let i=1; i<Math.min(7,simDepth); i++) { // 2대(i=1)부터 7대(i=6)까지
+// ─── ② 추천라인 롤업 (전체매출 6%, 15%×7대, 1대~7대) ───
+function calcRefLine(rows, totalSales) {
+  const pool   = Math.round(totalSales * CFG.refLinePool);
+  const perGen = Math.round(pool * CFG.refLineRate);
+  let tableHtml = '<table style="width:100%;font-size:0.75rem;"><thead><tr><th>대수</th><th>배분율</th><th>인원</th><th>금액</th></tr></thead><tbody>';
+  let lineTotal = 0;
+  const genCount = Math.min(CFG.refLineGens, rows.length);
+  for (let i = 0; i < genCount; i++) {
     const r = rows[i];
-    if(!r) continue;
-    const amt = refLinePerGen;
-    rlTotal += amt;
-    rlH += '<tr class="act"><td style="font-weight:700;">'+r.label+'</td><td class="mono">15%</td><td class="mono">'+r.cnt.toLocaleString()+'명</td><td class="mono" style="color:var(--gold);">$'+amt.toLocaleString()+'</td></tr>';
+    lineTotal += perGen;
+    tableHtml += `<tr class="act"><td style="font-weight:700;">${r.g}대</td><td class="mono">15%</td><td class="mono">${r.cnt.toLocaleString()}명</td><td class="mono" style="color:var(--gold);">$${perGen.toLocaleString()}</td></tr>`;
   }
-  rlH += '<tr class="totr"><td colspan="2">추천라인 합계</td><td></td><td style="color:var(--gold);">$'+rlTotal.toLocaleString()+'</td></tr></tbody></table>';
-  rlEl.innerHTML = `
+  tableHtml += `<tr class="totr"><td colspan="2">추천라인 합계</td><td></td><td style="color:var(--gold);">$${lineTotal.toLocaleString()}</td></tr></tbody></table>`;
+  document.getElementById('calc-refline').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">전체 매출의 6%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${refLineTotal.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${pool.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">대수별 배분</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">15% × 6대</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">15% × 7대</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">대당 지급액</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${refLinePerGen.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${perGen.toLocaleString()}</div>
       </div>
-    </div>` + rlH;
+    </div>` + tableHtml;
+  return pool; // 전체 풀 반환 (lineTotal은 genCount에 따라 변동)
+}
 
-  // ===== ③ 후원라인 롤업 (전체매출 4%, 4%×10대) =====
-  const sponTotal = Math.round(tSales * sponLinePool);
-  const sponPerGen = Math.round(sponTotal * 0.15); // 15%씩
+// ─── ③ 후원라인 롤업 (전체매출 4%, 15%×7대) ───
+function calcSponsor(rows, totalSales) {
+  const pool   = Math.round(totalSales * CFG.sponPool);
+  const perGen = Math.round(pool * CFG.sponRate);
   let sh = '<thead><tr><th>대수</th><th>롤업%</th><th>인원</th><th>매출</th><th>누적매출</th><th>인당수익</th><th>총수익</th><th>누적수익</th><th>상태</th></tr></thead><tbody>';
-  let cumSales=0, cumSpon=0, mx=0, cumPot=0;
-  for (const r of rows) { const p=r.cnt*r.perSpon; if(p>mx)mx=p; }
+  let cumSales = 0, cumSpon = 0, cumPot = 0, totSpon = 0;
+  const maxRev = perGen * Math.max(...rows.map(r => r.cnt));
   for (const r of rows) {
     cumSales += r.sales;
-    const potRev = r.cnt * r.perSpon;
+    const potRev = perGen * r.cnt;
+    const rev    = r.sponOn ? potRev : 0;
     cumPot += potRev;
-    if(r.sponOn) cumSpon += r.sponRev;
+    if (r.sponOn) { cumSpon += rev; totSpon += rev; }
     let statusTag = '';
-    if (r.cond === 'auto') statusTag = '<span class="tag tag-on">자동적용</span>';
+    if      (r.cond === 'auto')   statusTag = '<span class="tag tag-on">자동적용</span>';
     else if (r.cond === 'locked') statusTag = '<span class="tag tag-off">미해당</span>';
-    else statusTag = '<span class="tag" style="background:rgba(224,120,48,0.12);color:var(--hermes);">조건부</span>';
-    const dim = r.cond==='locked' ? 'opacity:0.3;' : '';
-    const revDisplay = r.sponOn ? '$'+r.sponRev.toLocaleString() : '($'+potRev.toLocaleString()+')';
-    const cumDisplay = r.sponOn ? '$'+cumSpon.toLocaleString() : '($'+cumPot.toLocaleString()+')';
-    sh += '<tr style="'+dim+'"><td style="font-weight:700">'+r.label+'</td><td class="mono">'+r.sponRate+'%</td><td class="mono">'+r.cnt.toLocaleString()+'</td><td class="mono" style="color:var(--text2)">$'+r.sales.toLocaleString()+'</td><td class="mono" style="color:var(--hermes)">$'+cumSales.toLocaleString()+'</td><td class="mono">$'+r.perSpon.toLocaleString()+'</td><td class="mono">'+revDisplay+'</td><td class="mono" style="color:var(--gold)">'+cumDisplay+'</td><td>'+statusTag+'</td></tr>';
+    else                          statusTag = '<span class="tag" style="background:rgba(224,120,48,0.12);color:var(--hermes);">조건부</span>';
+    const dim        = r.cond === 'locked' ? 'opacity:0.3;' : '';
+    const revDisplay = r.sponOn ? '$' + rev.toLocaleString() : '($' + potRev.toLocaleString() + ')';
+    const cumDisplay = r.sponOn ? '$' + cumSpon.toLocaleString() : '($' + cumPot.toLocaleString() + ')';
+    sh += `<tr style="${dim}"><td style="font-weight:700">${r.g}대</td><td class="mono">${Math.round(CFG.sponPool*100)}%</td><td class="mono">${r.cnt.toLocaleString()}</td><td class="mono" style="color:var(--text2)">$${r.sales.toLocaleString()}</td><td class="mono" style="color:var(--hermes)">$${cumSales.toLocaleString()}</td><td class="mono">$${perGen.toLocaleString()}</td><td class="mono">${revDisplay}</td><td class="mono" style="color:var(--gold)">${cumDisplay}</td><td>${statusTag}</td></tr>`;
   }
-  sh += '<tr class="totr"><td colspan="6">후원라인 수익 합계</td><td colspan="3" style="color:var(--gold);">$'+totSponsor.toLocaleString()+'</td></tr></tbody>';
+  sh += `<tr class="totr"><td colspan="6">후원라인 수익 합계</td><td colspan="3" style="color:var(--gold);">$${totSpon.toLocaleString()}</td></tr></tbody>`;
   document.getElementById('calc-sponsor').innerHTML = sh;
-  const condNote = me===300 
-    ? '<strong style="color:var(--gold);">$300 가입 → 후원 롤업 1대까지 자동적용</strong><br>2~5대: 미해당 · 6~10대: 조건부 (팀누적매출+추천인원 달성 시)'
-    : '<strong style="color:var(--gold);">$3,000 가입 → 후원 롤업 1~5대까지 자동적용</strong><br>6~10대: 조건부 (팀누적매출+추천인원 달성 시)';
-  document.getElementById('spon-note').innerHTML = condNote;
-  document.getElementById('bars').innerHTML = rows.map(r=>{
-    const potRev=r.cnt*r.perSpon; const displayRev=r.sponOn?r.sponRev:potRev;
-    const w=mx>0?Math.max(4,(displayRev/mx)*100):4;
-    const dimStyle=r.cond==='locked'?'opacity:0.3;':'';
-    return '<div class="bar-col" style="'+dimStyle+'"><div class="bl">'+r.label+' '+r.sponRate+'%</div><div class="br '+(r.sponOn?'on':'dim')+'" style="width:'+w+'%"></div><div class="bv '+(r.sponOn?'':'dim')+'">$'+displayRev.toLocaleString()+'</div></div>';
+  document.getElementById('spon-note').innerHTML = me === 300
+    ? '<strong style="color:var(--gold);">$300 가입 → 후원 롤업 1대까지 자동적용</strong><br>2~5대: 미해당 · 6~7대: 조건부 (팀누적매출+추천인원 달성 시)'
+    : '<strong style="color:var(--gold);">$3,000 가입 → 후원 롤업 1~5대까지 자동적용 (6개월 인정)</strong><br>6~7대: 조건부 (팀누적매출+추천인원 달성 시)';
+  document.getElementById('bars').innerHTML = rows.map(r => {
+    const potRev   = perGen * r.cnt;
+    const dispRev  = r.sponOn ? potRev : potRev;
+    const w        = maxRev > 0 ? Math.max(4, (dispRev / maxRev) * 100) : 4;
+    const dimStyle = r.cond === 'locked' ? 'opacity:0.3;' : '';
+    return `<div class="bar-col" style="${dimStyle}"><div class="bl">${r.g}대 ${Math.round(CFG.sponPool*100)}%</div><div class="br ${r.sponOn ? 'on' : 'dim'}" style="width:${w}%"></div><div class="bv ${r.sponOn ? '' : 'dim'}">$${dispRev.toLocaleString()}</div></div>`;
   }).join('');
+  return totSpon;
+}
 
-  // ===== ④ 공유 보너스 (전체매출 5%, 20%×5레벨) =====
+// ─── ④ 공유 보너스 (전체매출 5%, 20%×5레벨, L3~L7) ───
+function calcShare(totalSales) {
+  const pool     = Math.round(totalSales * CFG.sharePool);
+  const perLevel = Math.round(pool * CFG.shareRate);
   document.getElementById('calc-share').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">전체 매출의 5%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:#FF9FF3;margin-top:4px;">$${sharePool.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:#FF9FF3;margin-top:4px;">$${pool.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">대상</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">L3~L7</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">L${CFG.shareStart}~L${CFG.shareEnd}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">레벨당 20%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:#FF9FF3;margin-top:4px;">$${sharePerLevel.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:#FF9FF3;margin-top:4px;">$${perLevel.toLocaleString()}</div>
       </div>
     </div>
     <div style="font-size:0.78rem;color:var(--text);line-height:1.8;">
-      총 매출 $${tSales.toLocaleString()} × 5% = <strong style="color:#FF9FF3;">$${sharePool.toLocaleString()}</strong><br>
-      L3~L7 각 레벨에 20%씩 → 레벨당 <strong style="color:#FF9FF3;">$${sharePerLevel.toLocaleString()}</strong> (자격자 n명이 1/n 균등 배분)
+      총 매출 $${totalSales.toLocaleString()} × 5% = <strong style="color:#FF9FF3;">$${pool.toLocaleString()}</strong><br>
+      L${CFG.shareStart}~L${CFG.shareEnd} 각 레벨에 20%씩 → 레벨당 <strong style="color:#FF9FF3;">$${perLevel.toLocaleString()}</strong> (자격자 n명이 1/n 균등 배분)
     </div>`;
+  return pool;
+}
 
-  // ===== ⑥ 재구매/오토쉽 =====
+// ─── ⑥ 재구매/오토쉽 (5%) ───
+function calcRepurchase(totalSales) {
+  const pool = Math.round(totalSales * CFG.repurchase);
   document.getElementById('calc-repurchase').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">재구매 매출 5%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${repurchasePool.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${pool.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">배분 방식</div>
@@ -1799,10 +1783,12 @@ function calc() {
       </div>
     </div>
     <div style="font-size:0.78rem;color:var(--text);">재구매 회원 대상 · 지속 구매 보상 · 매출의 5%를 재구매 회원 수(n)로 나눠 지급</div>`;
+  return pool;
+}
 
-  // ===== ⑦~⑩ 시상 (매월+누적, 각 1%) =====
-  const pool1 = Math.round(tSales * 0.01);
-  const awEl = document.getElementById('calc-awards');
+// ─── ⑦~⑩ 시상 (매월/누적, 각 1%) ───
+function calcAwards(totalSales) {
+  const pool1 = Math.round(totalSales * CFG.awardRate);
   const mkAward = (title, color, pool) => `
     <div style="background:rgba(22,22,22,0.7);border:1px solid var(--border);border-radius:10px;padding:12px;">
       <div style="font-size:0.68rem;color:${color};font-weight:700;margin-bottom:8px;">${title} (1%)</div>
@@ -1813,7 +1799,7 @@ function calc() {
         <div style="flex:20;background:${color};opacity:0.35;border-radius:4px;padding:5px;text-align:center;font-size:0.65rem;font-weight:800;color:#fff;">3등 20%<br>$${Math.round(pool*0.2).toLocaleString()}</div>
       </div>
     </div>`;
-  awEl.innerHTML = `
+  document.getElementById('calc-awards').innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
       ${mkAward('⑦ 매월 최대매출','#48DBFB',pool1)}
       ${mkAward('⑧ 매월 최다추천','#FF9FF3',pool1)}
@@ -1823,39 +1809,40 @@ function calc() {
       ${mkAward('⑩ 누적 최다추천','#aaa',pool1)}
     </div>
     <div style="font-size:0.75rem;color:var(--text2);">※ 각 시상 = 전체매출 1%를 100분율 배분 (50:30:20) · 상위 3명</div>`;
+  return pool1 * CFG.awardCount;
+}
 
-  const totalAwards = pool1 * 4;
-
-  // ===== 종합 수익 =====
-  const grandTotal = totAll + refLineTotal + sharePool + repurchasePool + totalAwards;
-  document.getElementById('s4').textContent = '$'+grandTotal.toLocaleString();
+// ─── 종합 수익 렌더링 ───
+function renderTotal(totalSales, direct, refLine, sponsor, share, repurchase, awards) {
+  const grandTotal = direct + refLine + sponsor + share + repurchase + awards;
+  document.getElementById('s4').textContent = '$' + grandTotal.toLocaleString();
   document.getElementById('calc-total').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:8px;">
       <div style="background:rgba(22,22,22,0.7);padding:10px;text-align:center;">
-        <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">① 직접추천</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);margin-top:3px;">$${directTotal.toLocaleString()}</div>
+        <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">① 직접추천 30%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);margin-top:3px;">$${direct.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">② 추천롤업 6%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);margin-top:3px;">$${refLineTotal.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);margin-top:3px;">$${refLine.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">③ 후원롤업 4%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--hermes);margin-top:3px;">$${totSponsor.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--hermes);margin-top:3px;">$${sponsor.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">④ 공유 5%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:#FF9FF3;margin-top:3px;">$${sharePool.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:#FF9FF3;margin-top:3px;">$${share.toLocaleString()}</div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">⑥ 재구매 5%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);margin-top:3px;">$${repurchasePool.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);margin-top:3px;">$${repurchase.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">⑦~⑩ 시상 4%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--hermes);margin-top:3px;">$${totalAwards.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--hermes);margin-top:3px;">$${awards.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">⑤ 센터 (미정)</div>
@@ -1867,9 +1854,49 @@ function calc() {
       </div>
     </div>
     <div style="font-size:0.7rem;color:var(--text3);line-height:1.6;">
-      총 매출 $${tSales.toLocaleString()} 대비 배분률: <strong style="color:var(--gold);">${(tSales>0?((grandTotal)/tSales*100).toFixed(1):0)}%</strong>
+      총 매출 $${totalSales.toLocaleString()} 대비 배분률: <strong style="color:var(--gold);">${(totalSales > 0 ? (grandTotal / totalSales * 100).toFixed(1) : 0)}%</strong>
       <span style="color:var(--text4);margin-left:8px;">(센터 5% 미포함)</span>
     </div>`;
+}
+
+// ─── MAIN calc() ───
+function calc() {
+  const n        = parseInt(document.getElementById('rec').value);
+  const simDepth = parseInt(document.getElementById('gen-depth').value);
+  document.getElementById('rd').textContent = n + '명';
+  document.getElementById('gd').textContent = simDepth + '대';
+
+  const { rows, totalPeople, totalSales } = buildGenData(n, simDepth);
+
+  // 요약 카드
+  document.getElementById('s1').textContent = me === 300 ? '롤업 1대' : '롤업 1~5대';
+  document.getElementById('s2').textContent = '$' + sub.toLocaleString();
+  document.getElementById('s3').textContent = totalPeople.toLocaleString() + '명';
+  document.getElementById('s5').textContent = '$' + totalSales.toLocaleString();
+
+  // 각 수당 계산 (완전 분리)
+  const direct     = calcDirect(n);
+  const refLine    = calcRefLine(rows, totalSales);
+  const sponsor    = calcSponsor(rows, totalSales);
+  const share      = calcShare(totalSales);
+  const repurchase = calcRepurchase(totalSales);
+  const awards     = calcAwards(totalSales);
+
+  // 종합
+  renderTotal(totalSales, direct, refLine, sponsor, share, repurchase, awards);
+}
+
+function setMe(v) {
+  me = v;
+  document.getElementById('my300').className  = v === 300  ? 'tier-btn s1' : 'tier-btn';
+  document.getElementById('my3000').className = v === 3000 ? 'tier-btn s2' : 'tier-btn';
+  calc();
+}
+function setSub(v) {
+  sub = v;
+  document.getElementById('sb300').className  = v === 300  ? 'tier-btn s1' : 'tier-btn';
+  document.getElementById('sb3000').className = v === 3000 ? 'tier-btn s2' : 'tier-btn';
+  calc();
 }
 
 calc();
@@ -1883,7 +1910,6 @@ function switchTab(tab) {
   document.querySelectorAll('.main-tab')[idx].classList.add('active');
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
-
 
 // ===== Interactive 65% Plan =====
 const DEFAULT_RATES = [4,4,4,4,4,4,4];
