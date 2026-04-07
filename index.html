@@ -526,13 +526,18 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
             </linearGradient>
           </defs>
           <!-- trunk -->
-          <rect x="19.5" y="30" width="5" height="11" rx="2.5" fill="url(#treeGrad)"/>
-          <!-- bottom tier -->
-          <polygon points="22,18 10,33 34,33" fill="url(#treeGrad)" opacity="0.85"/>
-          <!-- middle tier -->
-          <polygon points="22,10 12,26 32,26" fill="url(#treeGrad)" opacity="0.92"/>
-          <!-- top tier -->
-          <polygon points="22,2 14,18 30,18" fill="url(#treeGrad)"/>
+          <line x1="22" y1="30" x2="22" y2="41" stroke="url(#treeGrad)" stroke-width="3" stroke-linecap="round"/>
+          <!-- side branches -->
+          <line x1="22" y1="36" x2="17" y2="40" stroke="url(#treeGrad)" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+          <line x1="22" y1="32" x2="16" y2="36" stroke="url(#treeGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+          <line x1="22" y1="36" x2="27" y2="40" stroke="url(#treeGrad)" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+          <line x1="22" y1="32" x2="28" y2="36" stroke="url(#treeGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+          <!-- bottom tier outline -->
+          <polygon points="22,20 9,34 35,34" fill="none" stroke="url(#treeGrad)" stroke-width="1.8" stroke-linejoin="round" opacity="0.8"/>
+          <!-- mid tier outline -->
+          <polygon points="22,12 11,27 33,27" fill="none" stroke="url(#treeGrad)" stroke-width="1.8" stroke-linejoin="round" opacity="0.9"/>
+          <!-- top tier outline -->
+          <polygon points="22,2 14,17 30,17" fill="none" stroke="url(#treeGrad)" stroke-width="1.8" stroke-linejoin="round"/>
         </svg>
       </div>
       <div class="brand">Value Tree<span class="alpha">NMN</span></div>
