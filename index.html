@@ -1674,115 +1674,116 @@ function calcDirect(n) {
   return total;
 }
 
-// ─── ② 추천라인 롤업 (대수별 레벨매출 × 6% × 15% = 내 수익) ───
-function calcRefLine(rows, totalSales) {
-  // 공식: 내 수익(대수별) = cnt × sub × 6% × 15%
-  // 대수 깊어질수록 인원↑ → 레벨매출↑ → 내 수익↑
-  let lineTotal = 0;
-  const genCount = Math.min(CFG.refLineGens, rows.length);
+// ─── 공통 롤업 테이블 렌더 함수 ───
+// poolPct: 전체매출 풀 비율 (예: 0.06)
+// ratePct: 대수별 적용 비율 (예: 0.15)
+// startGen: 시작 대수 (1 또는 2)
+// endGen: 끝 대수 (예: 7)
+// condFn: (row) => { on: bool, cond: 'auto'|'locked'|'level' } (null이면 모두 자동)
+// color: 강조 색상
+function renderRollupTable(rows, poolPctLabel, ratePctLabel, startGen, endGen, condFn, color) {
   const genRows = [];
-  for (let i = 0; i < genCount; i++) {
-    const r       = rows[i];
-    const lvSales = r.cnt * sub;                                        // 레벨매출
-    const pool6   = Math.round(lvSales * CFG.refLinePool);              // ×6%
-    const myIncome = Math.round(pool6 * CFG.refLineRate);               // ×15% = 내 수익
-    lineTotal += myIncome;
-    genRows.push({ g: r.g, cnt: r.cnt, lvSales, pool6, myIncome });
+  let myTotal = 0;
+  for (const r of rows) {
+    if (r.g < startGen || r.g > endGen) continue;
+    const lvSales  = r.cnt * sub;
+    const poolAmt  = Math.round(lvSales * parseFloat(poolPctLabel) / 100);
+    const myIncome = Math.round(poolAmt  * parseFloat(ratePctLabel) / 100);
+    const state    = condFn ? condFn(r) : { on: true, cond: 'auto' };
+    const active   = state.on;
+    myTotal += active ? myIncome : 0;
+    genRows.push({ g: r.g, cnt: r.cnt, lvSales, poolAmt, myIncome, active, cond: state.cond });
   }
   let tableHtml = `<table style="width:100%;font-size:0.75rem;">
-    <thead><tr><th>대수</th><th>인원</th><th>레벨매출</th><th>×6%</th><th>×15% (내 수익)</th></tr></thead><tbody>`;
+    <thead><tr><th>대수</th><th>인원</th><th>레벨매출</th><th>×${poolPctLabel}%</th><th>×${ratePctLabel}% (내 수익)</th><th>상태</th></tr></thead><tbody>`;
+  let maxIncome = Math.max(...genRows.map(r => r.myIncome), 1);
   for (const gr of genRows) {
-    tableHtml += `<tr class="act">
+    let statusTag = '';
+    if      (gr.cond === 'auto')   statusTag = '<span class="tag tag-on">자동적용</span>';
+    else if (gr.cond === 'locked') statusTag = '<span class="tag tag-off">미해당</span>';
+    else                           statusTag = '<span class="tag" style="background:rgba(224,120,48,0.12);color:var(--hermes);">조건부</span>';
+    const dim     = gr.cond === 'locked' ? 'opacity:0.3;' : '';
+    const incDisp = gr.active ? `<strong style="color:${color};">$${gr.myIncome.toLocaleString()}</strong>` : `<span style="color:var(--text4);">($${gr.myIncome.toLocaleString()})</span>`;
+    tableHtml += `<tr style="${dim}">
       <td style="font-weight:700;">${gr.g}대</td>
       <td class="mono">${gr.cnt.toLocaleString()}명</td>
       <td class="mono" style="color:var(--text2);">$${gr.lvSales.toLocaleString()}</td>
-      <td class="mono" style="color:var(--text2);">$${gr.pool6.toLocaleString()}</td>
-      <td class="mono" style="color:var(--gold);font-weight:700;">$${gr.myIncome.toLocaleString()}</td>
+      <td class="mono" style="color:var(--text2);">$${gr.poolAmt.toLocaleString()}</td>
+      <td class="mono">${incDisp}</td>
+      <td>${statusTag}</td>
     </tr>`;
   }
-  tableHtml += `<tr class="totr"><td colspan="4">추천라인 합계 (내 수익)</td><td style="color:var(--gold);">$${lineTotal.toLocaleString()}</td></tr></tbody></table>`;
+  tableHtml += `<tr class="totr"><td colspan="4">합계 (내 수익)</td><td colspan="2" style="color:${color};">$${myTotal.toLocaleString()}</td></tr></tbody></table>`;
+  return { tableHtml, myTotal, genRows };
+}
+
+// ─── ② 추천라인 롤업 (레벨매출 × 6% × 15%, 2대~7대) ───
+function calcRefLine(rows) {
+  const { tableHtml, myTotal } = renderRollupTable(rows, '6', '15', 2, 7, null, 'var(--gold)');
   document.getElementById('calc-refline').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">계산 공식</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:800;color:var(--text);margin-top:4px;">레벨매출 × 6% × 15%</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:800;color:var(--text);margin-top:4px;">레벨매출 × 6% × 15%</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">적용 대수</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">1대 ~ 7대</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">2대 ~ 7대</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">내 총 수익</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${lineTotal.toLocaleString()}</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${myTotal.toLocaleString()}</div>
       </div>
     </div>
     <div style="font-size:0.75rem;color:var(--text2);margin-bottom:10px;padding:8px 12px;background:rgba(22,22,22,0.5);border-radius:8px;">
-      대수가 깊어질수록 인원↑ → 레벨매출↑ → 내 수익↑ 구조
+      대수 깊어질수록 인원↑ → 레벨매출↑ → 내 수익↑
     </div>` + tableHtml;
-  return lineTotal;
+  return myTotal;
 }
 
-// ─── ③ 후원라인 롤업 (전체매출 4%, 15%×7대) ───
-function calcSponsor(rows, totalSales) {
-  const pool   = Math.round(totalSales * CFG.sponPool);
-  const perGen = Math.round(pool * CFG.sponRate);
-  let sh = '<thead><tr><th>대수</th><th>롤업%</th><th>인원</th><th>매출</th><th>누적매출</th><th>인당수익</th><th>총수익</th><th>누적수익</th><th>상태</th></tr></thead><tbody>';
-  let cumSales = 0, cumSpon = 0, cumPot = 0, totSpon = 0;
-  const maxRev = perGen * Math.max(...rows.map(r => r.cnt));
-  for (const r of rows) {
-    cumSales += r.sales;
-    const potRev = perGen * r.cnt;
-    const rev    = r.sponOn ? potRev : 0;
-    cumPot += potRev;
-    if (r.sponOn) { cumSpon += rev; totSpon += rev; }
-    let statusTag = '';
-    if      (r.cond === 'auto')   statusTag = '<span class="tag tag-on">자동적용</span>';
-    else if (r.cond === 'locked') statusTag = '<span class="tag tag-off">미해당</span>';
-    else                          statusTag = '<span class="tag" style="background:rgba(224,120,48,0.12);color:var(--hermes);">조건부</span>';
-    const dim        = r.cond === 'locked' ? 'opacity:0.3;' : '';
-    const revDisplay = r.sponOn ? '$' + rev.toLocaleString() : '($' + potRev.toLocaleString() + ')';
-    const cumDisplay = r.sponOn ? '$' + cumSpon.toLocaleString() : '($' + cumPot.toLocaleString() + ')';
-    sh += `<tr style="${dim}"><td style="font-weight:700">${r.g}대</td><td class="mono">${Math.round(CFG.sponPool*100)}%</td><td class="mono">${r.cnt.toLocaleString()}</td><td class="mono" style="color:var(--text2)">$${r.sales.toLocaleString()}</td><td class="mono" style="color:var(--hermes)">$${cumSales.toLocaleString()}</td><td class="mono">$${perGen.toLocaleString()}</td><td class="mono">${revDisplay}</td><td class="mono" style="color:var(--gold)">${cumDisplay}</td><td>${statusTag}</td></tr>`;
-  }
-  sh += `<tr class="totr"><td colspan="6">후원라인 수익 합계</td><td colspan="3" style="color:var(--gold);">$${totSpon.toLocaleString()}</td></tr></tbody>`;
-  document.getElementById('calc-sponsor').innerHTML = sh;
+// ─── ③ 후원라인 롤업 (레벨매출 × 4% × 15%, 1대~7대, 조건부) ───
+function calcSponsor(rows) {
+  const condFn = (r) => {
+    if (r.cond === 'auto')   return { on: true,  cond: 'auto'   };
+    if (r.cond === 'locked') return { on: false, cond: 'locked' };
+    return                          { on: false, cond: 'level'  };
+  };
+  const { tableHtml, myTotal, genRows } = renderRollupTable(rows, '4', '15', 1, 7, condFn, 'var(--hermes)');
+  document.getElementById('calc-sponsor').innerHTML = tableHtml;
   document.getElementById('spon-note').innerHTML = me === 300
     ? '<strong style="color:var(--gold);">$300 가입 → 후원 롤업 1대까지 자동적용</strong><br>2~5대: 미해당 · 6~7대: 조건부 (팀누적매출+추천인원 달성 시)'
     : '<strong style="color:var(--gold);">$3,000 가입 → 후원 롤업 1~5대까지 자동적용 (6개월 인정)</strong><br>6~7대: 조건부 (팀누적매출+추천인원 달성 시)';
-  document.getElementById('bars').innerHTML = rows.map(r => {
-    const potRev   = perGen * r.cnt;
-    const dispRev  = r.sponOn ? potRev : potRev;
-    const w        = maxRev > 0 ? Math.max(4, (dispRev / maxRev) * 100) : 4;
+  const maxInc = Math.max(...genRows.map(r => r.myIncome), 1);
+  document.getElementById('bars').innerHTML = genRows.map(r => {
+    const w = Math.max(4, (r.myIncome / maxInc) * 100);
     const dimStyle = r.cond === 'locked' ? 'opacity:0.3;' : '';
-    return `<div class="bar-col" style="${dimStyle}"><div class="bl">${r.g}대 ${Math.round(CFG.sponPool*100)}%</div><div class="br ${r.sponOn ? 'on' : 'dim'}" style="width:${w}%"></div><div class="bv ${r.sponOn ? '' : 'dim'}">$${dispRev.toLocaleString()}</div></div>`;
+    return `<div class="bar-col" style="${dimStyle}"><div class="bl">${r.g}대 4%×15%</div><div class="br ${r.active ? 'on' : 'dim'}" style="width:${w}%"></div><div class="bv ${r.active ? '' : 'dim'}">$${r.myIncome.toLocaleString()}</div></div>`;
   }).join('');
-  return totSpon;
+  return myTotal;
 }
 
-// ─── ④ 공유 보너스 (전체매출 5%, 20%×5레벨, L3~L7) ───
-function calcShare(totalSales) {
-  const pool     = Math.round(totalSales * CFG.sharePool);
-  const perLevel = Math.round(pool * CFG.shareRate);
+// ─── ④ 공유 보너스 (레벨매출 × 5% × 20%, L3~L7 = 3대~7대) ───
+function calcShare(rows) {
+  const { tableHtml, myTotal } = renderRollupTable(rows, '5', '20', CFG.shareStart, CFG.shareEnd, null, '#FF9FF3');
   document.getElementById('calc-share').innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">전체 매출의 5%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:#FF9FF3;margin-top:4px;">$${pool.toLocaleString()}</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">계산 공식</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:800;color:var(--text);margin-top:4px;">레벨매출 × 5% × 20%</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">대상</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">L${CFG.shareStart}~L${CFG.shareEnd}</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">적용 대수</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">L${CFG.shareStart} ~ L${CFG.shareEnd}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">레벨당 20%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:#FF9FF3;margin-top:4px;">$${perLevel.toLocaleString()}</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">내 총 수익</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:#FF9FF3;margin-top:4px;">$${myTotal.toLocaleString()}</div>
       </div>
     </div>
-    <div style="font-size:0.78rem;color:var(--text);line-height:1.8;">
-      총 매출 $${totalSales.toLocaleString()} × 5% = <strong style="color:#FF9FF3;">$${pool.toLocaleString()}</strong><br>
-      L${CFG.shareStart}~L${CFG.shareEnd} 각 레벨에 20%씩 → 레벨당 <strong style="color:#FF9FF3;">$${perLevel.toLocaleString()}</strong> (자격자 n명이 1/n 균등 배분)
-    </div>`;
-  return pool;
+    <div style="font-size:0.75rem;color:var(--text2);margin-bottom:10px;padding:8px 12px;background:rgba(22,22,22,0.5);border-radius:8px;">
+      대수 깊어질수록 인원↑ → 레벨매출↑ → 내 수익↑
+    </div>` + tableHtml;
+  return myTotal;
 }
 
 // ─── ⑥ 재구매/오토쉽 (5%) ───
@@ -1893,9 +1894,9 @@ function calc() {
 
   // 각 수당 계산 (완전 분리)
   const direct     = calcDirect(n);
-  const refLine    = calcRefLine(rows, totalSales);
-  const sponsor    = calcSponsor(rows, totalSales);
-  const share      = calcShare(totalSales);
+  const refLine    = calcRefLine(rows);
+  const sponsor    = calcSponsor(rows);
+  const share      = calcShare(rows);
   const repurchase = calcRepurchase(totalSales);
   const awards     = calcAwards(totalSales);
 
