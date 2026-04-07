@@ -1674,35 +1674,52 @@ function calcDirect(n) {
   return total;
 }
 
-// ─── ② 추천라인 롤업 (전체매출 6%, 15%×7대, 1대~7대) ───
+// ─── ② 추천라인 롤업 (대수별 레벨매출 × 6% × 15% = 내 수익) ───
 function calcRefLine(rows, totalSales) {
-  const pool   = Math.round(totalSales * CFG.refLinePool);
-  const perGen = Math.round(pool * CFG.refLineRate);
-  let tableHtml = '<table style="width:100%;font-size:0.75rem;"><thead><tr><th>대수</th><th>배분율</th><th>인원</th><th>금액</th></tr></thead><tbody>';
+  // 공식: 내 수익(대수별) = cnt × sub × 6% × 15%
+  // 대수 깊어질수록 인원↑ → 레벨매출↑ → 내 수익↑
   let lineTotal = 0;
   const genCount = Math.min(CFG.refLineGens, rows.length);
+  const genRows = [];
   for (let i = 0; i < genCount; i++) {
-    const r = rows[i];
-    lineTotal += perGen;
-    tableHtml += `<tr class="act"><td style="font-weight:700;">${r.g}대</td><td class="mono">15%</td><td class="mono">${r.cnt.toLocaleString()}명</td><td class="mono" style="color:var(--gold);">$${perGen.toLocaleString()}</td></tr>`;
+    const r       = rows[i];
+    const lvSales = r.cnt * sub;                                        // 레벨매출
+    const pool6   = Math.round(lvSales * CFG.refLinePool);              // ×6%
+    const myIncome = Math.round(pool6 * CFG.refLineRate);               // ×15% = 내 수익
+    lineTotal += myIncome;
+    genRows.push({ g: r.g, cnt: r.cnt, lvSales, pool6, myIncome });
   }
-  tableHtml += `<tr class="totr"><td colspan="2">추천라인 합계</td><td></td><td style="color:var(--gold);">$${lineTotal.toLocaleString()}</td></tr></tbody></table>`;
+  let tableHtml = `<table style="width:100%;font-size:0.75rem;">
+    <thead><tr><th>대수</th><th>인원</th><th>레벨매출</th><th>×6%</th><th>×15% (내 수익)</th></tr></thead><tbody>`;
+  for (const gr of genRows) {
+    tableHtml += `<tr class="act">
+      <td style="font-weight:700;">${gr.g}대</td>
+      <td class="mono">${gr.cnt.toLocaleString()}명</td>
+      <td class="mono" style="color:var(--text2);">$${gr.lvSales.toLocaleString()}</td>
+      <td class="mono" style="color:var(--text2);">$${gr.pool6.toLocaleString()}</td>
+      <td class="mono" style="color:var(--gold);font-weight:700;">$${gr.myIncome.toLocaleString()}</td>
+    </tr>`;
+  }
+  tableHtml += `<tr class="totr"><td colspan="4">추천라인 합계 (내 수익)</td><td style="color:var(--gold);">$${lineTotal.toLocaleString()}</td></tr></tbody></table>`;
   document.getElementById('calc-refline').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">전체 매출의 6%</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${pool.toLocaleString()}</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">계산 공식</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:800;color:var(--text);margin-top:4px;">레벨매출 × 6% × 15%</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">대수별 배분</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">15% × 7대</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">적용 대수</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">1대 ~ 7대</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">대당 지급액</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${perGen.toLocaleString()}</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">내 총 수익</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${lineTotal.toLocaleString()}</div>
       </div>
+    </div>
+    <div style="font-size:0.75rem;color:var(--text2);margin-bottom:10px;padding:8px 12px;background:rgba(22,22,22,0.5);border-radius:8px;">
+      대수가 깊어질수록 인원↑ → 레벨매출↑ → 내 수익↑ 구조
     </div>` + tableHtml;
-  return pool; // 전체 풀 반환 (lineTotal은 genCount에 따라 변동)
+  return lineTotal;
 }
 
 // ─── ③ 후원라인 롤업 (전체매출 4%, 15%×7대) ───
