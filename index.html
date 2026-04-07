@@ -502,34 +502,30 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   <div id="tab-landing" class="tab-panel active">
 
     <!-- SECTION 1: HERO -->
-    <div class="hero" style="display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;">
-      <div style="flex:1;min-width:280px;">
-        <div class="hero-badge">Value Tree · NMN 역노화 프로젝트</div>
-        <div class="hero-title">
-          오래 사는 것보다<br>중요한 것,<br>
-          <span class="accent">어떻게</span> 살 것인가?
-        </div>
-        <div class="hero-sub">
-          하버드 의대 싱클레어 박사가 밝혀낸 역노화의 비밀—<br>
-          <strong>NMN</strong>으로 NAD+를 복원하고, 세포 수준에서 다시 젊어지세요.
-        </div>
-        <div class="hero-stats">
-          <div class="stat"><div class="stat-num">1,749+</div><div class="stat-label">누적 연구 논문</div></div>
-          <div class="stat"><div class="stat-num">15%+</div><div class="stat-label">건강수명 연장</div></div>
-          <div class="stat"><div class="stat-num">99.9%</div><div class="stat-label">일본산 순도</div></div>
-        </div>
-        <a href="#" class="cta-btn" onclick="switchTab('tab-order');return false;">지금 시작하기 →</a>
+    <div class="hero" style="text-align:center;">
+      <div class="hero-badge">Value Tree · NMN 역노화 프로젝트</div>
+      <div class="hero-title">
+        오래 사는 것보다<br>중요한 것,<br>
+        <span class="accent">어떻게</span> 살 것인가?
       </div>
-      <div style="flex:0 0 auto;display:none;" class="hero-img-wrap">
+      <div class="hero-sub">
+        하버드 의대 싱클레어 박사가 밝혀낸 역노화의 비밀—<br>
+        <strong>NMN</strong>으로 NAD+를 복원하고, 세포 수준에서 다시 젊어지세요.
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">1,749+</div><div class="stat-label">누적 연구 논문</div></div>
+        <div class="stat"><div class="stat-num">15%+</div><div class="stat-label">건강수명 연장</div></div>
+        <div class="stat"><div class="stat-num">99.9%</div><div class="stat-label">일본산 순도</div></div>
+      </div>
+      <a href="#" class="cta-btn" onclick="switchTab('tab-order');return false;">지금 시작하기 →</a>
+      <!-- 제품 이미지: 텍스트 아래 중앙 -->
+      <div style="margin-top:2rem;">
         <img src="images/alpha-018.png"
           alt="PREMIUM NMN 10000"
           loading="lazy"
-          style="width:280px;border-radius:16px;box-shadow:0 0 50px rgba(30,144,255,0.4);object-fit:cover;">
+          style="max-width:560px;width:100%;border-radius:20px;box-shadow:0 0 60px rgba(30,144,255,0.35);object-fit:cover;">
       </div>
     </div>
-    <style>
-      @media(min-width:768px){.hero-img-wrap{display:block!important;}}
-    </style>
 
     <!-- SECTION 2: 싱클레어 박사 -->
     <div class="dc anim" style="margin-bottom:2rem;overflow:hidden;border-radius:16px;border:1px solid var(--border);">
@@ -651,71 +647,110 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
       </div>
     </div>
 
-    <!-- SECTION 4: Before / After 효능 -->
+    <!-- SECTION 4: 공인이 선택한 NAD+ -->
     <div class="dc anim" style="margin-bottom:2rem;padding:2rem;border-radius:16px;border:1px solid var(--border);">
       <div style="text-align:center;margin-bottom:1.8rem;">
-        <div style="font-size:0.85rem;color:var(--hermes);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.5rem;">Before → After</div>
-        <div style="font-size:1.6rem;font-weight:700;color:var(--text);">NMN 섭취 전후 — 세포 수준의 변화</div>
+        <div style="font-size:0.85rem;color:var(--hermes);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.5rem;">Who's Using NAD+</div>
+        <div style="font-size:1.6rem;font-weight:700;color:var(--text);">전 세계 공인이 선택한 NAD+</div>
+        <div style="font-size:0.9rem;color:var(--text2);margin-top:0.5rem;">억만장자부터 할리우드 탑스타까지, 그들의 젊음 비결</div>
       </div>
-      <!-- Card 1: 텔로미어 -->
-      <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.2rem;">
-        <div style="background:rgba(255,255,255,0.03);padding:0.7rem 1.2rem;font-weight:600;font-size:0.9rem;color:var(--text);">🧬 텔로미어 변화</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;">
-          <div style="padding:1.2rem;background:rgba(255,107,107,0.07);border-right:1px solid var(--border);">
-            <div style="font-size:0.75rem;color:#FF6B6B;font-weight:700;letter-spacing:1px;margin-bottom:0.8rem;">BEFORE</div>
-            <img src="https://learn-genetics.b-cdn.net/basics/telomeres/images/telomeres.png"
-              alt="텔로미어 구조"
-              loading="lazy"
-              onerror="this.style.display='none'"
-              style="max-width:100%;border-radius:8px;object-fit:contain;margin-bottom:0.8rem;">
-            <div style="font-size:0.82rem;color:var(--text2);">세포 분열마다 짧아짐 → 노화 가속</div>
+      <!-- 2x2 celebrity cards -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+
+        <!-- Card 1: 헤일리 비버 -->
+        <div style="background:rgba(254,202,87,0.05);border:1px solid rgba(254,202,87,0.25);border-radius:16px;padding:1.6rem;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,rgba(254,202,87,0.15),transparent);border-radius:50%;transform:translate(20px,-20px);"></div>
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:1.2rem;">
+            <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#FECA57,#FF6B00);display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;color:#000;flex-shrink:0;">H</div>
+            <div>
+              <div style="font-size:1rem;font-weight:800;color:var(--text);">헤일리 비버</div>
+              <div style="font-size:0.72rem;color:#FECA57;">Hailey Bieber · 모델 / 인플루언서</div>
+            </div>
           </div>
-          <div style="padding:1.2rem;background:rgba(72,219,251,0.06);">
-            <div style="font-size:0.75rem;color:#48DBFB;font-weight:700;letter-spacing:1px;margin-bottom:0.8rem;">AFTER NMN</div>
-            <img src="https://learn-genetics.b-cdn.net/basics/telomeres/images/telomere_length.png"
-              alt="텔로미어 길이 복원"
-              loading="lazy"
-              onerror="this.style.display='none'"
-              style="max-width:100%;border-radius:8px;object-fit:contain;margin-bottom:0.8rem;">
-            <div style="font-size:0.82rem;color:var(--text2);">NMN으로 <strong style="color:#48DBFB;">텔로미어 복원</strong> 확인</div>
+          <div style="background:rgba(254,202,87,0.08);border-left:3px solid #FECA57;border-radius:0 10px 10px 0;padding:1rem;margin-bottom:1rem;">
+            <p style="font-size:0.88rem;color:var(--text);line-height:1.7;font-style:italic;margin:0 0 0.5rem;">"남은 인생 동안 NAD를 할 것이고,<br>절대 늙지 않을 것"</p>
+            <p style="font-size:0.7rem;color:#FECA57;margin:0;font-weight:700;">— 방송 인터뷰 직접 발언</p>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span style="background:rgba(254,202,87,0.12);border:1px solid rgba(254,202,87,0.3);border-radius:20px;padding:3px 10px;font-size:0.7rem;color:#FECA57;">Forbes 집중 보도</span>
+            <span style="background:rgba(254,202,87,0.12);border:1px solid rgba(254,202,87,0.3);border-radius:20px;padding:3px 10px;font-size:0.7rem;color:#FECA57;">NAD+ IV 정기 투여</span>
           </div>
         </div>
-      </div>
-      <!-- Card 2: NAD+ 수치 -->
-      <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.2rem;">
-        <div style="background:rgba(255,255,255,0.03);padding:0.7rem 1.2rem;font-weight:600;font-size:0.9rem;color:var(--text);">⚡ NAD+ 체내 수치</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;">
-          <div style="padding:1.2rem;background:rgba(255,107,107,0.07);border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:center;">
-            <div style="font-size:0.75rem;color:#FF6B6B;font-weight:700;letter-spacing:1px;margin-bottom:0.8rem;">BEFORE</div>
-            <img src="images/alpha-002.png" alt="NAD+ 급감 그래프" loading="lazy"
-              style="width:100%;border-radius:8px;object-fit:cover;margin-bottom:0.8rem;">
-            <div style="font-size:0.82rem;color:var(--text2);">40대 이후 NAD+ <strong style="color:#FF6B6B;">50% 급감</strong><br>에너지·회복력 저하</div>
+
+        <!-- Card 2: 브라이언 존슨 -->
+        <div style="background:rgba(72,219,251,0.05);border:1px solid rgba(72,219,251,0.25);border-radius:16px;padding:1.6rem;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,rgba(72,219,251,0.15),transparent);border-radius:50%;transform:translate(20px,-20px);"></div>
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:1.2rem;">
+            <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#48DBFB,#54A0FF);display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;color:#000;flex-shrink:0;">B</div>
+            <div>
+              <div style="font-size:1rem;font-weight:800;color:var(--text);">브라이언 존슨</div>
+              <div style="font-size:0.72rem;color:#48DBFB;">Bryan Johnson · Blueprint 창시자</div>
+            </div>
           </div>
-          <div style="padding:1.5rem;background:rgba(72,219,251,0.06);display:flex;flex-direction:column;justify-content:center;">
-            <div style="font-size:0.75rem;color:#48DBFB;font-weight:700;letter-spacing:1px;margin-bottom:0.8rem;">AFTER NMN</div>
-            <div style="font-size:2.5rem;font-weight:800;color:#48DBFB;line-height:1;">↑청년</div>
-            <div style="font-size:0.85rem;color:var(--text2);margin-top:0.5rem;">체내 NAD+ 수치<br>급격히 상승</div>
-            <div style="margin-top:1rem;background:rgba(72,219,251,0.1);border-radius:8px;padding:0.7rem;font-size:0.78rem;color:var(--text2);">세포 에너지 공장<br>미토콘드리아 활성화</div>
+          <div style="background:rgba(72,219,251,0.08);border-radius:10px;padding:1rem;margin-bottom:1rem;">
+            <div style="font-size:0.75rem;color:var(--text2);margin-bottom:0.4rem;">연간 안티에이징 투자</div>
+            <div style="font-size:1.8rem;font-weight:900;color:#48DBFB;line-height:1;">$2,000,000</div>
+            <div style="font-size:0.72rem;color:var(--text2);margin-top:0.3rem;">NMN / NAD+ 일일 섭취 공개 인증</div>
           </div>
+          <div style="font-size:0.82rem;color:var(--text2);line-height:1.6;">전 오스 결제 CEO, 역노화 프로토콜<br>"Blueprint"의 핵심 성분으로 NMN 채택</div>
         </div>
-      </div>
-      <!-- Card 3: 건강수명 -->
-      <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;">
-        <div style="background:rgba(255,255,255,0.03);padding:0.7rem 1.2rem;font-weight:600;font-size:0.9rem;color:var(--text);">🏃 건강수명</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;">
-          <div style="padding:1.5rem;background:rgba(255,107,107,0.07);border-right:1px solid var(--border);">
-            <div style="font-size:0.75rem;color:#FF6B6B;font-weight:700;letter-spacing:1px;margin-bottom:0.8rem;">BEFORE</div>
-            <div style="font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:0.5rem;">85세 평균</div>
-            <div style="font-size:0.85rem;color:var(--text2);">4~5가지 만성질환 동반<br>삶의 질 급격히 저하</div>
-            <div style="margin-top:1rem;font-size:0.78rem;color:#FF6B6B;">질병으로 보내는 마지막 10년</div>
+
+        <!-- Card 3: 제프 베이조스 -->
+        <div style="background:rgba(84,160,255,0.05);border:1px solid rgba(84,160,255,0.25);border-radius:16px;padding:1.6rem;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,rgba(84,160,255,0.15),transparent);border-radius:50%;transform:translate(20px,-20px);"></div>
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:1.2rem;">
+            <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#54A0FF,#2C3E50);display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;color:#fff;flex-shrink:0;">J</div>
+            <div>
+              <div style="font-size:1rem;font-weight:800;color:var(--text);">제프 베이조스</div>
+              <div style="font-size:0.72rem;color:#54A0FF;">Jeff Bezos · Amazon 창업자</div>
+            </div>
           </div>
-          <div style="padding:1.5rem;background:rgba(212,175,55,0.06);">
-            <div style="font-size:0.75rem;color:var(--gold);font-weight:700;letter-spacing:1px;margin-bottom:0.8rem;">AFTER NMN</div>
-            <div style="font-size:1.2rem;font-weight:700;color:var(--gold);margin-bottom:0.5rem;">Cell 저널 임상 결과</div>
-            <div style="font-size:0.85rem;color:var(--text2);">건강수명 최소 <strong style="color:var(--gold);">15%+ 연장</strong><br>DNA 손상 수리 확인</div>
-            <div style="margin-top:1rem;font-size:0.78rem;color:var(--gold);">건강하게 살아가는 마지막 10년</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;">
+            <div style="background:rgba(84,160,255,0.1);border-radius:8px;padding:0.8rem;text-align:center;">
+              <div style="font-size:1.3rem;font-weight:900;color:#54A0FF;">$3B</div>
+              <div style="font-size:0.68rem;color:var(--text2);">알토스 랩 초기 투자</div>
+            </div>
+            <div style="background:rgba(84,160,255,0.1);border-radius:8px;padding:0.8rem;text-align:center;">
+              <div style="font-size:1.3rem;font-weight:900;color:#54A0FF;">508조</div>
+              <div style="font-size:0.68rem;color:var(--text2);">2030 시장 규모</div>
+            </div>
           </div>
+          <div style="font-size:0.82rem;color:var(--text2);line-height:1.6;">역노화 전문기업 알토스 랩에<br>노벨상 수상자 과학자 팀 직접 구성</div>
         </div>
+
+        <!-- Card 4: 할리우드 팝스타 -->
+        <div style="background:rgba(255,159,243,0.05);border:1px solid rgba(255,159,243,0.25);border-radius:16px;padding:1.6rem;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,rgba(255,159,243,0.15),transparent);border-radius:50%;transform:translate(20px,-20px);"></div>
+          <div style="margin-bottom:1.2rem;">
+            <div style="font-size:0.65rem;font-weight:700;color:#FF9FF3;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.6rem;">⭐ Hollywood A-List</div>
+            <div style="font-size:1rem;font-weight:800;color:var(--text);">글로벌 탑스타들의 공통 루틴</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.2rem;">
+            <div style="display:flex;align-items:center;gap:10px;background:rgba(255,159,243,0.07);border-radius:8px;padding:0.6rem 0.8rem;">
+              <span style="font-size:1rem;">🎤</span>
+              <div>
+                <div style="font-size:0.82rem;font-weight:700;color:var(--text);">저스틴 비버</div>
+                <div style="font-size:0.68rem;color:var(--text2);">NAD+ 정기 투여 루틴 공개</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:rgba(255,159,243,0.07);border-radius:8px;padding:0.6rem 0.8rem;">
+              <span style="font-size:1rem;">👑</span>
+              <div>
+                <div style="font-size:0.82rem;font-weight:700;color:var(--text);">켄달 제너</div>
+                <div style="font-size:0.68rem;color:var(--text2);">웰니스 루틴 NAD+ 포함 공개</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:rgba(255,159,243,0.07);border-radius:8px;padding:0.6rem 0.8rem;">
+              <span style="font-size:1rem;">🎶</span>
+              <div>
+                <div style="font-size:0.82rem;font-weight:700;color:var(--text);">아리아나 그란데</div>
+                <div style="font-size:0.68rem;color:var(--text2);">안티에이징 & 에너지 보충 목적</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:0.75rem;color:#FF9FF3;">살인적 스케줄 속 최상의 컨디션 유지 비결</div>
+        </div>
+
       </div>
     </div>
 
