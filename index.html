@@ -317,18 +317,41 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   margin: 0 auto 2rem; font-weight: 400;
 }
 .hero-stats {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-  background: var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 2.5rem; 
+  display: flex; justify-content: center; gap: 1rem;
+  flex-wrap: wrap; margin-bottom: 2.5rem;
 }
-.hero-stat {
-  background: rgba(18,18,18,0.85); padding: 1.5rem 1rem; text-align: center;
+.hero-stats .stat {
+  flex: 1; min-width: 130px; max-width: 180px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 16px; padding: 1.4rem 1rem 1.2rem;
+  text-align: center; position: relative; overflow: hidden;
+  transition: transform 0.25s;
 }
-.hero-stat .hs-num {
-  font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 900;
+.hero-stats .stat::before {
+  content:''; position:absolute; inset:0;
+  border-radius:16px; padding:1px;
+  background: var(--stat-border, linear-gradient(135deg,rgba(254,202,87,0.5),rgba(254,202,87,0.08)));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none;
 }
-.hero-stat .hs-label {
-  font-size: 0.7rem; color: var(--text2); margin-top: 4px;
-  text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;
+.hero-stats .stat:hover { transform: translateY(-3px); }
+.hero-stats .stat-num {
+  font-family: 'Outfit', sans-serif; font-size: 2.1rem; font-weight: 900;
+  background: var(--stat-grad, linear-gradient(135deg,#FECA57,#FF9F43));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1;
+}
+.hero-stats .stat-label {
+  font-size: 0.72rem; color: var(--text2); margin-top: 6px;
+  letter-spacing: 0.5px; font-weight: 600;
+}
+.hero-stats .stat:nth-child(2) {
+  --stat-grad: linear-gradient(135deg,#48CAE4,#00B4D8);
+  --stat-border: linear-gradient(135deg,rgba(72,202,228,0.5),rgba(72,202,228,0.08));
+}
+.hero-stats .stat:nth-child(3) {
+  --stat-grad: linear-gradient(135deg,#E0AAFF,#C77DFF);
+  --stat-border: linear-gradient(135deg,rgba(224,170,255,0.5),rgba(224,170,255,0.08));
 }
 .hero-cta {
   display: inline-block; padding: 16px 44px; border-radius: 12px;
