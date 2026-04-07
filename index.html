@@ -51,10 +51,9 @@ header .logo-row {
   display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 10px;
 }
 header .logo-icon {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: #FFFFFF;
+  width: 44px; height: 44px;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 800; color: #0A0A0A;
+  filter: drop-shadow(0 0 8px rgba(212,175,55,0.55));
 }
 header .brand {
   font-family: 'Outfit', sans-serif; font-size: clamp(1.8rem, 4.5vw, 2.8rem);
@@ -424,7 +423,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
 
   header { padding: 1.5rem 0 1rem; }
   header .logo-row { gap: 10px; }
-  header .logo-icon { width: 32px; height: 32px; font-size: 0.9rem; }
+  header .logo-icon { width: 36px; height: 36px; }
   header .tagline { font-size: 0.65rem; letter-spacing: 2px; }
 
   .product-cards { gap: 1rem; margin: 1.5rem 0; }
@@ -518,7 +517,24 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
 
   <header class="anim">
     <div class="logo-row">
-      <div class="logo-icon">V</div>
+      <div class="logo-icon">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="treeGrad" x1="22" y1="2" x2="22" y2="42" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FECA57"/>
+              <stop offset="100%" stop-color="#D4AF37"/>
+            </linearGradient>
+          </defs>
+          <!-- trunk -->
+          <rect x="19.5" y="30" width="5" height="11" rx="2.5" fill="url(#treeGrad)"/>
+          <!-- bottom tier -->
+          <polygon points="22,18 10,33 34,33" fill="url(#treeGrad)" opacity="0.85"/>
+          <!-- middle tier -->
+          <polygon points="22,10 12,26 32,26" fill="url(#treeGrad)" opacity="0.92"/>
+          <!-- top tier -->
+          <polygon points="22,2 14,18 30,18" fill="url(#treeGrad)"/>
+        </svg>
+      </div>
       <div class="brand">Value Tree<span class="alpha">NMN</span></div>
     </div>
     <div style="font-size:0.78rem;color:var(--text3);letter-spacing:2px;margin-top:4px;">가치가 열리는 나무, "Value Tree"</div>
