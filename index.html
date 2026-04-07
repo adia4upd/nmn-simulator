@@ -1503,7 +1503,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
       </div>
     </div>
   </div>
-  <div class="config-grid anim" style="margin-bottom:2.5rem;">
+  <div class="config-grid anim" style="margin-bottom:1rem;">
     <div class="cfg-card">
       <div class="section-title">단계별 모집 인원</div>
       <div class="slider-wrap">
@@ -1520,6 +1520,8 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
         <div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
       </div>
     </div>
+  </div>
+  <div class="config-grid anim" style="margin-bottom:2.5rem;grid-template-columns:1fr;">
     <div class="cfg-card">
       <div class="section-title">⑥ 재구매 인원 (독립 풀)</div>
       <div class="slider-wrap">
@@ -1574,6 +1576,17 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   <!-- 6. 재구매/오토쉽 보너스 -->
   <div class="dc anim" style="margin-bottom:1.5rem;">
     <div class="section-title" style="color:var(--gold);">⑥ 재구매/오토쉽 보너스 (재구매 매출 5% · n/1)</div>
+    <!-- 재구매 가격 선택 -->
+    <div style="display:flex;gap:10px;margin-bottom:14px;">
+      <button id="rp-btn-100" onclick="setRpSub(100)"
+        style="flex:1;padding:12px 0;border-radius:10px;border:2px solid var(--gold);background:rgba(212,175,55,0.18);color:var(--gold);font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;">
+        $100
+      </button>
+      <button id="rp-btn-300" onclick="setRpSub(300)"
+        style="flex:1;padding:12px 0;border-radius:10px;border:2px solid rgba(255,255,255,0.12);background:rgba(18,18,18,0.7);color:var(--text2);font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;">
+        $300
+      </button>
+    </div>
     <div id="calc-repurchase"></div>
   </div>
 
@@ -1604,7 +1617,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
 
 <script>
 // ─── 상태 ───
-let me = 300, sub = 300;
+let me = 300, sub = 300, rpSub = 100;
 
 // ─── CONFIG (한 곳에서 관리) ───
 const CFG = {
@@ -1798,9 +1811,9 @@ function calcShare(rows) {
 function calcRepurchase(totalSales) {
   const n         = parseInt(document.getElementById('repurchase-cnt').value);
   document.getElementById('rpd').textContent = n + '명';
-  const rpSales   = n * sub;                              // 재구매 총 매출
-  const pool      = Math.round(rpSales * CFG.repurchase); // 재구매 매출 × 5%
-  const perPerson = n > 0 ? Math.round(pool / n) : 0;    // 1인당 수령 (= sub × 5%)
+  const rpSales   = n * rpSub;                             // 재구매 총 매출
+  const pool      = Math.round(rpSales * CFG.repurchase);  // 재구매 매출 × 5%
+  const perPerson = n > 0 ? Math.round(pool / n) : 0;     // 1인당 수령 (= rpSub × 5%)
   document.getElementById('calc-repurchase').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
@@ -1808,20 +1821,20 @@ function calcRepurchase(totalSales) {
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">${n}명</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">1인당 재구매가</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text2);margin-top:4px;">$${rpSub.toLocaleString()}</div>
+      </div>
+      <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">재구매 총 매출</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text2);margin-top:4px;">$${rpSales.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">풀 (×5%)</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${pool.toLocaleString()}</div>
-      </div>
-      <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">1인당 수령</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">풀(×5%) / 1인당</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${perPerson.toLocaleString()}</div>
       </div>
     </div>
     <div style="font-size:0.78rem;color:var(--text2);line-height:1.8;">
-      재구매 ${n}명 × $${sub.toLocaleString()} = <strong style="color:var(--text);">$${rpSales.toLocaleString()}</strong> × 5% = <strong style="color:var(--gold);">$${pool.toLocaleString()}</strong><br>
+      재구매 ${n}명 × $${rpSub.toLocaleString()} = <strong style="color:var(--text);">$${rpSales.toLocaleString()}</strong> × 5% = <strong style="color:var(--gold);">$${pool.toLocaleString()}</strong><br>
       재구매자 ${n}명이 균등 배분 → 1인당 <strong style="color:var(--gold);">$${perPerson.toLocaleString()}</strong> · 전체 시뮬과 독립된 별도 풀
     </div>`;
   return pool;
@@ -1937,6 +1950,16 @@ function setSub(v) {
   sub = v;
   document.getElementById('sb300').className  = v === 300  ? 'tier-btn s1' : 'tier-btn';
   document.getElementById('sb3000').className = v === 3000 ? 'tier-btn s2' : 'tier-btn';
+  calc();
+}
+function setRpSub(v) {
+  rpSub = v;
+  document.getElementById('rp-btn-100').style.borderColor = v === 100 ? 'var(--gold)' : 'rgba(255,255,255,0.12)';
+  document.getElementById('rp-btn-100').style.background  = v === 100 ? 'rgba(212,175,55,0.18)' : 'rgba(18,18,18,0.7)';
+  document.getElementById('rp-btn-100').style.color       = v === 100 ? 'var(--gold)' : 'var(--text2)';
+  document.getElementById('rp-btn-300').style.borderColor = v === 300 ? 'var(--gold)' : 'rgba(255,255,255,0.12)';
+  document.getElementById('rp-btn-300').style.background  = v === 300 ? 'rgba(212,175,55,0.18)' : 'rgba(18,18,18,0.7)';
+  document.getElementById('rp-btn-300').style.color       = v === 300 ? 'var(--gold)' : 'var(--text2)';
   calc();
 }
 
