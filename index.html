@@ -1520,6 +1520,14 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
         <div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
       </div>
     </div>
+    <div class="cfg-card">
+      <div class="section-title">⑥ 재구매 인원 (독립 풀)</div>
+      <div class="slider-wrap">
+        <label>재구매 인원 <span id="rpd" style="color:var(--gold);">10명</span></label>
+        <input type="range" min="1" max="50" value="10" step="1" id="repurchase-cnt" oninput="calc()">
+        <div class="ticks"><span>1</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span></div>
+      </div>
+    </div>
   </div>
 
   <!-- 요약 -->
@@ -1786,21 +1794,36 @@ function calcShare(rows) {
   return myTotal;
 }
 
-// ─── ⑥ 재구매/오토쉽 (5%) ───
+// ─── ⑥ 재구매/오토쉽 (재구매자 독립 풀 · 5% ÷ n명) ───
 function calcRepurchase(totalSales) {
-  const pool = Math.round(totalSales * CFG.repurchase);
+  const n         = parseInt(document.getElementById('repurchase-cnt').value);
+  document.getElementById('rpd').textContent = n + '명';
+  const rpSales   = n * sub;                              // 재구매 총 매출
+  const pool      = Math.round(rpSales * CFG.repurchase); // 재구매 매출 × 5%
+  const perPerson = n > 0 ? Math.round(pool / n) : 0;    // 1인당 수령 (= sub × 5%)
   document.getElementById('calc-repurchase').innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px;">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">재구매 매출 5%</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">재구매 인원</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">${n}명</div>
+      </div>
+      <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">재구매 총 매출</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text2);margin-top:4px;">$${rpSales.toLocaleString()}</div>
+      </div>
+      <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">풀 (×5%)</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${pool.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">배분 방식</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">n/1 균등</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">1인당 수령</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${perPerson.toLocaleString()}</div>
       </div>
     </div>
-    <div style="font-size:0.78rem;color:var(--text);">재구매 회원 대상 · 지속 구매 보상 · 매출의 5%를 재구매 회원 수(n)로 나눠 지급</div>`;
+    <div style="font-size:0.78rem;color:var(--text2);line-height:1.8;">
+      재구매 ${n}명 × $${sub.toLocaleString()} = <strong style="color:var(--text);">$${rpSales.toLocaleString()}</strong> × 5% = <strong style="color:var(--gold);">$${pool.toLocaleString()}</strong><br>
+      재구매자 ${n}명이 균등 배분 → 1인당 <strong style="color:var(--gold);">$${perPerson.toLocaleString()}</strong> · 전체 시뮬과 독립된 별도 풀
+    </div>`;
   return pool;
 }
 
