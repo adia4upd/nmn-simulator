@@ -1734,7 +1734,7 @@ function calcAwards(totalSales) {
 
 // ─── 종합 수익 렌더링 ───
 function renderTotal(totalSales, direct, refLine, sponsor, share, repurchase, awards) {
-  const grandTotal = direct + refLine + sponsor + share + repurchase + awards;
+  const grandTotal = direct + refLine + sponsor + share + repurchase;
   document.getElementById('s4').textContent = '$' + grandTotal.toLocaleString();
   document.getElementById('calc-total').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:8px;">
