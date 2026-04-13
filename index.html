@@ -1882,8 +1882,8 @@ function buildGenData(n, simDepth) {
     let cond = 'locked';
     if (g <= baseMax)            cond = 'auto';
     else if (g <= 5)             cond = 'locked';
-    else if (n === 2 && g === 6) cond = 'auto';   // 2명 → 6대 자동적용
-    else if (n === 3 && g === 7) cond = 'auto';   // 3명 → 7대 자동적용
+    else if (n === 2 && g === 6) cond = 'auto';         // 2명 → 6대 자동적용
+    else if (n === 3 && g >= 6)  cond = 'auto';         // 3명 → 6·7대 모두 자동적용
     else if (g <= CFG.sponGens)  cond = 'level';
     rows.push({ g, cnt, sales, sponOn: cond === 'auto', cond });
   }
@@ -2051,7 +2051,7 @@ function calcRepurchase(totalSales, totalPeople) {
     if (g <= baseMax)            cond = 'auto';
     else if (g <= 5)             cond = 'locked';
     else if (n === 2 && g === 6) cond = 'auto';
-    else if (n === 3 && g === 7) cond = 'auto';
+    else if (n === 3 && g >= 6)  cond = 'auto';
     else if (g <= CFG.sponGens)  cond = 'level';
     rpRows.push({ g, cnt, sales, cond });
   }
