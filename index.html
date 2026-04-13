@@ -2027,34 +2027,79 @@ function calcShare(rows) {
   return myTotal;
 }
 
-// ─── ⑥ 재구매/오토쉽 (재구매자 독립 풀 · 5% ÷ n명) ───
+// ─── ⑥ 재구매/오토쉽 ($300 기준으로 ①②③④ 동일 수당 구조 적용) ───
 function calcRepurchase(totalSales, totalPeople) {
-  const rpBase  = totalPeople * 300;                      // 하위 인원 × $300 기준
-  const pool    = Math.round(rpBase * CFG.repurchase);    // × 5%
+  const n        = parseInt(document.getElementById('rec').value);
+  const simDepth = parseInt(document.getElementById('gen-depth').value);
+  const baseMax  = me === 300 ? 1 : 5;
+
+  // $300 고정 단가로 대수별 데이터 빌드
+  const rpRows = [];
+  for (let i = 0; i < simDepth; i++) {
+    const g    = i + 1;
+    const cnt  = Math.pow(n, g);
+    const sales = cnt * 300;
+    let cond = 'locked';
+    if (g <= baseMax)           cond = 'auto';
+    else if (g <= 5)            cond = 'locked';
+    else if (g <= CFG.sponGens) cond = 'level';
+    rpRows.push({ g, cnt, sales, cond });
+  }
+
+  // ① 직접추천 30%
+  const rp1 = Math.round(n * 300 * CFG.direct);
+
+  // ② 추천라인: gen 2~7, lvSales × 6% × 15%
+  let rp2 = 0;
+  for (const r of rpRows) {
+    if (r.g < 2 || r.g > CFG.refLineGens) continue;
+    rp2 += Math.round(Math.round(r.sales * 6 / 100) * 15 / 100);
+  }
+
+  // ③ 후원라인: gen 1~7, auto 대수만, lvSales × 4% × 15%
+  let rp3 = 0;
+  for (const r of rpRows) {
+    if (r.g < 1 || r.g > CFG.sponGens) continue;
+    if (r.cond !== 'auto') continue;
+    rp3 += Math.round(Math.round(r.sales * 4 / 100) * 15 / 100);
+  }
+
+  // ④ 공유수당: gen 3~7, lvSales × 5% × 20%
+  let rp4 = 0;
+  for (const r of rpRows) {
+    if (r.g < CFG.shareStart || r.g > CFG.shareEnd) continue;
+    rp4 += Math.round(Math.round(r.sales * 5 / 100) * 20 / 100);
+  }
+
+  const rpTotal = rp1 + rp2 + rp3 + rp4;
+
   document.getElementById('calc-repurchase').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">총 하위 인원</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">${totalPeople.toLocaleString()}명</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">① 직접추천 (30%)</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${rp1.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">기준 단가</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text2);margin-top:4px;">$300</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">② 추천라인 (6%×15%)</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${rp2.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">기준 매출</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text2);margin-top:4px;">$${rpBase.toLocaleString()}</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">③ 후원라인 (4%×15%)</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--hermes);margin-top:4px;">$${rp3.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">재구매 보너스 (×5%)</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${pool.toLocaleString()}</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">④ 공유수당 (5%×20%)</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:#FF9FF3;margin-top:4px;">$${rp4.toLocaleString()}</div>
       </div>
     </div>
-    <div style="font-size:0.78rem;color:var(--text2);line-height:1.8;">
-      총 하위 <strong style="color:var(--text);">${totalPeople.toLocaleString()}명</strong> × $300 = <strong style="color:var(--text);">$${rpBase.toLocaleString()}</strong> × 5% = <strong style="color:var(--gold);">$${pool.toLocaleString()}</strong><br>
-      다른 수당과 동일한 계산 방식 적용 · $300 고정 기준
+    <div style="background:rgba(254,202,87,0.08);border:1px solid rgba(254,202,87,0.25);border-radius:8px;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;">
+      <div style="font-size:0.78rem;color:var(--text2);line-height:1.9;">
+        $300 기준 단가 × ①②③④ 동일 수당 구조 적용<br>
+        $${rp1.toLocaleString()} + $${rp2.toLocaleString()} + $${rp3.toLocaleString()} + $${rp4.toLocaleString()} = <strong style="color:var(--gold);">$${rpTotal.toLocaleString()}</strong>
+      </div>
+      <div style="font-family:'Outfit',sans-serif;font-size:1.8rem;font-weight:900;color:var(--gold);white-space:nowrap;">$${rpTotal.toLocaleString()}</div>
     </div>`;
-  return pool;
+  return rpTotal;
 }
 
 // ─── ⑦~⑩ 시상 (매월/누적, 각 1%) ───
