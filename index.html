@@ -507,6 +507,42 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   .dc { padding: 0.8rem; overflow-x: auto; }
   table { min-width: 640px; }
 }
+
+/* ===== Product Catalog Selector ===== */
+.catalog-label {
+  font-size: 0.68rem; color: var(--text3); text-transform: uppercase;
+  letter-spacing: 2px; font-weight: 600; margin-bottom: 0.8rem;
+}
+.prod-catalog {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 580px) { .prod-catalog { grid-template-columns: 1fr; gap: 0.8rem; } }
+
+.prod-card {
+  background: rgba(18,18,18,0.85); border: 1.5px solid rgba(255,255,255,0.07);
+  border-radius: 14px; overflow: hidden; cursor: pointer; transition: all 0.25s;
+  display: grid; grid-template-columns: 1fr 1fr; align-items: stretch;
+}
+.prod-card:hover:not(.disabled) { transform: translateY(-2px); border-color: rgba(255,255,255,0.15); }
+.prod-card.active { border-color: rgba(212,175,55,0.55); box-shadow: 0 0 22px rgba(212,175,55,0.18); }
+.prod-card.disabled { opacity: 0.38; cursor: default; pointer-events: none; }
+.prod-card-img { width: 100%; height: 100%; min-height: 160px; object-fit: cover; display: block; }
+.prod-card-placeholder { width: 100%; min-height: 160px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); }
+.prod-card-body { padding: 1.2rem 1.2rem 1.2rem; display: flex; flex-direction: column; justify-content: center; }
+.prod-card-tag { font-size: 0.6rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; }
+.prod-card-name { font-size: 1rem; font-weight: 800; color: var(--text); line-height: 1.3; margin-bottom: 0.35rem; }
+.prod-card-sub { font-size: 0.75rem; color: var(--text2); line-height: 1.5; }
+.prod-card-price { font-family: 'Outfit',sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-top: 0.5rem; }
+.prod-card-btn {
+  display: block; width: 100%; margin-top: 0.6rem; padding: 6px 0;
+  border-radius: 7px; background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08); color: var(--text3);
+  font-size: 0.7rem; font-weight: 700; text-align: center;
+  font-family: 'Noto Sans KR', sans-serif; transition: all 0.2s;
+}
+.prod-card.active .prod-card-btn { background: rgba(212,175,55,0.12); border-color: rgba(212,175,55,0.35); color: var(--gold); }
+.prod-detail { animation: fadeUp 0.4s ease forwards; }
 </style>
 </head>
 <body>
@@ -554,6 +590,38 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
 
   <!-- Tab 0: 랜딩페이지 -->
   <div id="tab-landing" class="tab-panel active">
+
+    <!-- ===== 제품 카탈로그 셀렉터 ===== -->
+    <div style="margin-bottom:0.5rem;">
+      <div class="catalog-label">Value Tree · 프리미엄 라인업</div>
+    </div>
+    <div class="prod-catalog anim">
+      <!-- NMN -->
+      <div class="prod-card active" onclick="selectProduct('nmn',this)">
+        <img class="prod-card-img" src="images/premium/p-000.png" alt="Premium NMN 10000" loading="lazy">
+        <div class="prod-card-body">
+          <div class="prod-card-tag">역노화 · 세포 에너지</div>
+          <div class="prod-card-name">Premium NMN 10000</div>
+          <div class="prod-card-sub">NAD+ 복원 · 하버드 싱클레어 박사</div>
+          <div class="prod-card-price">$300 / box</div>
+          <div class="prod-card-btn">자세히 보기 ↓</div>
+        </div>
+      </div>
+      <!-- Alpha-GPC -->
+      <div class="prod-card" onclick="selectProduct('alpha',this)">
+        <img class="prod-card-img" src="images/alpha-gpc/box-card.jpg" alt="Alpha GPC + Biotin" loading="lazy">
+        <div class="prod-card-body">
+          <div class="prod-card-tag" style="color:var(--accent);">두뇌 최적화 · 운동 향상</div>
+          <div class="prod-card-name">Alpha GPC + Biotin</div>
+          <div class="prod-card-sub">BBB 직접 통과 · 99% 순도</div>
+          <div class="prod-card-price" style="color:var(--accent);">570mg × 60캡슐</div>
+          <div class="prod-card-btn">자세히 보기 ↓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== NMN 제품 상세 ===== -->
+    <div id="prod-detail-nmn" class="prod-detail">
 
     <!-- SECTION 1: HERO -->
     <div class="hero" style="text-align:center;">
@@ -643,6 +711,8 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
         .nmn-flow{grid-template-columns:1fr!important;}
         .nmn-arrow{display:none!important;}
         .celeb-grid{grid-template-columns:1fr 1fr!important;}
+        .alpha-card-grid{grid-template-columns:1fr 1fr!important;}
+        .alpha-spec-grid{grid-template-columns:1fr 1fr!important;}
       }
     </style>
 
@@ -1212,6 +1282,67 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
       </div>
     </div>
 
+    <!-- ===== NMN Alpha Timeless Vitality 슬라이드 ===== -->
+    <div style="display:flex;flex-direction:column;gap:1.2rem;margin-bottom:2rem;">
+
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+        <div style="padding:0.7rem 1rem;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border);">
+          <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);">Premium NMN 10000</span>
+        </div>
+        <img src="images/nmn-extra/slide-00.jpg" loading="lazy" style="width:100%;display:block;object-fit:cover;">
+      </div>
+
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+        <div style="padding:0.7rem 1rem;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border);">
+          <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);">NAD+ 생물학적 진실</span>
+        </div>
+        <img src="images/nmn-extra/slide-01.jpg" loading="lazy" style="width:100%;display:block;object-fit:cover;">
+      </div>
+
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+        <div style="padding:0.7rem 1rem;background:rgba(72,219,251,0.06);border-bottom:1px solid rgba(72,219,251,0.15);">
+          <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);">NAD+ 부스터 메커니즘</span>
+        </div>
+        <img src="images/nmn-extra/slide-02.jpg" loading="lazy" style="width:100%;display:block;object-fit:cover;">
+      </div>
+
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+        <div style="padding:0.7rem 1rem;background:rgba(84,160,255,0.06);border-bottom:1px solid rgba(84,160,255,0.15);">
+          <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);">NMN Alpha · 프리미엄의 탄생</span>
+        </div>
+        <img src="images/nmn-extra/slide-03.jpg" loading="lazy" style="width:100%;display:block;object-fit:cover;">
+      </div>
+
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+        <div style="padding:0.7rem 1rem;background:rgba(254,202,87,0.06);border-bottom:1px solid rgba(254,202,87,0.15);">
+          <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);">완벽주의 3가지 절대 기준</span>
+        </div>
+        <img src="images/nmn-extra/slide-04.jpg" loading="lazy" style="width:100%;display:block;object-fit:cover;">
+      </div>
+
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+        <div style="padding:0.7rem 1rem;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border);">
+          <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);">99% PURE · 압도적 순도</span>
+        </div>
+        <img src="images/nmn-extra/slide-05.jpg" loading="lazy" style="width:100%;display:block;object-fit:cover;">
+      </div>
+
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+        <div style="padding:0.7rem 1rem;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border);">
+          <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);">Japan Family Care · 제조 철학</span>
+        </div>
+        <img src="images/nmn-extra/slide-06.jpg" loading="lazy" style="width:100%;display:block;object-fit:cover;">
+      </div>
+
+      <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+        <div style="padding:0.7rem 1rem;background:rgba(254,202,87,0.06);border-bottom:1px solid rgba(254,202,87,0.15);">
+          <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);">NMN Alpha Lifestyle</span>
+        </div>
+        <img src="images/nmn-extra/slide-07.jpg" loading="lazy" style="width:100%;display:block;object-fit:cover;">
+      </div>
+
+    </div>
+
     <!-- Trust bar -->
     <div class="trust-bar">
       <div class="trust-item"><strong>99%</strong> Pure NMN</div>
@@ -1219,6 +1350,244 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
       <div class="trust-item"><strong>USDT</strong> 익일지급</div>
       <div class="trust-item"><strong>GMP</strong> 인증 시설</div>
     </div>
+
+    </div> <!-- end prod-detail-nmn -->
+
+    <!-- ===== Alpha-GPC + Biotin 제품 상세 ===== -->
+    <div id="prod-detail-alpha" class="prod-detail" style="display:none">
+
+      <!-- HERO -->
+      <div class="hero" style="text-align:center;">
+        <div class="hero-badge" style="border-color:rgba(72,219,251,0.25);color:var(--accent);">Alpha GPC · 뇌 최적화 프로토콜</div>
+        <div class="hero-title">
+          두뇌 인지력과<br>신체 퍼포먼스<br>
+          <span style="background:linear-gradient(90deg,#48DBFB,#FF9FF3,#54A0FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">극대화</span>
+        </div>
+        <div class="hero-sub">
+          혈뇌장벽(BBB)을 직접 통과하는 <strong>99% Alpha-GPC</strong>로<br>
+          아세틸콜린을 즉각 합성하고, 두뇌와 몸을 동시에 강화하세요.
+        </div>
+        <div class="hero-stats">
+          <div class="stat" style="--stat-grad:linear-gradient(135deg,#48DBFB,#00B4D8);--stat-border:linear-gradient(135deg,rgba(72,219,251,0.5),rgba(72,219,251,0.08));">
+            <div class="stat-num">99%</div><div class="stat-label">Alpha-GPC 순도</div>
+          </div>
+          <div class="stat" style="--stat-grad:linear-gradient(135deg,#E0AAFF,#C77DFF);--stat-border:linear-gradient(135deg,rgba(224,170,255,0.5),rgba(224,170,255,0.08));">
+            <div class="stat-num">BBB</div><div class="stat-label">직접 통과</div>
+          </div>
+          <div class="stat" style="--stat-grad:linear-gradient(135deg,#FECA57,#FF9F43);--stat-border:linear-gradient(135deg,rgba(254,202,87,0.5),rgba(254,202,87,0.08));">
+            <div class="stat-num">+14%</div><div class="stat-label">파워 출력 증가</div>
+          </div>
+        </div>
+        <!-- 타이틀 슬라이드 -->
+        <div style="margin-top:2rem;">
+          <img src="images/alpha-gpc/box-hero.jpg" alt="Alpha GPC + Biotin 제품" loading="lazy"
+            style="max-width:500px;width:100%;border-radius:20px;box-shadow:0 0 50px rgba(72,219,251,0.2);object-fit:cover;">
+        </div>
+      </div>
+
+      <!-- ===== NHK 방송 영상 ===== -->
+      <div style="margin-bottom:2rem;">
+        <div class="catalog-label" style="margin-bottom:1rem;">📺 NHK 방송 · 알파-GPC 과학적 근거</div>
+        <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(72,219,251,0.25);background:rgba(10,10,10,0.9);">
+          <div style="padding:0.8rem 1.2rem;background:rgba(72,219,251,0.06);border-bottom:1px solid rgba(72,219,251,0.15);display:flex;align-items:center;gap:0.6rem;">
+            <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);">NHK 과학 다큐멘터리</span>
+            <span style="font-size:0.6rem;color:var(--text3);">· 일본 국영방송 공식 보도</span>
+          </div>
+          <video controls style="width:100%;display:block;max-height:560px;background:#000;" preload="metadata">
+            <source src="images/alpha-gpc/NHK방송.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <!-- ===== 카드 섹션 ===== -->
+
+      <!-- 6가지 핵심 효능 카드 -->
+      <div style="margin-bottom:2rem;">
+        <div class="catalog-label" style="margin-bottom:1rem;">핵심 효능 · 6 Core Benefits</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.9rem;" class="alpha-card-grid">
+          <div style="background:rgba(18,18,18,0.85);border:1px solid rgba(72,219,251,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #48DBFB;">
+            <div style="font-size:1.6rem;margin-bottom:0.5rem;">🧠</div>
+            <div style="font-size:0.88rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">학습·기억력 향상</div>
+            <div style="font-size:0.72rem;color:var(--text2);line-height:1.6;">아세틸콜린(ACh) 즉각 합성으로 뇌 신호 전달 속도 향상</div>
+          </div>
+          <div style="background:rgba(18,18,18,0.85);border:1px solid rgba(255,159,243,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #FF9FF3;">
+            <div style="font-size:1.6rem;margin-bottom:0.5rem;">🔗</div>
+            <div style="font-size:0.88rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">신경가소성 강화</div>
+            <div style="font-size:0.72rem;color:var(--text2);line-height:1.6;">뇌 기능 감퇴 특유의 델타파(여파) 발현 감소</div>
+          </div>
+          <div style="background:rgba(18,18,18,0.85);border:1px solid rgba(84,160,255,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #54A0FF;">
+            <div style="font-size:1.6rem;margin-bottom:0.5rem;">⏳</div>
+            <div style="font-size:0.88rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">두뇌 노화 지연</div>
+            <div style="font-size:0.72rem;color:var(--text2);line-height:1.6;">뇌 혈관성 기능 저하 회복 지원</div>
+          </div>
+          <div style="background:rgba(18,18,18,0.85);border:1px solid rgba(254,202,87,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #FECA57;">
+            <div style="font-size:1.6rem;margin-bottom:0.5rem;">💪</div>
+            <div style="font-size:0.88rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">파워 출력 +14%</div>
+            <div style="font-size:0.72rem;color:var(--text2);line-height:1.6;">저항 운동 등 고강도 훈련 시 파워 출력 14% 증가</div>
+          </div>
+          <div style="background:rgba(18,18,18,0.85);border:1px solid rgba(255,107,107,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #FF6B6B;">
+            <div style="font-size:1.6rem;margin-bottom:0.5rem;">🔥</div>
+            <div style="font-size:0.88rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">지방 산화 촉진</div>
+            <div style="font-size:0.72rem;color:var(--text2);line-height:1.6;">내장 지방 감소 및 체형 개선 지원</div>
+          </div>
+          <div style="background:rgba(18,18,18,0.85);border:1px solid rgba(255,159,243,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #FF9FF3;">
+            <div style="font-size:1.6rem;margin-bottom:0.5rem;">✨</div>
+            <div style="font-size:0.88rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">세포 재생·피부 개선</div>
+            <div style="font-size:0.72rem;color:var(--text2);line-height:1.6;">일생에 걸친 기관 조직 재생 및 기미·주름 개선</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 콜린 소스 비교 하이라이트 -->
+      <div style="margin-bottom:2rem;">
+        <div class="catalog-label" style="margin-bottom:1rem;">Alpha-GPC vs 경쟁 소스</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.9rem;" class="alpha-card-grid">
+          <div style="background:rgba(72,219,251,0.07);border:1.5px solid rgba(72,219,251,0.35);border-radius:14px;padding:1.2rem;position:relative;">
+            <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:#0a0a0a;font-size:0.58rem;font-weight:800;padding:3px 12px;border-radius:20px;letter-spacing:1px;white-space:nowrap;">✓ 최우수</div>
+            <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:800;color:var(--accent);margin-bottom:0.6rem;margin-top:0.3rem;">Alpha-GPC 99%</div>
+            <div style="font-size:0.72rem;color:var(--text2);line-height:1.7;">콜린 함량 <strong style="color:var(--text);">40~41%</strong><br>BBB 통과 <strong style="color:var(--accent);">✓ 우수</strong><br>1일 권장량 500~1200mg<br><span style="color:var(--accent);font-weight:700;">두뇌 ACh 급증 + 퍼포먼스 향상</span></div>
+          </div>
+          <div style="background:rgba(18,18,18,0.85);border:1px solid var(--border);border-radius:14px;padding:1.2rem;">
+            <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:800;color:var(--text2);margin-bottom:0.6rem;">시티콜린(CDP)</div>
+            <div style="font-size:0.72rem;color:var(--text3);line-height:1.7;">콜린 함량 18.5%<br>BBB 통과 ✓ 통과<br>1일 권장량 500~2000mg<br><span style="color:var(--text4);">동일 효과 위해 2배 용량 필요</span></div>
+          </div>
+          <div style="background:rgba(18,18,18,0.85);border:1px solid var(--border);border-radius:14px;padding:1.2rem;">
+            <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:800;color:var(--text2);margin-bottom:0.6rem;">콜린 바이타르트</div>
+            <div style="font-size:0.72rem;color:var(--text3);line-height:1.7;">콜린 함량 41%<br>BBB 통과 <strong style="color:#FF6B6B;">✗ 불가</strong><br>최대 2000mg<br><span style="color:var(--text4);">뇌 기능 효과 미미</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 제품 스펙 카드 -->
+      <div style="margin-bottom:2rem;">
+        <div class="catalog-label" style="margin-bottom:1rem;">Product Spec</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.9rem;" class="alpha-spec-grid">
+          <div style="background:rgba(18,18,18,0.85);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center;">
+            <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.4rem;">주성분</div>
+            <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:800;color:var(--accent);">400mg</div>
+            <div style="font-size:0.68rem;color:var(--text2);margin-top:0.2rem;">α-GPC</div>
+          </div>
+          <div style="background:rgba(18,18,18,0.85);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center;">
+            <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.4rem;">순도</div>
+            <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:800;color:var(--gold);">99%</div>
+            <div style="font-size:0.68rem;color:var(--text2);margin-top:0.2rem;">Pharmaceutical Grade</div>
+          </div>
+          <div style="background:rgba(18,18,18,0.85);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center;">
+            <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.4rem;">용량</div>
+            <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:800;color:var(--text);">570mg</div>
+            <div style="font-size:0.68rem;color:var(--text2);margin-top:0.2rem;">× 60캡슐</div>
+          </div>
+          <div style="background:rgba(18,18,18,0.85);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center;">
+            <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.4rem;">섭취 기간</div>
+            <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:800;color:var(--pink);">1개월</div>
+            <div style="font-size:0.68rem;color:var(--text2);margin-top:0.2rem;">Biotin 30μg 포함</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 슬라이드 섹션들 -->
+      <div style="display:flex;flex-direction:column;gap:1.2rem;margin-bottom:2rem;">
+
+        <!-- slide-01: BBB 메커니즘 -->
+        <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+          <div style="padding:0.7rem 1rem;background:rgba(72,219,251,0.06);border-bottom:1px solid rgba(72,219,251,0.15);">
+            <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);">작용 메커니즘</span>
+          </div>
+          <img src="images/alpha-gpc/slide-01.jpg" alt="BBB 직접 통과 메커니즘" loading="lazy"
+            style="width:100%;display:block;object-fit:cover;">
+        </div>
+
+        <!-- slide-02: 6가지 효능 -->
+        <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+          <div style="padding:0.7rem 1rem;background:rgba(255,159,243,0.06);border-bottom:1px solid rgba(255,159,243,0.15);">
+            <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--pink);">핵심 효능</span>
+          </div>
+          <img src="images/alpha-gpc/slide-02.jpg" alt="6가지 핵심 효능" loading="lazy"
+            style="width:100%;display:block;object-fit:cover;">
+        </div>
+
+        <!-- slide-03: 성장호르몬 -->
+        <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+          <div style="padding:0.7rem 1rem;background:rgba(254,202,87,0.06);border-bottom:1px solid rgba(254,202,87,0.15);">
+            <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);">성장호르몬(h-GH) 분비 패턴</span>
+          </div>
+          <img src="images/alpha-gpc/slide-03.jpg" alt="성장호르몬 생애 분비 패턴" loading="lazy"
+            style="width:100%;display:block;object-fit:cover;">
+        </div>
+
+        <!-- slide-04: 콜린 소스 비교 -->
+        <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+          <div style="padding:0.7rem 1rem;background:rgba(84,160,255,0.06);border-bottom:1px solid rgba(84,160,255,0.15);">
+            <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);">콜린 소스 비교 (Alpha-GPC vs 기타)</span>
+          </div>
+          <img src="images/alpha-gpc/slide-04.jpg" alt="콜린 소스별 핵심 기능 비교" loading="lazy"
+            style="width:100%;display:block;object-fit:cover;">
+        </div>
+
+        <!-- slide-07: 용량 가이드 -->
+        <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+          <div style="padding:0.7rem 1rem;background:rgba(255,107,107,0.06);border-bottom:1px solid rgba(255,107,107,0.15);">
+            <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--hermes);">목적별 최적 섭취 용량 가이드</span>
+          </div>
+          <img src="images/alpha-gpc/slide-07.jpg" alt="섭취 용량 가이드" loading="lazy"
+            style="width:100%;display:block;object-fit:cover;">
+        </div>
+
+        <!-- slide-08: 안전성 & 시너지 -->
+        <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+          <div style="padding:0.7rem 1rem;background:rgba(72,219,251,0.06);border-bottom:1px solid rgba(72,219,251,0.15);">
+            <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);">안전성 & 시너지 최적화</span>
+          </div>
+          <img src="images/alpha-gpc/slide-08.jpg" alt="안전성 및 시너지 최적화" loading="lazy"
+            style="width:100%;display:block;object-fit:cover;">
+        </div>
+
+        <!-- slide-09: 종합 평가 레이더 -->
+        <div style="border-radius:14px;overflow:hidden;border:1px solid var(--border);">
+          <div style="padding:0.7rem 1rem;background:rgba(255,159,243,0.06);border-bottom:1px solid rgba(255,159,243,0.15);">
+            <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--pink);">종합 성능 평가</span>
+          </div>
+          <img src="images/alpha-gpc/slide-09.jpg" alt="종합 성능 레이더 차트" loading="lazy"
+            style="width:100%;display:block;object-fit:cover;">
+        </div>
+
+      </div>
+
+      <!-- 제품 스펙 -->
+      <div class="dc anim" style="margin-bottom:2rem;">
+        <div style="padding:1.8rem;">
+          <div style="font-family:'Outfit',sans-serif;font-size:0.72rem;color:var(--accent);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:0.4rem;">Product Spec</div>
+          <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:1.5rem;">제품 사양</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;" class="icd-grid">
+            <table>
+              <tbody>
+                <tr><td style="color:var(--text3);font-size:0.8rem;">주성분</td><td class="mono" style="color:var(--accent);">α-GPC 400mg</td></tr>
+                <tr><td style="color:var(--text3);font-size:0.8rem;">부성분</td><td class="mono">Biotin 30μg</td></tr>
+                <tr><td style="color:var(--text3);font-size:0.8rem;">1캡슐 용량</td><td class="mono">570mg</td></tr>
+                <tr><td style="color:var(--text3);font-size:0.8rem;">총 캡슐 수</td><td class="mono">60캡슐 (1개월분)</td></tr>
+              </tbody>
+            </table>
+            <table>
+              <tbody>
+                <tr><td style="color:var(--text3);font-size:0.8rem;">Alpha-GPC 순도</td><td class="mono" style="color:var(--gold);">99%</td></tr>
+                <tr><td style="color:var(--text3);font-size:0.8rem;">콜린 함량</td><td class="mono">40~41%</td></tr>
+                <tr><td style="color:var(--text3);font-size:0.8rem;">1일 권장량</td><td class="mono">500~1,200mg</td></tr>
+                <tr><td style="color:var(--text3);font-size:0.8rem;">포장</td><td class="mono">오렌지 박스 (1개월분)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust bar -->
+      <div class="trust-bar">
+        <div class="trust-item"><strong>99%</strong> 순도 Alpha-GPC</div>
+        <div class="trust-item"><strong>BBB</strong> 직접 통과</div>
+        <div class="trust-item"><strong>USDT</strong> 익일지급</div>
+        <div class="trust-item"><strong>GMP</strong> 인증 시설</div>
+      </div>
+
+    </div> <!-- end prod-detail-alpha -->
 
   </div> <!-- end tab-landing -->
 
@@ -1834,6 +2203,23 @@ function switchTab(tab) {
   const idx = tab === 'landing' ? 0 : 1;
   document.querySelectorAll('.main-tab')[idx].classList.add('active');
   window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// Product selector
+function selectProduct(id, card) {
+  // Update card active state
+  document.querySelectorAll('.prod-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  // Show selected product detail, hide others
+  document.querySelectorAll('.prod-detail').forEach(d => { d.style.display = 'none'; });
+  const target = document.getElementById('prod-detail-' + id);
+  if (target) {
+    target.style.display = 'block';
+    // Smooth scroll to detail section
+    setTimeout(() => {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 60);
+  }
 }
 
 // ===== Interactive 65% Plan =====
