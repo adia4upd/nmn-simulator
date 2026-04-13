@@ -1756,8 +1756,8 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
       <div class="section-title">단계별 모집 인원</div>
       <div class="slider-wrap">
         <label>1인당 모집 <span id="rd">3명</span></label>
-        <input type="range" min="1" max="5" value="3" step="1" id="rec" oninput="calc()">
-        <div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+        <input type="range" min="1" max="10" value="3" step="1" id="rec" oninput="calc()">
+        <div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
       </div>
     </div>
     <div class="cfg-card">
@@ -1805,10 +1805,10 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
     <div id="calc-share"></div>
   </div>
 
-  <!-- 5. 센터 지원금 (미정) -->
-  <div class="dc anim" style="margin-bottom:1.5rem;opacity:0.5;">
-    <div class="section-title" style="color:var(--text3);">⑤ 센터 지원금 (본인 산하 매출 5%) — 미정</div>
-    <div style="font-size:0.78rem;color:var(--text4);padding:1rem;background:rgba(22,22,22,0.7);border-radius:8px;">조건부 항목 · 추후 확정 예정</div>
+  <!-- 5. 센터 지원금 -->
+  <div class="dc anim" style="margin-bottom:1.5rem;opacity:0.6;">
+    <div class="section-title" style="color:var(--text3);">⑤ 센터 지원금</div>
+    <div style="font-size:0.78rem;color:var(--text3);padding:1rem;background:rgba(22,22,22,0.7);border-radius:8px;">조건부 충족 협의</div>
   </div>
 
   <!-- 6. 재구매/오토쉽 보너스 -->
@@ -2040,32 +2040,25 @@ function calcShare(rows) {
 
 // ─── ⑥ 재구매/오토쉽 (재구매자 독립 풀 · 5% ÷ n명) ───
 function calcRepurchase(totalSales, totalPeople) {
-  const n = totalPeople;
-  const rpSales   = n * rpSub;                             // 재구매 총 매출
-  const pool      = Math.round(rpSales * CFG.repurchase);  // 재구매 매출 × 5%
-  const perPerson = n > 0 ? Math.round(pool / n) : 0;     // 1인당 수령 (= rpSub × 5%)
+  const pool = Math.round(totalSales * CFG.repurchase);  // 전체 매출 × 5%
   document.getElementById('calc-repurchase').innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">재구매 인원</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">${n.toLocaleString()}명</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">총 하위 인원</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">${totalPeople.toLocaleString()}명</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">1인당 재구매가</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text2);margin-top:4px;">$${rpSub.toLocaleString()}</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">총 네트워크 매출</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text2);margin-top:4px;">$${totalSales.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">재구매 총 매출</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text2);margin-top:4px;">$${rpSales.toLocaleString()}</div>
-      </div>
-      <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">풀(×5%) / 1인당</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${perPerson.toLocaleString()}</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">재구매 보너스 (×5%)</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${pool.toLocaleString()}</div>
       </div>
     </div>
     <div style="font-size:0.78rem;color:var(--text2);line-height:1.8;">
-      재구매 <strong style="color:var(--text);">${n.toLocaleString()}명</strong> (기준설정값 총 하위 인원 자동 반영) × $${rpSub.toLocaleString()} = <strong style="color:var(--text);">$${rpSales.toLocaleString()}</strong> × 5% = <strong style="color:var(--gold);">$${pool.toLocaleString()}</strong><br>
-      재구매자 ${n.toLocaleString()}명이 균등 배분 → 1인당 <strong style="color:var(--gold);">$${perPerson.toLocaleString()}</strong> · 전체 시뮬과 독립된 별도 풀
+      총 네트워크 매출 <strong style="color:var(--text);">$${totalSales.toLocaleString()}</strong> × 5% = <strong style="color:var(--gold);">$${pool.toLocaleString()}</strong><br>
+      다른 수당과 동일한 방식으로 전체 네트워크 매출 기준 계산
     </div>`;
   return pool;
 }
@@ -2129,7 +2122,7 @@ function renderTotal(totalSales, direct, refLine, sponsor, share, repurchase, aw
         <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--hermes);margin-top:3px;">$${awards.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);padding:10px;text-align:center;">
-        <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">⑤ 센터 (미정)</div>
+        <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">⑤ 센터 (협의)</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text4);margin-top:3px;">—</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);padding:10px;text-align:center;">
@@ -2139,7 +2132,7 @@ function renderTotal(totalSales, direct, refLine, sponsor, share, repurchase, aw
     </div>
     <div style="font-size:0.7rem;color:var(--text3);line-height:1.6;">
       총 매출 $${totalSales.toLocaleString()} 대비 배분률: <strong style="color:var(--gold);">${(totalSales > 0 ? (grandTotal / totalSales * 100).toFixed(1) : 0)}%</strong>
-      <span style="color:var(--text4);margin-left:8px;">(센터 5% 미포함)</span>
+      <span style="color:var(--text4);margin-left:8px;">(센터 조건부 협의 미포함)</span>
     </div>`;
 }
 
