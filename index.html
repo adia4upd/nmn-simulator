@@ -1813,18 +1813,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
 
   <!-- 6. 재구매/오토쉽 보너스 -->
   <div class="dc anim" style="margin-bottom:1.5rem;">
-    <div class="section-title" style="color:var(--gold);">⑥ 재구매/오토쉽 보너스 (재구매 매출 5% · n/1)</div>
-    <!-- 재구매 가격 선택 -->
-    <div style="display:flex;gap:10px;margin-bottom:14px;">
-      <button id="rp-btn-100" onclick="setRpSub(100)"
-        style="flex:1;padding:12px 0;border-radius:10px;border:2px solid var(--gold);background:rgba(212,175,55,0.18);color:var(--gold);font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;">
-        $100
-      </button>
-      <button id="rp-btn-300" onclick="setRpSub(300)"
-        style="flex:1;padding:12px 0;border-radius:10px;border:2px solid rgba(255,255,255,0.12);background:rgba(18,18,18,0.7);color:var(--text2);font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;">
-        $300
-      </button>
-    </div>
+    <div class="section-title" style="color:var(--gold);">⑥ 재구매/오토쉽 보너스 (전체매출 5% · $300 기준)</div>
     <div id="calc-repurchase"></div>
   </div>
 
@@ -2040,16 +2029,21 @@ function calcShare(rows) {
 
 // ─── ⑥ 재구매/오토쉽 (재구매자 독립 풀 · 5% ÷ n명) ───
 function calcRepurchase(totalSales, totalPeople) {
-  const pool = Math.round(totalSales * CFG.repurchase);  // 전체 매출 × 5%
+  const rpBase  = totalPeople * 300;                      // 하위 인원 × $300 기준
+  const pool    = Math.round(rpBase * CFG.repurchase);    // × 5%
   document.getElementById('calc-repurchase').innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">총 하위 인원</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">${totalPeople.toLocaleString()}명</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
-        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">총 네트워크 매출</div>
-        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text2);margin-top:4px;">$${totalSales.toLocaleString()}</div>
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">기준 단가</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text2);margin-top:4px;">$300</div>
+      </div>
+      <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
+        <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">기준 매출</div>
+        <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text2);margin-top:4px;">$${rpBase.toLocaleString()}</div>
       </div>
       <div style="background:rgba(22,22,22,0.7);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">재구매 보너스 (×5%)</div>
@@ -2057,8 +2051,8 @@ function calcRepurchase(totalSales, totalPeople) {
       </div>
     </div>
     <div style="font-size:0.78rem;color:var(--text2);line-height:1.8;">
-      총 네트워크 매출 <strong style="color:var(--text);">$${totalSales.toLocaleString()}</strong> × 5% = <strong style="color:var(--gold);">$${pool.toLocaleString()}</strong><br>
-      다른 수당과 동일한 방식으로 전체 네트워크 매출 기준 계산
+      총 하위 <strong style="color:var(--text);">${totalPeople.toLocaleString()}명</strong> × $300 = <strong style="color:var(--text);">$${rpBase.toLocaleString()}</strong> × 5% = <strong style="color:var(--gold);">$${pool.toLocaleString()}</strong><br>
+      다른 수당과 동일한 계산 방식 적용 · $300 고정 기준
     </div>`;
   return pool;
 }
@@ -2173,16 +2167,6 @@ function setSub(v) {
   sub = v;
   document.getElementById('sb300').className  = v === 300  ? 'tier-btn s1' : 'tier-btn';
   document.getElementById('sb3000').className = v === 3000 ? 'tier-btn s2' : 'tier-btn';
-  calc();
-}
-function setRpSub(v) {
-  rpSub = v;
-  document.getElementById('rp-btn-100').style.borderColor = v === 100 ? 'var(--gold)' : 'rgba(255,255,255,0.12)';
-  document.getElementById('rp-btn-100').style.background  = v === 100 ? 'rgba(212,175,55,0.18)' : 'rgba(18,18,18,0.7)';
-  document.getElementById('rp-btn-100').style.color       = v === 100 ? 'var(--gold)' : 'var(--text2)';
-  document.getElementById('rp-btn-300').style.borderColor = v === 300 ? 'var(--gold)' : 'rgba(255,255,255,0.12)';
-  document.getElementById('rp-btn-300').style.background  = v === 300 ? 'rgba(212,175,55,0.18)' : 'rgba(18,18,18,0.7)';
-  document.getElementById('rp-btn-300').style.color       = v === 300 ? 'var(--gold)' : 'var(--text2)';
   calc();
 }
 
