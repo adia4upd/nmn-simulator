@@ -236,7 +236,23 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', s
   .wave-totals{grid-template-columns:1fr 1fr;} .award-grid{grid-template-columns:1fr;} .legend{flex-direction:column;}
   .week-footer{grid-template-columns:1fr;} .timeline::before{left:38px;} .wave-left{width:55px;}
   .tab-btn{padding:14px 10px;font-size:0.72rem;} .nav-brand{display:none;}
+  .plan-switcher{padding:14px 14px 0;}
 }
+
+/* ── PLAN SWITCHER (Tab 1) ── */
+.plan-switcher { display: flex; gap: 10px; max-width: 780px; margin: 0 auto; padding: 24px 20px 0; }
+.plan-btn { flex: 1; background: var(--card); border: 2px solid var(--border); border-radius: 14px; padding: 16px 20px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; color: var(--text2); transition: all 0.22s; text-align: center; }
+.plan-btn:hover { border-color: rgba(254,202,87,0.25); color: var(--text); }
+.plan-btn.active { background: rgba(254,202,87,0.07); border-color: rgba(254,202,87,0.45); color: var(--gold); }
+.plan-btn .pb-price { font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 900; display: block; margin-bottom: 4px; }
+.plan-btn .pb-label { font-size: 0.72rem; font-weight: 600; display: block; }
+.plan-btn .pb-tag { display: inline-block; font-size: 0.6rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-top: 6px; background: rgba(254,202,87,0.12); color: var(--gold); }
+.plan-btn.promo .pb-price { color: var(--red); }
+.plan-btn.promo:hover { border-color: rgba(255,107,107,0.3); }
+.plan-btn.promo.active { background: rgba(255,107,107,0.06); border-color: rgba(255,107,107,0.45); }
+.plan-btn.promo.active .pb-tag { background: rgba(255,107,107,0.15); color: var(--red); }
+.plan-panel { display: none; }
+.plan-panel.active { display: block; }
 </style>
 </head>
 <body>
@@ -251,145 +267,258 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', s
 
 <!-- ══════════════ TAB 1: 3인 파동 작전 ══════════════ -->
 <div id="t1" class="tab-panel active">
+
+  <!-- 공통 헤더 -->
   <div class="hdr">
     <div class="hdr-badge" style="background:rgba(254,202,87,0.1);border:1px solid rgba(254,202,87,0.3);color:var(--gold);">3인 파동 전략</div>
     <h1>각자 <span>3명</span>씩만 추천하면<br>모두가 수익을 낸다</h1>
-    <p>초기 투자 $3,000 · 각자 3명씩만 추천 · 7대까지 18주 완성<br>2대만 완성해도 원금 회수 — 전 대수 후원 AUTO 자동 적용</p>
-    <div class="hdr-stats">
-      <div class="hs"><div class="hs-val">$3,000</div><div class="hs-lbl">초기 투자</div></div>
-      <div class="hs"><div class="hs-val">3명</div><div class="hs-lbl">각자 추천 인원</div></div>
-      <div class="hs"><div class="hs-val">3주차</div><div class="hs-lbl">원금 회수 시점</div></div>
-      <div class="hs"><div class="hs-val">$248,184</div><div class="hs-lbl">18주 누적 수익</div></div>
+    <p>각자 3명씩만 추천 · 7대까지 파동으로 퍼짐 · 가입 플랜에 따라 수익 규모가 달라진다</p>
+  </div>
+
+  <!-- 플랜 선택 스위처 -->
+  <div class="plan-switcher">
+    <button class="plan-btn active" onclick="switchPlan('p300', this)">
+      <span class="pb-price" style="color:var(--gold)">$300</span>
+      <span class="pb-label">일반 가입</span>
+      <span class="pb-tag">6대 후원 AUTO · 18주 완성</span>
+    </button>
+    <button class="plan-btn promo" onclick="switchPlan('p3000', this)">
+      <span class="pb-price" style="color:var(--red)">$3,000</span>
+      <span class="pb-label">프로모션 한정</span>
+      <span class="pb-tag" style="background:rgba(255,107,107,0.15);color:var(--red);">🔥 전 대수 AUTO · 3주차 원금 회수</span>
+    </button>
+  </div>
+
+  <!-- ───── 플랜 $300 ───── -->
+  <div id="p300" class="plan-panel active">
+    <div style="max-width:780px;margin:18px auto 0;padding:0 20px;">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <div class="concept-card" style="flex:1;min-width:180px;"><div class="concept-icon">🎯</div><div class="concept-title">단 3명만 추천</div><div class="concept-desc">직접추천 30%로 원금의 90% ($270) 즉시 회수. 누구나 가능한 최소 목표.</div></div>
+        <div class="concept-card" style="flex:1;min-width:180px;"><div class="concept-icon">🌊</div><div class="concept-title">파동처럼 퍼짐</div><div class="concept-desc">내 3명이 각자 3명을 추천하면 자동으로 2대·3대 수당 수령. 팀이 함께 성장.</div></div>
+        <div class="concept-card" style="flex:1;min-width:180px;"><div class="concept-icon">⚡</div><div class="concept-title">6·7대 자동화</div><div class="concept-desc">3명 모집 시 6·7대 후원롤업 AUTO. 가장 큰 수익 구간에서 수당 폭발.</div></div>
+      </div>
+    </div>
+    <div class="timeline" style="margin-top:20px;">
+      <div class="wrap"><div class="sec-title">파동별 수익 타임라인 ($300 기준)</div></div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">1주차</div></div>
+        <div class="wave-card">
+          <div class="wave-header"><span class="wave-num">파동 1</span><span class="wave-title">내가 3명 추천 · 1대 완성</span></div>
+          <div class="people-info">신규 <span class="hi">3명</span> · 누적 <strong>3명</strong> · 매출 <strong>$900</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-direct">① 직접추천 30%</span></td><td class="formula">3명 × $300 × 30%</td><td class="amount gold">$270</td></tr>
+            <tr><td><span class="bonus-label lbl-spon">③ 후원 1대</span></td><td class="formula">$900 × 4% × 15%</td><td class="amount orange">$5</td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$275</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$275</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-red">-$25</div></div></div>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">3주차</div></div>
+        <div class="wave-card">
+          <div class="wave-header"><span class="wave-num">파동 2</span><span class="wave-title">내 3명이 각자 3명 · 2대 완성</span></div>
+          <div class="people-info">신규 <span class="hi">9명</span> · 누적 <strong>12명</strong> · 매출 <strong>$2,700</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-ref">② 추천라인 2대</span></td><td class="formula">$2,700 × 6% × 15%</td><td class="amount gold">$24</td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$24</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$299</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-red">-$1</div></div></div>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot milestone"></div><div class="wave-week">6주차</div></div>
+        <div class="wave-card milestone">
+          <div class="wave-header"><span class="wave-num">파동 3</span><span class="wave-title">2대 9명이 각자 3명 · 3대 완성</span><span class="wave-badge badge-milestone">✓ 원금 회수</span></div>
+          <div class="people-info">신규 <span class="hi">27명</span> · 누적 <strong>39명</strong> · 매출 <strong>$8,100</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-ref">② 추천라인 3대</span></td><td class="formula">$8,100 × 6% × 15%</td><td class="amount gold">$73</td></tr>
+            <tr><td><span class="bonus-label lbl-share">④ 공유수당 3대</span></td><td class="formula">$8,100 × 5% × 20%</td><td class="amount pink">$81</td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$154</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$453</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$153</div></div></div>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">9주차</div></div>
+        <div class="wave-card">
+          <div class="wave-header"><span class="wave-num">파동 4</span><span class="wave-title">3대 27명이 각자 3명 · 4대 완성</span></div>
+          <div class="people-info">신규 <span class="hi">81명</span> · 누적 <strong>120명</strong> · 매출 <strong>$24,300</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-ref">② 추천라인 4대</span></td><td class="formula">$24,300 × 6% × 15%</td><td class="amount gold">$219</td></tr>
+            <tr><td><span class="bonus-label lbl-share">④ 공유수당 4대</span></td><td class="formula">$24,300 × 5% × 20%</td><td class="amount pink">$243</td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$462</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$915</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$615</div></div></div>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">12주차</div></div>
+        <div class="wave-card">
+          <div class="wave-header"><span class="wave-num">파동 5</span><span class="wave-title">4대 81명이 각자 3명 · 5대 완성</span></div>
+          <div class="people-info">신규 <span class="hi">243명</span> · 누적 <strong>363명</strong> · 매출 <strong>$72,900</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-ref">② 추천라인 5대</span></td><td class="formula">$72,900 × 6% × 15%</td><td class="amount gold">$656</td></tr>
+            <tr><td><span class="bonus-label lbl-share">④ 공유수당 5대</span></td><td class="formula">$72,900 × 5% × 20%</td><td class="amount pink">$729</td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$1,385</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$2,300</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$2,000</div></div></div>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot special"></div><div class="wave-week">15주차</div></div>
+        <div class="wave-card special">
+          <div class="wave-header"><span class="wave-num">파동 6</span><span class="wave-title">5대 243명이 각자 3명 · 6대 완성</span><span class="wave-badge badge-special">⚡ 후원 자동화</span></div>
+          <div class="people-info">신규 <span class="hi">729명</span> · 누적 <strong>1,092명</strong> · 매출 <strong>$218,700</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-ref">② 추천라인 6대</span></td><td class="formula">$218,700 × 6% × 15%</td><td class="amount gold">$1,968</td></tr>
+            <tr><td><span class="bonus-label lbl-spon">③ 후원라인 6대</span></td><td class="formula"><span class="auto-note">$218,700 × 4% × 15% · 3명 AUTO</span></td><td class="amount orange">$1,312 <span class="auto-tag">AUTO</span></td></tr>
+            <tr><td><span class="bonus-label lbl-share">④ 공유수당 6대</span></td><td class="formula">$218,700 × 5% × 20%</td><td class="amount pink">$2,187</td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-cyan">$5,467</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$7,767</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$7,467</div></div></div>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot special"></div><div class="wave-week">18주차</div></div>
+        <div class="wave-card special">
+          <div class="wave-header"><span class="wave-num">파동 7</span><span class="wave-title">6대 729명이 각자 3명 · 7대 완성</span><span class="wave-badge badge-max">🔥 최대 수익</span></div>
+          <div class="people-info">신규 <span class="hi">2,187명</span> · 누적 <strong>3,279명</strong> · 매출 <strong>$656,100</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-ref">② 추천라인 7대</span></td><td class="formula">$656,100 × 6% × 15%</td><td class="amount gold">$5,905</td></tr>
+            <tr><td><span class="bonus-label lbl-spon">③ 후원라인 7대</span></td><td class="formula"><span class="auto-note">$656,100 × 4% × 15% · 3명 AUTO</span></td><td class="amount orange">$3,937 <span class="auto-tag">AUTO</span></td></tr>
+            <tr><td><span class="bonus-label lbl-share">④ 공유수당 7대</span></td><td class="formula">$656,100 × 5% × 20%</td><td class="amount pink">$6,561</td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-cyan">$16,403</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$24,170</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$23,870</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="wrap" style="margin-top:28px;">
+      <div class="summary-card">
+        <div class="s-label">18주 · 7대 완성 누적 총 수익</div>
+        <div class="s-total">$24,170</div>
+        <div class="s-sub">초기 투자 $300 대비 <strong>80.6배</strong> · 원금 회수 6주차</div>
+        <div class="s-grid">
+          <div class="s-box"><div class="s-box-lbl">총 네트워크</div><div class="s-box-val" style="color:var(--text)">3,279명</div></div>
+          <div class="s-box"><div class="s-box-lbl">네트워크 매출</div><div class="s-box-val" style="color:var(--cyan)">$983,700</div></div>
+          <div class="s-box"><div class="s-box-lbl">원금 회수 시점</div><div class="s-box-val" style="color:var(--green)">6주차</div></div>
+          <div class="s-box"><div class="s-box-lbl">시상 풀 (1%)</div><div class="s-box-val" style="color:var(--gold)">$9,837</div></div>
+        </div>
+      </div>
+      <div class="disclaimer">※ 모든 구성원이 3명씩 추천, 각 파동 3주 완성 이상적 시나리오 기준 · Value Tree NMN</div>
     </div>
   </div>
 
-  <div class="concept-grid">
-    <div class="concept-card"><div class="concept-icon">🎯</div><div class="concept-title">단 3명만 추천</div><div class="concept-desc">직접추천 30% 수당만으로 $2,700 즉시 회수. 초기 투자의 90%를 첫 주에 바로 회수.</div></div>
-    <div class="concept-card"><div class="concept-icon">🌊</div><div class="concept-title">파동처럼 퍼짐</div><div class="concept-desc">내 3명이 각자 3명을 추천하면 나는 자동으로 2대·3대 수당을 받음. 팀이 함께 성장.</div></div>
-    <div class="concept-card"><div class="concept-icon">⚡</div><div class="concept-title">전 대수 후원 AUTO</div><div class="concept-desc">$3,000 가입 시 1~5대 자동, n=3 조건으로 6·7대도 AUTO — 7대 전부 후원 수당 적용.</div></div>
+  <!-- ───── 플랜 $3,000 프로모션 ───── -->
+  <div id="p3000" class="plan-panel">
+    <div style="max-width:780px;margin:18px auto 0;padding:0 20px;">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <div class="concept-card" style="flex:1;min-width:180px;border-color:rgba(255,107,107,0.2);"><div class="concept-icon">🎯</div><div class="concept-title" style="color:var(--red)">1주만에 90% 회수</div><div class="concept-desc">직접추천 30%로 $2,700 즉시 회수. 초기 투자 $3,000의 90%를 첫 주에 확보.</div></div>
+        <div class="concept-card" style="flex:1;min-width:180px;border-color:rgba(255,107,107,0.2);"><div class="concept-icon">🌊</div><div class="concept-title" style="color:var(--red)">3주차에 원금 완전 회수</div><div class="concept-desc">2대 완성 시점(3주차) 누적 $3,159 — 원금 $3,000 돌파. $300보다 3주 빠름.</div></div>
+        <div class="concept-card" style="flex:1;min-width:180px;border-color:rgba(255,107,107,0.2);"><div class="concept-icon">⚡</div><div class="concept-title" style="color:var(--red)">전 7대 후원 AUTO</div><div class="concept-desc">$3,000 가입 시 1~5대 자동, n=3으로 6·7대도 AUTO — 7대 전부 ③ 후원 수당 적용.</div></div>
+      </div>
+    </div>
+    <div class="timeline" style="margin-top:20px;">
+      <div class="wrap"><div class="sec-title">파동별 수익 타임라인 ($3,000 프로모션 기준)</div></div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">1주차</div></div>
+        <div class="wave-card">
+          <div class="wave-header"><span class="wave-num">파동 1</span><span class="wave-title">내가 3명 추천 · 1대 완성</span></div>
+          <div class="people-info">신규 <span class="hi">3명</span> · 누적 <strong>3명</strong> · 매출 <strong>$9,000</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-direct">① 직접추천 30%</span></td><td class="formula">3명 × $3,000 × 30%</td><td class="amount gold">$2,700</td></tr>
+            <tr><td><span class="bonus-label lbl-spon">③ 후원 1대</span></td><td class="formula"><span class="auto-note">$9,000 × 4% × 15% · AUTO</span></td><td class="amount orange">$54 <span class="auto-tag">AUTO</span></td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$2,754</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$2,754</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-red">-$246</div></div></div>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot milestone"></div><div class="wave-week">3주차</div></div>
+        <div class="wave-card milestone">
+          <div class="wave-header"><span class="wave-num">파동 2</span><span class="wave-title">내 3명이 각자 3명 · 2대 완성</span><span class="wave-badge badge-milestone">✓ 원금 회수</span></div>
+          <div class="people-info">신규 <span class="hi">9명</span> · 누적 <strong>12명</strong> · 매출 <strong>$27,000</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-ref">② 추천라인 2대</span></td><td class="formula">$27,000 × 6% × 15%</td><td class="amount gold">$243</td></tr>
+            <tr><td><span class="bonus-label lbl-spon">③ 후원 2대</span></td><td class="formula"><span class="auto-note">$27,000 × 4% × 15% · AUTO</span></td><td class="amount orange">$162 <span class="auto-tag">AUTO</span></td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$405</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$3,159</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$159</div></div></div>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">6주차</div></div>
+        <div class="wave-card">
+          <div class="wave-header"><span class="wave-num">파동 3</span><span class="wave-title">2대 9명이 각자 3명 · 3대 완성</span></div>
+          <div class="people-info">신규 <span class="hi">27명</span> · 누적 <strong>39명</strong> · 매출 <strong>$81,000</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-ref">② 추천라인 3대</span></td><td class="formula">$81,000 × 6% × 15%</td><td class="amount gold">$729</td></tr>
+            <tr><td><span class="bonus-label lbl-spon">③ 후원 3대</span></td><td class="formula"><span class="auto-note">$81,000 × 4% × 15% · AUTO</span></td><td class="amount orange">$486 <span class="auto-tag">AUTO</span></td></tr>
+            <tr><td><span class="bonus-label lbl-share">④ 공유수당 3대</span></td><td class="formula">$81,000 × 5% × 20%</td><td class="amount pink">$810</td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$2,025</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$5,184</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$2,184</div></div></div>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">9주차</div></div>
+        <div class="wave-card">
+          <div class="wave-header"><span class="wave-num">파동 4</span><span class="wave-title">3대 27명이 각자 3명 · 4대 완성</span></div>
+          <div class="people-info">신규 <span class="hi">81명</span> · 누적 <strong>120명</strong> · 매출 <strong>$243,000</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-ref">② 추천라인 4대</span></td><td class="formula">$243,000 × 6% × 15%</td><td class="amount gold">$2,187</td></tr>
+            <tr><td><span class="bonus-label lbl-spon">③ 후원 4대</span></td><td class="formula"><span class="auto-note">$243,000 × 4% × 15% · AUTO</span></td><td class="amount orange">$1,458 <span class="auto-tag">AUTO</span></td></tr>
+            <tr><td><span class="bonus-label lbl-share">④ 공유수당 4대</span></td><td class="formula">$243,000 × 5% × 20%</td><td class="amount pink">$2,430</td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$6,075</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$11,259</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$8,259</div></div></div>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">12주차</div></div>
+        <div class="wave-card">
+          <div class="wave-header"><span class="wave-num">파동 5</span><span class="wave-title">4대 81명이 각자 3명 · 5대 완성</span></div>
+          <div class="people-info">신규 <span class="hi">243명</span> · 누적 <strong>363명</strong> · 매출 <strong>$729,000</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-ref">② 추천라인 5대</span></td><td class="formula">$729,000 × 6% × 15%</td><td class="amount gold">$6,561</td></tr>
+            <tr><td><span class="bonus-label lbl-spon">③ 후원 5대</span></td><td class="formula"><span class="auto-note">$729,000 × 4% × 15% · AUTO</span></td><td class="amount orange">$4,374 <span class="auto-tag">AUTO</span></td></tr>
+            <tr><td><span class="bonus-label lbl-share">④ 공유수당 5대</span></td><td class="formula">$729,000 × 5% × 20%</td><td class="amount pink">$7,290</td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$18,225</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$29,484</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$26,484</div></div></div>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot special"></div><div class="wave-week">15주차</div></div>
+        <div class="wave-card special">
+          <div class="wave-header"><span class="wave-num">파동 6</span><span class="wave-title">5대 243명이 각자 3명 · 6대 완성</span><span class="wave-badge badge-special">⚡ 후원 자동화</span></div>
+          <div class="people-info">신규 <span class="hi">729명</span> · 누적 <strong>1,092명</strong> · 매출 <strong>$2,187,000</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-ref">② 추천라인 6대</span></td><td class="formula">$2,187,000 × 6% × 15%</td><td class="amount gold">$19,683</td></tr>
+            <tr><td><span class="bonus-label lbl-spon">③ 후원라인 6대</span></td><td class="formula"><span class="auto-note">$2,187,000 × 4% × 15% · 3명 AUTO</span></td><td class="amount orange">$13,122 <span class="auto-tag">AUTO</span></td></tr>
+            <tr><td><span class="bonus-label lbl-share">④ 공유수당 6대</span></td><td class="formula">$2,187,000 × 5% × 20%</td><td class="amount pink">$21,870</td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-cyan">$54,675</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$84,159</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$81,159</div></div></div>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-left"><div class="wave-dot special"></div><div class="wave-week">18주차</div></div>
+        <div class="wave-card special">
+          <div class="wave-header"><span class="wave-num">파동 7</span><span class="wave-title">6대 729명이 각자 3명 · 7대 완성</span><span class="wave-badge badge-max">🔥 최대 수익</span></div>
+          <div class="people-info">신규 <span class="hi">2,187명</span> · 누적 <strong>3,279명</strong> · 매출 <strong>$6,561,000</strong></div>
+          <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+            <tr><td><span class="bonus-label lbl-ref">② 추천라인 7대</span></td><td class="formula">$6,561,000 × 6% × 15%</td><td class="amount gold">$59,049</td></tr>
+            <tr><td><span class="bonus-label lbl-spon">③ 후원라인 7대</span></td><td class="formula"><span class="auto-note">$6,561,000 × 4% × 15% · 3명 AUTO</span></td><td class="amount orange">$39,366 <span class="auto-tag">AUTO</span></td></tr>
+            <tr><td><span class="bonus-label lbl-share">④ 공유수당 7대</span></td><td class="formula">$6,561,000 × 5% × 20%</td><td class="amount pink">$65,610</td></tr>
+          </tbody></table>
+          <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-cyan">$164,025</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$248,184</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$245,184</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="wrap" style="margin-top:28px;">
+      <div class="summary-card" style="border-color:rgba(255,107,107,0.25);background:linear-gradient(135deg,rgba(255,107,107,0.06),rgba(72,219,251,0.04));">
+        <div class="s-label">18주 · 7대 완성 누적 총 수익</div>
+        <div class="s-total" style="color:var(--red)">$248,184</div>
+        <div class="s-sub">초기 투자 $3,000 대비 <strong style="color:var(--red)">82.7배</strong> · 원금 회수 3주차 · 전 대수 후원 AUTO</div>
+        <div class="s-grid">
+          <div class="s-box"><div class="s-box-lbl">총 네트워크</div><div class="s-box-val" style="color:var(--text)">3,279명</div></div>
+          <div class="s-box"><div class="s-box-lbl">네트워크 매출</div><div class="s-box-val" style="color:var(--cyan)">$9,837,000</div></div>
+          <div class="s-box"><div class="s-box-lbl">원금 회수 시점</div><div class="s-box-val" style="color:var(--green)">3주차</div></div>
+          <div class="s-box"><div class="s-box-lbl">시상 풀 (1%)</div><div class="s-box-val" style="color:var(--gold)">$98,370</div></div>
+        </div>
+      </div>
+      <div class="disclaimer">※ 프로모션 한정 $3,000 가입 기준 · 모든 구성원이 3명씩 추천, 각 파동 3주 완성 이상적 시나리오 · Value Tree NMN</div>
+    </div>
   </div>
 
-  <div class="timeline">
-    <div class="wrap"><div class="sec-title">파동별 수익 타임라인</div></div>
-
-    <!-- Wave 1 -->
-    <div class="wave">
-      <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">1주차</div></div>
-      <div class="wave-card">
-        <div class="wave-header"><span class="wave-num">파동 1</span><span class="wave-title">내가 3명 추천 · 1대 완성</span></div>
-        <div class="people-info">신규 <span class="hi">3명</span> · 누적 <strong>3명</strong> · 매출 <strong>$9,000</strong></div>
-        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
-          <tr><td><span class="bonus-label lbl-direct">① 직접추천 30%</span></td><td class="formula">3명 × $3,000 × 30%</td><td class="amount gold">$2,700</td></tr>
-          <tr><td><span class="bonus-label lbl-spon">③ 후원 1대</span></td><td class="formula"><span class="auto-note">$9,000 × 4% × 15% · $3,000 AUTO</span></td><td class="amount orange">$54 <span class="auto-tag">AUTO</span></td></tr>
-        </tbody></table>
-        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$2,754</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$2,754</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-red">-$246</div></div></div>
-      </div>
-    </div>
-
-    <!-- Wave 2 — Milestone -->
-    <div class="wave">
-      <div class="wave-left"><div class="wave-dot milestone"></div><div class="wave-week">3주차</div></div>
-      <div class="wave-card milestone">
-        <div class="wave-header"><span class="wave-num">파동 2</span><span class="wave-title">내 3명이 각자 3명 · 2대 완성</span><span class="wave-badge badge-milestone">✓ 원금 회수</span></div>
-        <div class="people-info">신규 <span class="hi">9명</span> · 누적 <strong>12명</strong> · 2대 매출 <strong>$27,000</strong></div>
-        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
-          <tr><td><span class="bonus-label lbl-ref">② 추천라인 2대</span></td><td class="formula">$27,000 × 6% × 15%</td><td class="amount gold">$243</td></tr>
-          <tr><td><span class="bonus-label lbl-spon">③ 후원 2대</span></td><td class="formula"><span class="auto-note">$27,000 × 4% × 15% · AUTO</span></td><td class="amount orange">$162 <span class="auto-tag">AUTO</span></td></tr>
-        </tbody></table>
-        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$405</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$3,159</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$159</div></div></div>
-      </div>
-    </div>
-
-    <!-- Wave 3 -->
-    <div class="wave">
-      <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">6주차</div></div>
-      <div class="wave-card">
-        <div class="wave-header"><span class="wave-num">파동 3</span><span class="wave-title">2대 9명이 각자 3명 · 3대 완성</span></div>
-        <div class="people-info">신규 <span class="hi">27명</span> · 누적 <strong>39명</strong> · 3대 매출 <strong>$81,000</strong></div>
-        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
-          <tr><td><span class="bonus-label lbl-ref">② 추천라인 3대</span></td><td class="formula">$81,000 × 6% × 15%</td><td class="amount gold">$729</td></tr>
-          <tr><td><span class="bonus-label lbl-spon">③ 후원 3대</span></td><td class="formula"><span class="auto-note">$81,000 × 4% × 15% · AUTO</span></td><td class="amount orange">$486 <span class="auto-tag">AUTO</span></td></tr>
-          <tr><td><span class="bonus-label lbl-share">④ 공유수당 3대</span></td><td class="formula">$81,000 × 5% × 20%</td><td class="amount pink">$810</td></tr>
-        </tbody></table>
-        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$2,025</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$5,184</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$2,184</div></div></div>
-      </div>
-    </div>
-
-    <!-- Wave 4 -->
-    <div class="wave">
-      <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">9주차</div></div>
-      <div class="wave-card">
-        <div class="wave-header"><span class="wave-num">파동 4</span><span class="wave-title">3대 27명이 각자 3명 · 4대 완성</span></div>
-        <div class="people-info">신규 <span class="hi">81명</span> · 누적 <strong>120명</strong> · 4대 매출 <strong>$243,000</strong></div>
-        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
-          <tr><td><span class="bonus-label lbl-ref">② 추천라인 4대</span></td><td class="formula">$243,000 × 6% × 15%</td><td class="amount gold">$2,187</td></tr>
-          <tr><td><span class="bonus-label lbl-spon">③ 후원 4대</span></td><td class="formula"><span class="auto-note">$243,000 × 4% × 15% · AUTO</span></td><td class="amount orange">$1,458 <span class="auto-tag">AUTO</span></td></tr>
-          <tr><td><span class="bonus-label lbl-share">④ 공유수당 4대</span></td><td class="formula">$243,000 × 5% × 20%</td><td class="amount pink">$2,430</td></tr>
-        </tbody></table>
-        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$6,075</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$11,259</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$8,259</div></div></div>
-      </div>
-    </div>
-
-    <!-- Wave 5 -->
-    <div class="wave">
-      <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">12주차</div></div>
-      <div class="wave-card">
-        <div class="wave-header"><span class="wave-num">파동 5</span><span class="wave-title">4대 81명이 각자 3명 · 5대 완성</span></div>
-        <div class="people-info">신규 <span class="hi">243명</span> · 누적 <strong>363명</strong> · 5대 매출 <strong>$729,000</strong></div>
-        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
-          <tr><td><span class="bonus-label lbl-ref">② 추천라인 5대</span></td><td class="formula">$729,000 × 6% × 15%</td><td class="amount gold">$6,561</td></tr>
-          <tr><td><span class="bonus-label lbl-spon">③ 후원 5대</span></td><td class="formula"><span class="auto-note">$729,000 × 4% × 15% · AUTO</span></td><td class="amount orange">$4,374 <span class="auto-tag">AUTO</span></td></tr>
-          <tr><td><span class="bonus-label lbl-share">④ 공유수당 5대</span></td><td class="formula">$729,000 × 5% × 20%</td><td class="amount pink">$7,290</td></tr>
-        </tbody></table>
-        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$18,225</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$29,484</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$26,484</div></div></div>
-      </div>
-    </div>
-
-    <!-- Wave 6 — Special -->
-    <div class="wave">
-      <div class="wave-left"><div class="wave-dot special"></div><div class="wave-week">15주차</div></div>
-      <div class="wave-card special">
-        <div class="wave-header"><span class="wave-num">파동 6</span><span class="wave-title">5대 243명이 각자 3명 · 6대 완성</span><span class="wave-badge badge-special">⚡ 후원 자동화</span></div>
-        <div class="people-info">신규 <span class="hi">729명</span> · 누적 <strong>1,092명</strong> · 6대 매출 <strong>$2,187,000</strong></div>
-        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
-          <tr><td><span class="bonus-label lbl-ref">② 추천라인 6대</span></td><td class="formula">$2,187,000 × 6% × 15%</td><td class="amount gold">$19,683</td></tr>
-          <tr><td><span class="bonus-label lbl-spon">③ 후원라인 6대</span></td><td class="formula"><span class="auto-note">$2,187,000 × 4% × 15% · 3명 AUTO</span></td><td class="amount orange">$13,122 <span class="auto-tag">AUTO</span></td></tr>
-          <tr><td><span class="bonus-label lbl-share">④ 공유수당 6대</span></td><td class="formula">$2,187,000 × 5% × 20%</td><td class="amount pink">$21,870</td></tr>
-        </tbody></table>
-        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-cyan">$54,675</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$84,159</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$81,159</div></div></div>
-      </div>
-    </div>
-
-    <!-- Wave 7 — Max -->
-    <div class="wave">
-      <div class="wave-left"><div class="wave-dot special"></div><div class="wave-week">18주차</div></div>
-      <div class="wave-card special">
-        <div class="wave-header"><span class="wave-num">파동 7</span><span class="wave-title">6대 729명이 각자 3명 · 7대 완성</span><span class="wave-badge badge-max">🔥 최대 수익</span></div>
-        <div class="people-info">신규 <span class="hi">2,187명</span> · 누적 <strong>3,279명</strong> · 7대 매출 <strong>$6,561,000</strong></div>
-        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
-          <tr><td><span class="bonus-label lbl-ref">② 추천라인 7대</span></td><td class="formula">$6,561,000 × 6% × 15%</td><td class="amount gold">$59,049</td></tr>
-          <tr><td><span class="bonus-label lbl-spon">③ 후원라인 7대</span></td><td class="formula"><span class="auto-note">$6,561,000 × 4% × 15% · 3명 AUTO</span></td><td class="amount orange">$39,366 <span class="auto-tag">AUTO</span></td></tr>
-          <tr><td><span class="bonus-label lbl-share">④ 공유수당 7대</span></td><td class="formula">$6,561,000 × 5% × 20%</td><td class="amount pink">$65,610</td></tr>
-        </tbody></table>
-        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-cyan">$164,025</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$248,184</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$245,184</div></div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="wrap" style="margin-top:28px;">
-    <div class="summary-card">
-      <div class="s-label">18주 · 7대 완성 누적 총 수익</div>
-      <div class="s-total">$248,184</div>
-      <div class="s-sub">초기 투자 $3,000 대비 <strong>82.7배</strong> · 원금 회수 3주차</div>
-      <div class="s-grid">
-        <div class="s-box"><div class="s-box-lbl">총 네트워크</div><div class="s-box-val" style="color:var(--text)">3,279명</div></div>
-        <div class="s-box"><div class="s-box-lbl">네트워크 매출</div><div class="s-box-val" style="color:var(--cyan)">$9,837,000</div></div>
-        <div class="s-box"><div class="s-box-lbl">원금 회수 시점</div><div class="s-box-val" style="color:var(--green)">3주차</div></div>
-        <div class="s-box"><div class="s-box-lbl">시상 풀 (1%)</div><div class="s-box-val" style="color:var(--gold)">$98,370</div></div>
-      </div>
-    </div>
-    <div class="disclaimer">※ 모든 구성원이 3명씩 추천, 각 파동 3주 완성 이상적 시나리오 기준 · Value Tree NMN</div>
-  </div>
 </div>
 
 <!-- ══════════════ TAB 2: 선물하기 운영 시스템 ══════════════ -->
@@ -641,6 +770,13 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', s
 function switchTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+function switchPlan(id, btn) {
+  document.querySelectorAll('.plan-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.plan-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
   window.scrollTo({top: 0, behavior: 'smooth'});
