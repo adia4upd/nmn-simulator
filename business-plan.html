@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Value Tree NMN · 비즈니스 플랜</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0A0A0A; --card: #111; --card2: #161616;
+  --border: rgba(255,255,255,0.07);
+  --gold: #FECA57; --cyan: #48DBFB; --pink: #FF9FF3;
+  --orange: #FF9F43; --green: #1DD1A1; --red: #FF6B6B; --purple: #A29BFE;
+  --text: #F0F0F0; --text2: #999; --text3: #555;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; padding-bottom: 80px; }
+
+/* ── TOP NAV ── */
+.top-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,10,10,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  display: flex; align-items: center; gap: 0;
+}
+.nav-brand {
+  font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 800;
+  color: var(--gold); padding: 14px 16px 14px 0;
+  border-right: 1px solid var(--border); margin-right: 4px;
+  white-space: nowrap;
+}
+.tab-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif; font-size: 0.78rem; font-weight: 500;
+  color: var(--text2); padding: 16px 16px; border-bottom: 2px solid transparent;
+  transition: all 0.2s; white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 700; }
+
+/* ── TAB PANELS ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── SHARED ── */
+.hdr { background: linear-gradient(160deg,#0f0f0f,#0A0A0A); border-bottom: 1px solid var(--border); padding: 48px 24px 36px; text-align: center; }
+.hdr-badge { display: inline-block; border-radius: 100px; padding: 5px 18px; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 18px; }
+.hdr h1 { font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 900; line-height: 1.2; margin-bottom: 10px; }
+.hdr h1 span { color: var(--gold); }
+.hdr p { font-size: 0.84rem; color: var(--text2); line-height: 1.9; }
+.hdr-stats { display: flex; justify-content: center; gap: 36px; flex-wrap: wrap; margin-top: 24px; }
+.hs { text-align: center; }
+.hs-val { font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 900; color: var(--gold); }
+.hs-lbl { font-size: 0.66rem; color: var(--text2); margin-top: 3px; }
+
+.wrap { max-width: 780px; margin: 0 auto; padding: 0 20px; }
+.sec-title { font-family: 'Outfit', sans-serif; font-size: 0.67rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 2.5px; margin: 32px 0 14px; }
+
+/* ── WAVE CARDS (Tab 1) ── */
+.concept-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 28px auto; max-width: 780px; padding: 0 20px; }
+.concept-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 14px; text-align: center; }
+.concept-icon { font-size: 1.8rem; margin-bottom: 10px; }
+.concept-title { font-size: 0.8rem; font-weight: 700; color: var(--gold); margin-bottom: 7px; }
+.concept-desc { font-size: 0.71rem; color: var(--text2); line-height: 1.7; }
+
+.timeline { max-width: 760px; margin: 0 auto; padding: 0 20px; position: relative; }
+.timeline::before { content:''; position: absolute; left: 55px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(180deg,rgba(254,202,87,0.6),rgba(72,219,251,0.4),rgba(72,219,251,0.05)); border-radius: 2px; }
+.wave { display: flex; gap: 18px; margin-bottom: 18px; position: relative; }
+.wave-left { width: 72px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding-top: 16px; gap: 6px; }
+.wave-dot { width: 15px; height: 15px; border-radius: 50%; background: var(--gold); border: 2.5px solid var(--bg); position: relative; z-index: 1; flex-shrink: 0; }
+.wave-dot.milestone { width: 20px; height: 20px; background: var(--green); box-shadow: 0 0 14px rgba(29,209,161,0.55); }
+.wave-dot.special { width: 20px; height: 20px; background: var(--cyan); box-shadow: 0 0 14px rgba(72,219,251,0.55); }
+.wave-week { font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 700; color: var(--text2); white-space: nowrap; }
+.wave-card { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; min-width: 0; }
+.wave-card.milestone { border-color: rgba(29,209,161,0.25); background: linear-gradient(135deg,rgba(29,209,161,0.04),var(--card)); }
+.wave-card.special { border-color: rgba(72,219,251,0.25); background: linear-gradient(135deg,rgba(72,219,251,0.04),var(--card)); }
+.wave-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.wave-num { font-family: 'Outfit', sans-serif; font-size: 0.72rem; font-weight: 800; color: var(--gold); background: rgba(254,202,87,0.1); border-radius: 6px; padding: 2px 9px; flex-shrink: 0; }
+.wave-title { font-size: 0.84rem; font-weight: 700; color: var(--text); flex: 1; min-width: 0; }
+.wave-badge { font-size: 0.64rem; font-weight: 700; padding: 2px 9px; border-radius: 100px; flex-shrink: 0; }
+.badge-milestone { background: rgba(29,209,161,0.15); color: var(--green); border: 1px solid rgba(29,209,161,0.3); }
+.badge-special { background: rgba(72,219,251,0.12); color: var(--cyan); border: 1px solid rgba(72,219,251,0.3); }
+.badge-max { background: rgba(255,107,107,0.12); color: var(--red); border: 1px solid rgba(255,107,107,0.3); }
+.people-info { font-size: 0.72rem; color: var(--text2); margin-bottom: 12px; padding: 6px 10px; background: rgba(255,255,255,0.03); border-radius: 6px; }
+.people-info .hi { color: var(--gold); font-family: 'Outfit', sans-serif; font-weight: 800; }
+.bonus-table { width: 100%; font-size: 0.72rem; border-collapse: collapse; margin-bottom: 12px; }
+.bonus-table thead tr { border-bottom: 1px solid var(--border); }
+.bonus-table th { color: var(--text3); font-weight: 500; padding: 5px 6px; text-align: left; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.bonus-table td { padding: 6px 6px; vertical-align: middle; }
+.bonus-table tbody tr:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.03); }
+.bonus-label { display: inline-block; padding: 2px 7px; border-radius: 5px; font-weight: 700; font-size: 0.64rem; white-space: nowrap; }
+.lbl-direct { background: rgba(254,202,87,0.15); color: var(--gold); }
+.lbl-ref { background: rgba(254,202,87,0.08); color: #daa800; }
+.lbl-spon { background: rgba(255,159,67,0.15); color: var(--orange); }
+.lbl-share { background: rgba(255,159,243,0.12); color: var(--pink); }
+.formula { color: var(--text2); font-size: 0.7rem; }
+.formula .auto-note { color: var(--cyan); font-size: 0.62rem; }
+.amount { font-family: 'Outfit', sans-serif; font-weight: 800; text-align: right; white-space: nowrap; }
+.amount.gold { color: var(--gold); } .amount.orange { color: var(--orange); } .amount.pink { color: var(--pink); }
+.auto-tag { display: inline-block; font-size: 0.55rem; background: rgba(72,219,251,0.15); color: var(--cyan); border-radius: 3px; padding: 1px 4px; margin-left: 4px; font-weight: 800; vertical-align: middle; }
+.wave-totals { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.wtotal { background: var(--card2); border-radius: 9px; padding: 9px 10px; text-align: center; }
+.wtotal-lbl { font-size: 0.59rem; color: var(--text2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.wtotal-val { font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 800; }
+.c-gold{color:var(--gold);} .c-cyan{color:var(--cyan);} .c-green{color:var(--green);} .c-red{color:var(--red);}
+
+/* ── RULES (Tab 2) ── */
+.rules { display: flex; flex-direction: column; gap: 10px; }
+.rule { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 16px; }
+.rule.highlight { border-color: rgba(254,202,87,0.25); background: linear-gradient(135deg,rgba(254,202,87,0.04),var(--card)); }
+.rule-num { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 900; color: var(--gold); width: 36px; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+.rule-title { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+.rule-desc { font-size: 0.76rem; color: var(--text2); line-height: 1.8; }
+.rule-desc strong { color: var(--gold); }
+.rule-desc .cyan { color: var(--cyan); } .rule-desc .green { color: var(--green); } .rule-desc .orange { color: var(--orange); }
+.rule-tag { display: inline-block; font-size: 0.62rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px; }
+.tag-gold { background: rgba(254,202,87,0.15); color: var(--gold); }
+.tag-cyan { background: rgba(72,219,251,0.12); color: var(--cyan); }
+.tag-green { background: rgba(29,209,161,0.12); color: var(--green); }
+
+/* ── TREE (Tab 2) ── */
+.tree-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+.tree-legend { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.leg { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--text2); }
+.leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.tree-gen { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.gen-label { font-family: 'Outfit', sans-serif; font-size: 0.72rem; font-weight: 700; color: var(--text2); width: 44px; flex-shrink: 0; text-align: right; }
+.gen-count { font-family: 'Outfit', sans-serif; font-size: 0.72rem; font-weight: 800; width: 60px; flex-shrink: 0; }
+.pdot-group { display: flex; gap: 2px; flex-wrap: wrap; }
+.pdot { width: 9px; height: 9px; border-radius: 50%; }
+.pdot.self { background: var(--gold); } .pdot.gift { background: var(--cyan); }
+.gen-bigbar { flex: 1; height: 22px; border-radius: 6px; display: flex; align-items: center; padding: 0 10px; position: relative; overflow: hidden; }
+.gen-bigbar-self { position: absolute; left: 0; top: 0; bottom: 0; background: var(--gold); opacity: 0.85; }
+.gen-bigbar-gift { position: absolute; top: 0; bottom: 0; background: var(--cyan); opacity: 0.85; }
+.gen-bigbar-label { position: relative; z-index: 1; font-family: 'Outfit', sans-serif; font-size: 0.7rem; font-weight: 800; color: #000; }
+
+/* ── SIM TABLE (Tab 2) ── */
+.sim-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.sim-table { width: 100%; border-collapse: collapse; font-size: 0.76rem; }
+.sim-table thead { background: rgba(255,255,255,0.04); }
+.sim-table th { padding: 12px 10px; text-align: center; font-size: 0.63rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 600; white-space: nowrap; }
+.sim-table td { padding: 11px 10px; text-align: center; border-top: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+.sim-table tr:hover td { background: rgba(255,255,255,0.02); }
+.wave-tag { display: inline-block; background: rgba(254,202,87,0.1); color: var(--gold); font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+.num-self { color: var(--gold); font-family: 'Outfit', sans-serif; font-weight: 800; }
+.num-gift { color: var(--cyan); font-family: 'Outfit', sans-serif; font-weight: 800; }
+.num-total { color: var(--text); font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.88rem; }
+.num-cum { color: var(--text2); font-family: 'Outfit', sans-serif; font-weight: 700; }
+.income-cell { font-family: 'Outfit', sans-serif; font-weight: 800; color: var(--gold); font-size: 0.9rem; }
+.income-cell.big { color: var(--cyan); font-size: 1rem; }
+.sim-total-row td { background: rgba(254,202,87,0.06); border-top: 1px solid rgba(254,202,87,0.2) !important; font-weight: 700; }
+
+/* ── MECHANISM (Tab 2) ── */
+.mechanism { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+.mech-flow { display: flex; gap: 8px; align-items: stretch; flex-wrap: wrap; margin-bottom: 16px; }
+.mech-box { flex: 1; min-width: 110px; background: var(--card2); border-radius: 10px; padding: 14px 12px; text-align: center; }
+.mech-box-icon { font-size: 1.4rem; margin-bottom: 6px; }
+.mech-box-title { font-size: 0.72rem; font-weight: 700; margin-bottom: 4px; }
+.mech-box-desc { font-size: 0.65rem; color: var(--text2); line-height: 1.6; }
+.mech-arrow { display: flex; align-items: center; font-size: 1.2rem; color: var(--text3); flex-shrink: 0; }
+.mech-note { background: rgba(72,219,251,0.06); border: 1px solid rgba(72,219,251,0.15); border-radius: 8px; padding: 10px 14px; font-size: 0.74rem; color: var(--text2); line-height: 1.8; }
+.mech-note strong { color: var(--cyan); }
+
+/* ── AWARD GRID (Tab 2) ── */
+.award-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.award-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.aw-badge { display: inline-block; font-size: 0.62rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
+.aw-title { font-size: 0.8rem; font-weight: 700; margin-bottom: 5px; }
+.aw-desc { font-size: 0.7rem; color: var(--text2); line-height: 1.7; }
+
+/* ── PAYMENT CARDS (Tab 3) ── */
+.legend { display: flex; gap: 10px; flex-wrap: wrap; margin: 24px auto 0; max-width: 780px; padding: 0 20px; }
+.leg-card { flex: 1; min-width: 140px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+.leg-info .leg-bonus { font-size: 0.72rem; font-weight: 700; margin-bottom: 2px; }
+.leg-info .leg-when { font-size: 0.65rem; color: var(--text2); }
+.week-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 14px; }
+.week-card.month-pay { border-color: rgba(255,159,243,0.25); background: linear-gradient(135deg,rgba(255,159,243,0.04),var(--card)); }
+.week-card.auto-card { border-color: rgba(72,219,251,0.2); background: linear-gradient(135deg,rgba(72,219,251,0.03),var(--card)); }
+.week-card.max-card { border-color: rgba(255,159,243,0.2); }
+.week-card.breakeven { border-color: rgba(29,209,161,0.3); background: linear-gradient(135deg,rgba(29,209,161,0.05),var(--card)); }
+.week-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.week-num { font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 900; flex-shrink: 0; }
+.week-days { font-size: 0.7rem; color: var(--text3); flex-shrink: 0; }
+.week-gen { flex: 1; font-size: 0.78rem; color: var(--text2); }
+.week-gen strong { color: var(--text); }
+.auto-badge2 { display: inline-block; font-size: 0.6rem; font-weight: 700; border-radius: 4px; padding: 1px 6px; margin-left: 5px; }
+.week-body { padding: 14px 18px; }
+.pay-events { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.pay-event { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 8px; background: var(--card2); }
+.pay-day { font-family: 'Outfit', sans-serif; font-size: 0.7rem; font-weight: 700; color: var(--text3); width: 48px; flex-shrink: 0; }
+.pay-type { display: inline-block; font-size: 0.62rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; flex-shrink: 0; width: 80px; text-align: center; }
+.type-direct  { background: rgba(254,202,87,0.15); color: var(--gold); }
+.type-weekly  { background: rgba(72,219,251,0.12); color: var(--cyan); }
+.type-weekly-s{ background: rgba(255,159,67,0.15); color: var(--orange); }
+.type-monthly { background: rgba(255,159,243,0.12); color: var(--pink); }
+.type-accum   { background: rgba(255,255,255,0.04); color: var(--text3); font-style: italic; }
+.pay-desc { flex: 1; font-size: 0.74rem; color: var(--text2); }
+.pay-amount { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.95rem; flex-shrink: 0; text-align: right; min-width: 90px; }
+.pay-amount.gold{color:var(--gold);} .pay-amount.cyan{color:var(--cyan);} .pay-amount.orange{color:var(--orange);} .pay-amount.pink{color:var(--pink);} .pay-amount.dim{color:var(--text3);font-style:italic;font-size:0.8rem;}
+.week-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.wf-box { background: var(--card2); border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; }
+.wf-lbl { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+.wf-val { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1rem; }
+.progress-bar-wrap { height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+.progress-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg,var(--gold),var(--cyan)); }
+
+/* ── SUMMARY SHARED ── */
+.summary-card { background: linear-gradient(135deg,rgba(254,202,87,0.07),rgba(72,219,251,0.04)); border: 1px solid rgba(254,202,87,0.2); border-radius: 20px; padding: 30px 24px; text-align: center; }
+.s-label { font-size: 0.67rem; color: var(--text3); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; font-family: 'Outfit', sans-serif; font-weight: 700; }
+.s-total { font-family: 'Outfit', sans-serif; font-size: 3.2rem; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 6px; }
+.s-sub { font-size: 0.8rem; color: var(--text2); margin-bottom: 22px; }
+.s-sub strong { color: var(--gold); }
+.s-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.s-box { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 14px 10px; }
+.s-box-lbl { font-size: 0.62rem; color: var(--text2); margin-bottom: 5px; }
+.s-box-val { font-family: 'Outfit', sans-serif; font-size: 1.0rem; font-weight: 800; }
+.struct-card { background: var(--card); border: 1px solid rgba(254,202,87,0.2); border-radius: 16px; padding: 22px; }
+.struct-title { font-size: 0.88rem; font-weight: 700; color: var(--gold); margin-bottom: 14px; }
+.struct-q { background: var(--card2); border-left: 3px solid var(--red); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 0.8rem; color: var(--text2); line-height: 1.8; margin-bottom: 12px; }
+.struct-q strong { color: var(--text); }
+.struct-ans { background: rgba(29,209,161,0.06); border: 1px solid rgba(29,209,161,0.2); border-radius: 10px; padding: 14px 16px; font-size: 0.78rem; color: var(--text2); line-height: 1.9; margin-bottom: 12px; }
+.struct-ans strong { color: var(--green); }
+.struct-ans .key { color: var(--gold); font-weight: 700; }
+.struct-rules { display: flex; flex-direction: column; gap: 8px; }
+.struct-rule { display: flex; gap: 12px; align-items: flex-start; background: var(--card2); border-radius: 8px; padding: 10px 12px; }
+.sr-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.sr-text { font-size: 0.76rem; color: var(--text2); line-height: 1.7; }
+.sr-text strong { color: var(--text); }
+.sr-text .gold{color:var(--gold);} .sr-text .cyan{color:var(--cyan);} .sr-text .green{color:var(--green);}
+.disclaimer { font-size: 0.67rem; color: var(--text3); text-align: center; line-height: 1.9; margin-top: 20px; }
+
+@media(max-width:600px){
+  .hdr h1{font-size:1.75rem;} .concept-grid{grid-template-columns:1fr;} .s-grid{grid-template-columns:1fr 1fr;}
+  .wave-totals{grid-template-columns:1fr 1fr;} .award-grid{grid-template-columns:1fr;} .legend{flex-direction:column;}
+  .week-footer{grid-template-columns:1fr;} .timeline::before{left:38px;} .wave-left{width:55px;}
+  .tab-btn{padding:14px 10px;font-size:0.72rem;} .nav-brand{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ TOP NAV ══════════════ -->
+<div class="top-nav">
+  <div class="nav-brand">Value Tree NMN</div>
+  <button class="tab-btn active" onclick="switchTab('t1',this)">① 3인 파동 작전</button>
+  <button class="tab-btn" onclick="switchTab('t2',this)">② 선물하기 운영 시스템</button>
+  <button class="tab-btn" onclick="switchTab('t3',this)">③ 지급 타임라인 $3,000</button>
+</div>
+
+<!-- ══════════════ TAB 1: 3인 파동 작전 ══════════════ -->
+<div id="t1" class="tab-panel active">
+  <div class="hdr">
+    <div class="hdr-badge" style="background:rgba(254,202,87,0.1);border:1px solid rgba(254,202,87,0.3);color:var(--gold);">3인 파동 전략</div>
+    <h1>각자 <span>3명</span>씩만 추천하면<br>모두가 수익을 낸다</h1>
+    <p>초기 투자 $300 · 각자 3명씩만 추천 · 7대까지 18주 완성<br>3대만 완성해도 원금 회수 — 그 이후는 순수 수익</p>
+    <div class="hdr-stats">
+      <div class="hs"><div class="hs-val">$300</div><div class="hs-lbl">초기 투자</div></div>
+      <div class="hs"><div class="hs-val">3명</div><div class="hs-lbl">각자 추천 인원</div></div>
+      <div class="hs"><div class="hs-val">6주</div><div class="hs-lbl">원금 회수 시점</div></div>
+      <div class="hs"><div class="hs-val">$24,170</div><div class="hs-lbl">18주 누적 수익</div></div>
+    </div>
+  </div>
+
+  <div class="concept-grid">
+    <div class="concept-card"><div class="concept-icon">🎯</div><div class="concept-title">단 3명만 추천</div><div class="concept-desc">직접추천 30% 수당만으로 원금의 90% ($270) 즉시 회수. 누구나 가능한 최소 목표.</div></div>
+    <div class="concept-card"><div class="concept-icon">🌊</div><div class="concept-title">파동처럼 퍼짐</div><div class="concept-desc">내 3명이 각자 3명을 추천하면 나는 자동으로 2대·3대 수당을 받음. 팀이 함께 성장.</div></div>
+    <div class="concept-card"><div class="concept-icon">⚡</div><div class="concept-title">6·7대 자동화</div><div class="concept-desc">3명 모집 시 6·7대 후원롤업 자동적용. 가장 큰 수익 구간에서 수당 폭발적 증가.</div></div>
+  </div>
+
+  <div class="timeline">
+    <div class="wrap"><div class="sec-title">파동별 수익 타임라인</div></div>
+
+    <!-- Wave 1 -->
+    <div class="wave">
+      <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">1주차</div></div>
+      <div class="wave-card">
+        <div class="wave-header"><span class="wave-num">파동 1</span><span class="wave-title">내가 3명 추천 · 1대 완성</span></div>
+        <div class="people-info">신규 <span class="hi">3명</span> · 누적 <strong>3명</strong> · 매출 <strong>$900</strong></div>
+        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+          <tr><td><span class="bonus-label lbl-direct">① 직접추천 30%</span></td><td class="formula">3명 × $300 × 30%</td><td class="amount gold">$270</td></tr>
+          <tr><td><span class="bonus-label lbl-spon">③ 후원 1대</span></td><td class="formula">$900 × 4% × 15%</td><td class="amount orange">$5</td></tr>
+        </tbody></table>
+        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$275</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$275</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-red">-$25</div></div></div>
+      </div>
+    </div>
+
+    <!-- Wave 2 -->
+    <div class="wave">
+      <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">3주차</div></div>
+      <div class="wave-card">
+        <div class="wave-header"><span class="wave-num">파동 2</span><span class="wave-title">내 3명이 각자 3명 · 2대 완성</span></div>
+        <div class="people-info">신규 <span class="hi">9명</span> · 누적 <strong>12명</strong> · 2대 매출 <strong>$2,700</strong></div>
+        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+          <tr><td><span class="bonus-label lbl-ref">② 추천라인 2대</span></td><td class="formula">$2,700 × 6% × 15%</td><td class="amount gold">$24</td></tr>
+        </tbody></table>
+        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$24</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$299</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-red">-$1</div></div></div>
+      </div>
+    </div>
+
+    <!-- Wave 3 — Milestone -->
+    <div class="wave">
+      <div class="wave-left"><div class="wave-dot milestone"></div><div class="wave-week">6주차</div></div>
+      <div class="wave-card milestone">
+        <div class="wave-header"><span class="wave-num">파동 3</span><span class="wave-title">2대 9명이 각자 3명 · 3대 완성</span><span class="wave-badge badge-milestone">✓ 원금 회수</span></div>
+        <div class="people-info">신규 <span class="hi">27명</span> · 누적 <strong>39명</strong> · 3대 매출 <strong>$8,100</strong></div>
+        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+          <tr><td><span class="bonus-label lbl-ref">② 추천라인 3대</span></td><td class="formula">$8,100 × 6% × 15%</td><td class="amount gold">$73</td></tr>
+          <tr><td><span class="bonus-label lbl-share">④ 공유수당 3대</span></td><td class="formula">$8,100 × 5% × 20%</td><td class="amount pink">$81</td></tr>
+        </tbody></table>
+        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$154</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$453</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$153</div></div></div>
+      </div>
+    </div>
+
+    <!-- Wave 4 -->
+    <div class="wave">
+      <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">9주차</div></div>
+      <div class="wave-card">
+        <div class="wave-header"><span class="wave-num">파동 4</span><span class="wave-title">3대 27명이 각자 3명 · 4대 완성</span></div>
+        <div class="people-info">신규 <span class="hi">81명</span> · 누적 <strong>120명</strong> · 4대 매출 <strong>$24,300</strong></div>
+        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+          <tr><td><span class="bonus-label lbl-ref">② 추천라인 4대</span></td><td class="formula">$24,300 × 6% × 15%</td><td class="amount gold">$219</td></tr>
+          <tr><td><span class="bonus-label lbl-share">④ 공유수당 4대</span></td><td class="formula">$24,300 × 5% × 20%</td><td class="amount pink">$243</td></tr>
+        </tbody></table>
+        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$462</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$915</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$615</div></div></div>
+      </div>
+    </div>
+
+    <!-- Wave 5 -->
+    <div class="wave">
+      <div class="wave-left"><div class="wave-dot"></div><div class="wave-week">12주차</div></div>
+      <div class="wave-card">
+        <div class="wave-header"><span class="wave-num">파동 5</span><span class="wave-title">4대 81명이 각자 3명 · 5대 완성</span></div>
+        <div class="people-info">신규 <span class="hi">243명</span> · 누적 <strong>363명</strong> · 5대 매출 <strong>$72,900</strong></div>
+        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+          <tr><td><span class="bonus-label lbl-ref">② 추천라인 5대</span></td><td class="formula">$72,900 × 6% × 15%</td><td class="amount gold">$656</td></tr>
+          <tr><td><span class="bonus-label lbl-share">④ 공유수당 5대</span></td><td class="formula">$72,900 × 5% × 20%</td><td class="amount pink">$729</td></tr>
+        </tbody></table>
+        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-gold">$1,385</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$2,300</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$2,000</div></div></div>
+      </div>
+    </div>
+
+    <!-- Wave 6 — Special -->
+    <div class="wave">
+      <div class="wave-left"><div class="wave-dot special"></div><div class="wave-week">15주차</div></div>
+      <div class="wave-card special">
+        <div class="wave-header"><span class="wave-num">파동 6</span><span class="wave-title">5대 243명이 각자 3명 · 6대 완성</span><span class="wave-badge badge-special">⚡ 후원 자동화</span></div>
+        <div class="people-info">신규 <span class="hi">729명</span> · 누적 <strong>1,092명</strong> · 6대 매출 <strong>$218,700</strong></div>
+        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+          <tr><td><span class="bonus-label lbl-ref">② 추천라인 6대</span></td><td class="formula">$218,700 × 6% × 15%</td><td class="amount gold">$1,968</td></tr>
+          <tr><td><span class="bonus-label lbl-spon">③ 후원라인 6대</span></td><td class="formula"><span class="auto-note">$218,700 × 4% × 15% · 3명 AUTO</span></td><td class="amount orange">$1,312 <span class="auto-tag">AUTO</span></td></tr>
+          <tr><td><span class="bonus-label lbl-share">④ 공유수당 6대</span></td><td class="formula">$218,700 × 5% × 20%</td><td class="amount pink">$2,187</td></tr>
+        </tbody></table>
+        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-cyan">$5,467</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$7,767</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$7,467</div></div></div>
+      </div>
+    </div>
+
+    <!-- Wave 7 — Max -->
+    <div class="wave">
+      <div class="wave-left"><div class="wave-dot special"></div><div class="wave-week">18주차</div></div>
+      <div class="wave-card special">
+        <div class="wave-header"><span class="wave-num">파동 7</span><span class="wave-title">6대 729명이 각자 3명 · 7대 완성</span><span class="wave-badge badge-max">🔥 최대 수익</span></div>
+        <div class="people-info">신규 <span class="hi">2,187명</span> · 누적 <strong>3,279명</strong> · 7대 매출 <strong>$656,100</strong></div>
+        <table class="bonus-table"><thead><tr><th>수당</th><th>계산식</th><th style="text-align:right">수익</th></tr></thead><tbody>
+          <tr><td><span class="bonus-label lbl-ref">② 추천라인 7대</span></td><td class="formula">$656,100 × 6% × 15%</td><td class="amount gold">$5,905</td></tr>
+          <tr><td><span class="bonus-label lbl-spon">③ 후원라인 7대</span></td><td class="formula"><span class="auto-note">$656,100 × 4% × 15% · 3명 AUTO</span></td><td class="amount orange">$3,937 <span class="auto-tag">AUTO</span></td></tr>
+          <tr><td><span class="bonus-label lbl-share">④ 공유수당 7대</span></td><td class="formula">$656,100 × 5% × 20%</td><td class="amount pink">$6,561</td></tr>
+        </tbody></table>
+        <div class="wave-totals"><div class="wtotal"><div class="wtotal-lbl">파동 수익</div><div class="wtotal-val c-cyan">$16,403</div></div><div class="wtotal"><div class="wtotal-lbl">누적 수익</div><div class="wtotal-val c-gold">$24,170</div></div><div class="wtotal"><div class="wtotal-lbl">순수익</div><div class="wtotal-val c-green">+$23,870</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap" style="margin-top:28px;">
+    <div class="summary-card">
+      <div class="s-label">18주 · 7대 완성 누적 총 수익</div>
+      <div class="s-total">$24,170</div>
+      <div class="s-sub">초기 투자 $300 대비 <strong>80.6배</strong> · 원금 회수 6주차</div>
+      <div class="s-grid">
+        <div class="s-box"><div class="s-box-lbl">총 네트워크</div><div class="s-box-val" style="color:var(--text)">3,279명</div></div>
+        <div class="s-box"><div class="s-box-lbl">네트워크 매출</div><div class="s-box-val" style="color:var(--cyan)">$983,700</div></div>
+        <div class="s-box"><div class="s-box-lbl">원금 회수 시점</div><div class="s-box-val" style="color:var(--green)">6주차</div></div>
+        <div class="s-box"><div class="s-box-lbl">시상 풀 (1%)</div><div class="s-box-val" style="color:var(--gold)">$9,837</div></div>
+      </div>
+    </div>
+    <div class="disclaimer">※ 모든 구성원이 3명씩 추천, 각 파동 3주 완성 이상적 시나리오 기준 · Value Tree NMN</div>
+  </div>
+</div>
+
+<!-- ══════════════ TAB 2: 선물하기 운영 시스템 ══════════════ -->
+<div id="t2" class="tab-panel">
+  <div class="hdr">
+    <div class="hdr-badge" style="background:rgba(72,219,251,0.1);border:1px solid rgba(72,219,251,0.3);color:var(--cyan);">선물하기 운영 시스템</div>
+    <h1><span>선물하기</span>로 완성하는<br>자기강화 네트워크</h1>
+    <p>선착순 진입 · 1주일 안에 2명 · 1명 선물 받기 · 순번 밀리면 선물 자원이 된다</p>
+    <div class="hdr-stats">
+      <div class="hs"><div class="hs-val">7주</div><div class="hs-lbl">7대 완성 목표</div></div>
+      <div class="hs"><div class="hs-val">3명</div><div class="hs-lbl">각자 확정 인원</div></div>
+      <div class="hs"><div class="hs-val">2주차</div><div class="hs-lbl">원금 회수 ($3,000)</div></div>
+      <div class="hs"><div class="hs-val">$248,184</div><div class="hs-lbl">7주 누적 수익</div></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="sec-title">운영 규칙 5가지</div>
+    <div class="rules">
+      <div class="rule highlight"><div class="rule-num">01</div><div class="rule-body"><div class="rule-title">선착순으로 번호표를 받는다</div><div class="rule-desc">빨리 들어올수록 좋은 자리. 단, <strong>들어왔다고 끝이 아니다.</strong> 활동성이 순번을 유지한다.</div><span class="rule-tag tag-gold">선착순 진입</span></div></div>
+      <div class="rule highlight"><div class="rule-num">02</div><div class="rule-body"><div class="rule-title">가입 후 1주일 안에 2명을 찾아야 한다</div><div class="rule-desc"><strong>2명(자력) + 1명(선물) = 3명 완성.</strong> 1주일은 충분히 짧은 기간. 긴장감이 즉각적인 행동을 만들어낸다.</div><span class="rule-tag tag-gold">1주일 · 2명</span></div></div>
+      <div class="rule"><div class="rule-num">03</div><div class="rule-body"><div class="rule-title">2명을 찾으면 위에서 1명을 선물로 연결해준다</div><div class="rule-desc"><span class="cyan">선물 = 관심은 있지만 아직 팀을 못 찾은 사람을 연결해주는 것.</span> 30%는 선물 받은 사람이 가져간다. 위에서 포기하는 금액 없음.</div><span class="rule-tag tag-cyan">선물하기 핵심</span></div></div>
+      <div class="rule"><div class="rule-num">04</div><div class="rule-body"><div class="rule-title">1주일 안에 못 찾으면 순번이 뒤로 밀린다</div><div class="rule-desc">탈락이 아니다. <span class="orange">밀린 사람은 선물 자원 풀에 들어간다.</span> 빠르게 움직인 사람의 선물로 연결되어 더 좋은 팀에 배치될 수 있다.</div><span class="rule-tag" style="background:rgba(162,155,254,0.15);color:var(--purple);">순번 밀리기 = 선물 자원</span></div></div>
+      <div class="rule"><div class="rule-num">05</div><div class="rule-body"><div class="rule-title">선물을 받은 사람은 반드시 아래로 내려준다</div><div class="rule-desc"><span class="green">받았으면 내려줘야 한다 — Pay it Forward.</span> 이 문화가 정착되면 시스템은 외부 자극 없이 스스로 굴러간다.</div><span class="rule-tag tag-green">페이 포워드 원칙</span></div></div>
+    </div>
+
+    <div class="sec-title">네트워크 성장 구조</div>
+    <div class="tree-wrap">
+      <div class="tree-legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--gold)"></div>자력 모집</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--cyan)"></div>선물 받음</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>순번 밀림 (선물 자원)</div>
+      </div>
+      <div class="tree-gen"><div class="gen-label" style="color:var(--gold)">나</div><div style="flex:1"><div class="pdot-group"><div class="pdot self"></div></div></div><div class="gen-count" style="color:var(--gold)">1명</div></div>
+      <div class="tree-gen"><div class="gen-label">1대</div><div style="flex:1"><div class="pdot-group"><div class="pdot self"></div><div class="pdot self"></div><div class="pdot gift"></div></div></div><div class="gen-count">3명 <span style="font-size:0.6rem;color:var(--text2)">(자력2+선물1)</span></div></div>
+      <div class="tree-gen"><div class="gen-label">2대</div><div style="flex:1"><div class="pdot-group"><div class="pdot self"></div><div class="pdot self"></div><div class="pdot gift"></div><div class="pdot self" style="margin-left:4px"></div><div class="pdot self"></div><div class="pdot gift"></div><div class="pdot self" style="margin-left:4px"></div><div class="pdot self"></div><div class="pdot gift"></div></div></div><div class="gen-count">9명</div></div>
+      <div class="tree-gen"><div class="gen-label">3대</div><div style="flex:1"><div class="gen-bigbar" style="background:rgba(255,255,255,0.05);max-width:300px"><div class="gen-bigbar-self" style="width:66.7%"></div><div class="gen-bigbar-gift" style="left:66.7%;width:33.3%"></div><div class="gen-bigbar-label">27명 (자력18+선물9)</div></div></div><div class="gen-count">27명</div></div>
+      <div class="tree-gen"><div class="gen-label">4대</div><div style="flex:1"><div class="gen-bigbar" style="background:rgba(255,255,255,0.05);max-width:420px"><div class="gen-bigbar-self" style="width:66.7%"></div><div class="gen-bigbar-gift" style="left:66.7%;width:33.3%"></div><div class="gen-bigbar-label">81명 (자력54+선물27)</div></div></div><div class="gen-count">81명</div></div>
+      <div class="tree-gen"><div class="gen-label">5대</div><div style="flex:1"><div class="gen-bigbar" style="background:rgba(255,255,255,0.05);width:100%"><div class="gen-bigbar-self" style="width:66.7%"></div><div class="gen-bigbar-gift" style="left:66.7%;width:33.3%"></div><div class="gen-bigbar-label">243명 (자력162+선물81)</div></div></div><div class="gen-count">243명</div></div>
+      <div class="tree-gen"><div class="gen-label" style="color:var(--cyan)">6대 ⚡</div><div style="flex:1"><div class="gen-bigbar" style="background:rgba(72,219,251,0.08);border:1px solid rgba(72,219,251,0.2);width:100%"><div class="gen-bigbar-self" style="width:66.7%"></div><div class="gen-bigbar-gift" style="left:66.7%;width:33.3%"></div><div class="gen-bigbar-label">729명 — 후원라인 AUTO</div></div></div><div class="gen-count" style="color:var(--cyan)">729명</div></div>
+      <div class="tree-gen"><div class="gen-label" style="color:var(--pink)">7대 🔥</div><div style="flex:1"><div class="gen-bigbar" style="background:rgba(255,159,243,0.08);border:1px solid rgba(255,159,243,0.2);width:100%"><div class="gen-bigbar-self" style="width:66.7%"></div><div class="gen-bigbar-gift" style="left:66.7%;width:33.3%"></div><div class="gen-bigbar-label">2,187명 — 최대 수익</div></div></div><div class="gen-count" style="color:var(--pink)">2,187명</div></div>
+    </div>
+
+    <div class="sec-title">주차별 성장 시뮬레이션</div>
+    <div class="sim-wrap">
+      <table class="sim-table">
+        <thead><tr><th>주차</th><th>파동</th><th>자력(2×n)</th><th>선물(+1×n)</th><th>파동 확정</th><th>누적</th><th>파동 수익</th><th>누적 수익</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1주</strong></td><td><span class="wave-tag">1대</span></td><td><span class="num-self">2명</span></td><td><span class="num-gift">+1명</span></td><td><span class="num-total">3명</span></td><td><span class="num-cum">3명</span></td><td><span class="income-cell">$275</span></td><td>$275</td></tr>
+          <tr><td><strong>2주</strong></td><td><span class="wave-tag">2대</span></td><td><span class="num-self">6명</span></td><td><span class="num-gift">+3명</span></td><td><span class="num-total">9명</span></td><td><span class="num-cum">12명</span></td><td><span class="income-cell">$24</span></td><td>$299</td></tr>
+          <tr style="background:rgba(29,209,161,0.03)"><td><strong style="color:var(--green)">3주</strong></td><td><span class="wave-tag">3대</span></td><td><span class="num-self">18명</span></td><td><span class="num-gift">+9명</span></td><td><span class="num-total">27명</span></td><td><span class="num-cum">39명</span></td><td><span class="income-cell">$154</span></td><td style="color:var(--green)">$453 ✓</td></tr>
+          <tr><td><strong>4주</strong></td><td><span class="wave-tag">4대</span></td><td><span class="num-self">54명</span></td><td><span class="num-gift">+27명</span></td><td><span class="num-total">81명</span></td><td><span class="num-cum">120명</span></td><td><span class="income-cell">$462</span></td><td>$915</td></tr>
+          <tr><td><strong>5주</strong></td><td><span class="wave-tag">5대</span></td><td><span class="num-self">162명</span></td><td><span class="num-gift">+81명</span></td><td><span class="num-total">243명</span></td><td><span class="num-cum">363명</span></td><td><span class="income-cell">$1,385</span></td><td>$2,300</td></tr>
+          <tr style="background:rgba(72,219,251,0.03)"><td><strong style="color:var(--cyan)">6주</strong></td><td><span class="wave-tag" style="background:rgba(72,219,251,0.1);color:var(--cyan)">6대 ⚡</span></td><td><span class="num-self">486명</span></td><td><span class="num-gift">+243명</span></td><td><span class="num-total">729명</span></td><td><span class="num-cum">1,092명</span></td><td><span class="income-cell big">$5,467</span></td><td style="color:var(--cyan)">$7,767</td></tr>
+          <tr style="background:rgba(255,159,243,0.03)"><td><strong style="color:var(--pink)">7주</strong></td><td><span class="wave-tag" style="background:rgba(255,159,243,0.1);color:var(--pink)">7대 🔥</span></td><td><span class="num-self">1,458명</span></td><td><span class="num-gift">+729명</span></td><td><span class="num-total">2,187명</span></td><td><span class="num-cum">3,279명</span></td><td><span class="income-cell big">$16,403</span></td><td style="color:var(--gold)">$24,170</td></tr>
+          <tr class="sim-total-row"><td colspan="4" style="text-align:left;padding-left:16px;color:var(--text2);font-size:0.72rem">7주 완성 기준</td><td style="font-family:'Outfit',sans-serif;font-weight:800">3,279명</td><td>—</td><td style="color:var(--gold);font-family:'Outfit',sans-serif;font-weight:800;font-size:1rem">$24,170</td><td style="color:var(--gold);font-family:'Outfit',sans-serif;font-weight:800">$24,170</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec-title">선물 자원 순환 구조</div>
+    <div class="mechanism">
+      <div style="font-size:0.85rem;font-weight:700;color:var(--text);margin-bottom:16px">어떻게 선물 자원이 끊기지 않는가</div>
+      <div class="mech-flow">
+        <div class="mech-box"><div class="mech-box-icon">⚡</div><div class="mech-box-title" style="color:var(--gold)">빠른 사람</div><div class="mech-box-desc">1주 안에 2명 완성 → 선물 받음 → 순번 유지</div></div>
+        <div class="mech-arrow">→</div>
+        <div class="mech-box"><div class="mech-box-icon">🔗</div><div class="mech-box-title" style="color:var(--cyan)">선물 연결</div><div class="mech-box-desc">위에서 밀린 인원을 빠른 사람 아래에 배치</div></div>
+        <div class="mech-arrow">→</div>
+        <div class="mech-box"><div class="mech-box-icon">🔄</div><div class="mech-box-title" style="color:var(--purple)">느린 사람</div><div class="mech-box-desc">순번 밀림 → 선물 자원 → 좋은 팀에 재배치</div></div>
+        <div class="mech-arrow">→</div>
+        <div class="mech-box"><div class="mech-box-icon">♾️</div><div class="mech-box-title" style="color:var(--green)">자기 순환</div><div class="mech-box-desc">나가는 사람 없음. 모두가 시스템 안에서 역할을 가짐</div></div>
+      </div>
+      <div class="mech-note"><strong>핵심:</strong> 빠른 사람과 느린 사람이 서로 자원이 된다. 선물 자원은 시스템 내부에서 자동으로 생성된다.</div>
+    </div>
+
+    <div class="sec-title">시상 프로모션 연계 (⑦~⑩)</div>
+    <div class="award-grid">
+      <div class="award-card"><div class="aw-badge" style="background:rgba(254,202,87,0.15);color:var(--gold)">⑦ 매월 최대매출</div><div class="aw-title">빠르게 팀을 키운 사람</div><div class="aw-desc">선물 전략으로 아래를 빠르게 활성화할수록 내 팀 매출이 커진다. 돕는 행동이 곧 시상 유리함으로 돌아온다.</div></div>
+      <div class="award-card"><div class="aw-badge" style="background:rgba(72,219,251,0.12);color:var(--cyan)">⑧ 매월 최다추천</div><div class="aw-title">이번 달 가장 열심히 뛴 사람</div><div class="aw-desc">론칭 초기 전면에 내세움. "이번 달 추천 1위가 전체 매출 1%의 절반을 가져간다." FOMO와 결합해 초기 스프린트를 만든다.</div></div>
+      <div class="award-card"><div class="aw-badge" style="background:rgba(136,136,136,0.15);color:#aaa">⑨ 누적 최대매출</div><div class="aw-title">장기적으로 가장 큰 네트워크</div><div class="aw-desc">초기 흥분이 가라앉은 이후에도 시스템에 남아있는 이유가 된다. 누적 기록은 지속적 활동을 보상한다.</div></div>
+      <div class="award-card"><div class="aw-badge" style="background:rgba(170,170,170,0.1);color:#999">⑩ 누적 최다추천</div><div class="aw-title">오래 꾸준히 활동한 사람</div><div class="aw-desc">가장 많이 페이 포워드를 실천한 사람에게 돌아간다. 선물하기 문화의 최우수 실천자를 인정하는 시상.</div></div>
+    </div>
+    <div style="margin-top:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:0.74rem;color:var(--text2);line-height:1.8">
+      💡 시상 풀: 전체 네트워크 매출 × 1% = <strong style="color:var(--gold)">$9,837</strong> / 1등 <strong style="color:var(--gold)">$4,918</strong> 수령 ($300 기준 7대 완성 시)
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ TAB 3: 지급 타임라인 ══════════════ -->
+<div id="t3" class="tab-panel">
+  <div class="hdr">
+    <div class="hdr-badge" style="background:rgba(254,202,87,0.1);border:1px solid rgba(254,202,87,0.3);color:var(--gold)">지급 타임라인 $3,000</div>
+    <h1>언제, <span>얼마가</span> 들어오는가</h1>
+    <p>① 직접추천 30% — 3일 후 지급 &nbsp;|&nbsp; ② 추천라인 + ③ 후원라인 — 주급 &nbsp;|&nbsp; ④ 공유수당 — 월급</p>
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(72,219,251,0.08);border:1px solid rgba(72,219,251,0.25);border-radius:8px;padding:8px 16px;font-size:0.76rem;color:var(--cyan);margin-top:12px">
+      ⚡ $3,000 가입 → 후원라인 1~5대 자동 + n=3 → 6·7대까지 전 대수 AUTO
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="leg-card"><div class="leg-dot" style="background:var(--gold);box-shadow:0 0 8px rgba(254,202,87,0.5)"></div><div class="leg-info"><div class="leg-bonus" style="color:var(--gold)">① 직접추천 30%</div><div class="leg-when">가입 후 3일 이내 지급</div></div></div>
+    <div class="leg-card"><div class="leg-dot" style="background:var(--cyan);box-shadow:0 0 8px rgba(72,219,251,0.4)"></div><div class="leg-info"><div class="leg-bonus" style="color:var(--cyan)">② 추천라인 롤업</div><div class="leg-when">주급 — 매주 정산</div></div></div>
+    <div class="leg-card"><div class="leg-dot" style="background:var(--orange);box-shadow:0 0 8px rgba(255,159,67,0.4)"></div><div class="leg-info"><div class="leg-bonus" style="color:var(--orange)">③ 후원라인 롤업</div><div class="leg-when">주급 — 전 대수 AUTO ($3,000)</div></div></div>
+    <div class="leg-card"><div class="leg-dot" style="background:var(--pink);box-shadow:0 0 8px rgba(255,159,243,0.4)"></div><div class="leg-info"><div class="leg-bonus" style="color:var(--pink)">④ 공유수당</div><div class="leg-when">월급 — 매월 말 정산</div></div></div>
+  </div>
+
+  <div class="wrap">
+    <div class="sec-title">주차별 지급 타임라인 · $3,000 · 파동 1주 완성</div>
+
+    <!-- Week 1 -->
+    <div class="week-card">
+      <div class="week-header"><div class="week-num">1주차</div><div class="week-days">Day 1–7</div><div class="week-gen"><strong>1대 완성</strong> · 3명 · $9,000 <span style="font-size:0.68rem;color:var(--gold);font-weight:700;margin-left:6px">투자금 91.8% 즉시 회수</span></div></div>
+      <div class="week-body">
+        <div class="pay-events">
+          <div class="pay-event"><div class="pay-day">Day 4</div><div class="pay-type type-direct">① 3일 지급</div><div class="pay-desc">직접추천 30% · 3명 × $3,000 × 30%</div><div class="pay-amount gold">$2,700</div></div>
+          <div class="pay-event"><div class="pay-day">Day 7</div><div class="pay-type type-weekly-s">③ 주급 AUTO</div><div class="pay-desc">후원라인 1대 · $9,000 × 4% × 15%</div><div class="pay-amount orange">$54</div></div>
+        </div>
+        <div class="week-footer"><div class="wf-box"><span class="wf-lbl">이번 주 수령</span><span class="wf-val" style="color:var(--gold)">$2,754</span></div><div class="wf-box"><span class="wf-lbl">누적 수익</span><span class="wf-val">$2,754</span></div></div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:1.11%"></div></div>
+      </div>
+    </div>
+
+    <!-- Week 2 — Breakeven -->
+    <div class="week-card breakeven">
+      <div class="week-header" style="border-color:rgba(29,209,161,0.15)"><div class="week-num" style="color:var(--green)">2주차</div><div class="week-days">Day 8–14</div><div class="week-gen"><strong>2대 완성</strong> · 9명 · $27,000 <span style="font-size:0.68rem;color:var(--green);font-weight:700;margin-left:6px">✓ 원금 $3,000 회수</span></div></div>
+      <div class="week-body">
+        <div class="pay-events">
+          <div class="pay-event"><div class="pay-day">Day 14</div><div class="pay-type type-weekly">② 주급</div><div class="pay-desc">추천라인 2대 · $27,000 × 6% × 15%</div><div class="pay-amount cyan">$243</div></div>
+          <div class="pay-event" style="border:1px solid rgba(255,159,67,0.18)"><div class="pay-day">Day 14</div><div class="pay-type type-weekly-s">③ 주급 AUTO</div><div class="pay-desc">후원라인 2대 · $27,000 × 4% × 15%</div><div class="pay-amount orange">$162</div></div>
+        </div>
+        <div class="week-footer"><div class="wf-box" style="border:1px solid rgba(29,209,161,0.2)"><span class="wf-lbl">이번 주 수령</span><span class="wf-val" style="color:var(--gold)">$405</span></div><div class="wf-box" style="border:1px solid rgba(29,209,161,0.2)"><span class="wf-lbl">누적 수익</span><span class="wf-val" style="color:var(--green)">$3,159 ✓</span></div></div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:1.27%;background:var(--green)"></div></div>
+      </div>
+    </div>
+
+    <!-- Week 3 -->
+    <div class="week-card">
+      <div class="week-header"><div class="week-num">3주차</div><div class="week-days">Day 15–21</div><div class="week-gen"><strong>3대 완성</strong> · 27명 · $81,000</div></div>
+      <div class="week-body">
+        <div class="pay-events">
+          <div class="pay-event"><div class="pay-day">Day 21</div><div class="pay-type type-weekly">② 주급</div><div class="pay-desc">추천라인 3대 · $81,000 × 6% × 15%</div><div class="pay-amount cyan">$729</div></div>
+          <div class="pay-event" style="border:1px solid rgba(255,159,67,0.18)"><div class="pay-day">Day 21</div><div class="pay-type type-weekly-s">③ 주급 AUTO</div><div class="pay-desc">후원라인 3대 · $81,000 × 4% × 15%</div><div class="pay-amount orange">$486</div></div>
+          <div class="pay-event" style="opacity:0.45"><div class="pay-day">적립중</div><div class="pay-type type-accum">④ 월적립</div><div class="pay-desc">공유수당 3대 $81,000 × 5% × 20% → 월말 정산</div><div class="pay-amount dim">$810 ↓</div></div>
+        </div>
+        <div class="week-footer"><div class="wf-box"><span class="wf-lbl">이번 주 수령</span><span class="wf-val" style="color:var(--gold)">$1,215</span></div><div class="wf-box"><span class="wf-lbl">누적 수익</span><span class="wf-val">$4,374</span></div></div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:1.76%"></div></div>
+      </div>
+    </div>
+
+    <!-- Week 4 + Month 1 -->
+    <div class="week-card month-pay">
+      <div class="week-header"><div class="week-num">4주차</div><div class="week-days">Day 22–30</div><div class="week-gen"><strong>4대 완성</strong> · 81명 · $243,000 <span class="auto-badge2" style="background:rgba(255,159,243,0.15);color:var(--pink)">+ 1개월 공유수당 정산</span></div></div>
+      <div class="week-body">
+        <div class="pay-events">
+          <div class="pay-event"><div class="pay-day">Day 28</div><div class="pay-type type-weekly">② 주급</div><div class="pay-desc">추천라인 4대 · $243,000 × 6% × 15%</div><div class="pay-amount cyan">$2,187</div></div>
+          <div class="pay-event" style="border:1px solid rgba(255,159,67,0.18)"><div class="pay-day">Day 28</div><div class="pay-type type-weekly-s">③ 주급 AUTO</div><div class="pay-desc">후원라인 4대 · $243,000 × 4% × 15%</div><div class="pay-amount orange">$1,458</div></div>
+          <div class="pay-event" style="background:rgba(255,159,243,0.05);border:1px solid rgba(255,159,243,0.15)"><div class="pay-day">Day 30</div><div class="pay-type type-monthly">④ 월급</div><div class="pay-desc">공유수당 1개월 · 3대($810) + 4대($2,430)</div><div class="pay-amount pink">$3,240</div></div>
+        </div>
+        <div class="week-footer"><div class="wf-box"><span class="wf-lbl">이번 주 수령 합계</span><span class="wf-val" style="color:var(--gold)">$6,885</span></div><div class="wf-box"><span class="wf-lbl">누적 수익</span><span class="wf-val">$11,259</span></div></div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:4.54%"></div></div>
+      </div>
+    </div>
+
+    <!-- Week 5 -->
+    <div class="week-card">
+      <div class="week-header"><div class="week-num">5주차</div><div class="week-days">Day 31–35</div><div class="week-gen"><strong>5대 완성</strong> · 243명 · $729,000</div></div>
+      <div class="week-body">
+        <div class="pay-events">
+          <div class="pay-event"><div class="pay-day">Day 35</div><div class="pay-type type-weekly">② 주급</div><div class="pay-desc">추천라인 5대 · $729,000 × 6% × 15%</div><div class="pay-amount cyan">$6,561</div></div>
+          <div class="pay-event" style="border:1px solid rgba(255,159,67,0.18)"><div class="pay-day">Day 35</div><div class="pay-type type-weekly-s">③ 주급 AUTO</div><div class="pay-desc">후원라인 5대 · $729,000 × 4% × 15%</div><div class="pay-amount orange">$4,374</div></div>
+          <div class="pay-event" style="opacity:0.45"><div class="pay-day">적립중</div><div class="pay-type type-accum">④ 월적립</div><div class="pay-desc">공유수당 5대 $729,000 × 5% × 20% → 월말</div><div class="pay-amount dim">$7,290 ↓</div></div>
+        </div>
+        <div class="week-footer"><div class="wf-box"><span class="wf-lbl">이번 주 수령</span><span class="wf-val" style="color:var(--gold)">$10,935</span></div><div class="wf-box"><span class="wf-lbl">누적 수익</span><span class="wf-val">$22,194</span></div></div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8.94%"></div></div>
+      </div>
+    </div>
+
+    <!-- Week 6 -->
+    <div class="week-card auto-card">
+      <div class="week-header"><div class="week-num" style="color:var(--cyan)">6주차</div><div class="week-days">Day 36–42</div><div class="week-gen"><strong>6대 완성</strong> · 729명 · $2,187,000 <span class="auto-badge2" style="background:rgba(72,219,251,0.15);color:var(--cyan)">⚡ 6대 AUTO</span></div></div>
+      <div class="week-body">
+        <div class="pay-events">
+          <div class="pay-event"><div class="pay-day">Day 42</div><div class="pay-type type-weekly">② 주급</div><div class="pay-desc">추천라인 6대 · $2,187,000 × 6% × 15%</div><div class="pay-amount cyan">$19,683</div></div>
+          <div class="pay-event" style="border:1px solid rgba(255,159,67,0.25)"><div class="pay-day">Day 42</div><div class="pay-type type-weekly-s">③ 주급 AUTO</div><div class="pay-desc">후원라인 6대 · $2,187,000 × 4% × 15%</div><div class="pay-amount orange">$13,122</div></div>
+          <div class="pay-event" style="opacity:0.45"><div class="pay-day">적립중</div><div class="pay-type type-accum">④ 월적립</div><div class="pay-desc">공유수당 6대 $2,187,000 × 5% × 20% → 월말</div><div class="pay-amount dim">$21,870 ↓</div></div>
+        </div>
+        <div class="week-footer"><div class="wf-box" style="border:1px solid rgba(72,219,251,0.15)"><span class="wf-lbl">이번 주 수령</span><span class="wf-val" style="color:var(--cyan)">$32,805</span></div><div class="wf-box" style="border:1px solid rgba(72,219,251,0.15)"><span class="wf-lbl">누적 수익</span><span class="wf-val">$54,999</span></div></div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:22.16%;background:linear-gradient(90deg,var(--gold),var(--cyan))"></div></div>
+      </div>
+    </div>
+
+    <!-- Week 7 -->
+    <div class="week-card max-card">
+      <div class="week-header"><div class="week-num" style="color:var(--pink)">7주차</div><div class="week-days">Day 43–49</div><div class="week-gen"><strong>7대 완성</strong> · 2,187명 · $6,561,000 <span class="auto-badge2" style="background:rgba(255,159,243,0.15);color:var(--pink)">🔥 최대 수익</span></div></div>
+      <div class="week-body">
+        <div class="pay-events">
+          <div class="pay-event"><div class="pay-day">Day 49</div><div class="pay-type type-weekly">② 주급</div><div class="pay-desc">추천라인 7대 · $6,561,000 × 6% × 15%</div><div class="pay-amount cyan">$59,049</div></div>
+          <div class="pay-event" style="border:1px solid rgba(255,159,67,0.25)"><div class="pay-day">Day 49</div><div class="pay-type type-weekly-s">③ 주급 AUTO</div><div class="pay-desc">후원라인 7대 · $6,561,000 × 4% × 15%</div><div class="pay-amount orange">$39,366</div></div>
+          <div class="pay-event" style="opacity:0.45"><div class="pay-day">적립중</div><div class="pay-type type-accum">④ 월적립</div><div class="pay-desc">공유수당 7대 $6,561,000 × 5% × 20% → 월말</div><div class="pay-amount dim">$65,610 ↓</div></div>
+        </div>
+        <div class="week-footer"><div class="wf-box" style="border:1px solid rgba(255,159,243,0.15)"><span class="wf-lbl">이번 주 수령</span><span class="wf-val" style="color:var(--pink)">$98,415</span></div><div class="wf-box" style="border:1px solid rgba(255,159,243,0.15)"><span class="wf-lbl">누적 수익</span><span class="wf-val">$153,414</span></div></div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:61.81%;background:linear-gradient(90deg,var(--gold),var(--pink))"></div></div>
+      </div>
+    </div>
+
+    <!-- Month 2 Payout -->
+    <div class="week-card month-pay" style="border-color:rgba(255,159,243,0.35)">
+      <div class="week-header" style="border-color:rgba(255,159,243,0.2)"><div class="week-num" style="color:var(--pink)">2개월차</div><div class="week-days">Day ~60</div><div class="week-gen"><strong>공유수당 월정산</strong> · 5대+6대+7대 누적분 일괄 지급</div></div>
+      <div class="week-body">
+        <div class="pay-events">
+          <div class="pay-event" style="background:rgba(255,159,243,0.06);border:1px solid rgba(255,159,243,0.18)"><div class="pay-day">월말</div><div class="pay-type type-monthly">④ 월급</div><div class="pay-desc">5대($7,290) + 6대($21,870) + 7대($65,610) 합산</div><div class="pay-amount pink">$94,770</div></div>
+        </div>
+        <div class="week-footer"><div class="wf-box" style="border:1px solid rgba(255,159,243,0.2)"><span class="wf-lbl">월정산 수령</span><span class="wf-val" style="color:var(--pink)">$94,770</span></div><div class="wf-box" style="background:rgba(254,202,87,0.08);border:1px solid rgba(254,202,87,0.2)"><span class="wf-lbl">최종 누적 수익</span><span class="wf-val" style="color:var(--gold)">$248,184</span></div></div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--cyan),var(--pink))"></div></div>
+      </div>
+    </div>
+
+    <div class="sec-title">구조적 문제 & 해결 원칙</div>
+    <div class="struct-card">
+      <div class="struct-title">⚠️ 내 아래 사람이 2명을 못 찾으면 내 라인도 멈추는 건가?</div>
+      <div class="struct-q">"내가 2명을 찾았어. 근데 그 2명이 각자 2명을 못 찾으면 파동이 안 만들어지잖아. <strong>내가 찾은 사람들도 덩달아 탈락이 되는 건가?"</strong></div>
+      <div class="struct-ans"><strong>선물하기는 보너스이지, 진입 필수조건이 아니다.</strong><br>선물을 못 받아도 <span class="key">스스로 3명을 찾으면 파동은 계속된다.</span> 선물 시스템은 <span class="key">가속 도구</span>일 뿐이다.</div>
+      <div class="struct-rules">
+        <div class="struct-rule"><div class="sr-icon">✅</div><div class="sr-text"><strong>기본 원칙</strong> — <span class="gold">3명 스스로 찾으면 언제든 파동 완성.</span> 선물 없어도 진행 가능.</div></div>
+        <div class="struct-rule"><div class="sr-icon">🔄</div><div class="sr-text"><strong>풀 대체 (A)</strong> — 내 아래가 느리면 <span class="cyan">풀에서 활성화된 사람으로 대체 배치.</span> 내 라인 유지.</div></div>
+        <div class="struct-rule"><div class="sr-icon">🤝</div><div class="sr-text"><strong>직접 지원 (B)</strong> — 내 아래가 못 찾으면 내가 직접 1명 연결. <span class="green">내 수당이 빨리 터지는 게 내 이익.</span></div></div>
+        <div class="struct-rule"><div class="sr-icon">⏱️</div><div class="sr-text"><strong>순번 밀리기</strong> — 못 찾은 사람은 탈락이 아니라 <span class="gold">선물 자원 풀로 이동.</span> 더 좋은 팀에 배치될 기회.</div></div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px">
+      <div class="summary-card">
+        <div class="s-label">7주 + 2개월차 공유수당 · $3,000 가입 최종 수익</div>
+        <div class="s-total">$248,184</div>
+        <div class="s-sub">초기 투자 $3,000 대비 <strong>82.7배</strong> · 원금 회수 <strong>2주차</strong></div>
+        <div class="s-grid">
+          <div class="s-box"><div class="s-box-lbl">① 직접추천 (3일)</div><div class="s-box-val" style="color:var(--gold)">$2,700</div></div>
+          <div class="s-box"><div class="s-box-lbl">② 추천라인 (주급)</div><div class="s-box-val" style="color:var(--cyan)">$88,452</div></div>
+          <div class="s-box"><div class="s-box-lbl">③ 후원라인 (전대수AUTO)</div><div class="s-box-val" style="color:var(--orange)">$59,022</div></div>
+          <div class="s-box"><div class="s-box-lbl">④ 공유수당 (월급)</div><div class="s-box-val" style="color:var(--pink)">$98,010</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="disclaimer">※ 파동 1개 = 1주 완성 이상적 시나리오 · $3,000 가입 · 1인당 모집 3명 기준<br>④ 공유수당 월정산: 1개월차(3·4대) Day 30 / 2개월차(5·6·7대) Day 60 · Value Tree NMN</div>
+  </div>
+</div>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+</body>
+</html>
