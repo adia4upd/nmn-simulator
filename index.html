@@ -2047,23 +2047,17 @@ function calcShare(rows) {
 }
 
 // ─── ⑥ 재구매/오토쉽 ($300 기준으로 ①②③④ 동일 수당 구조 적용) ───
-function calcRepurchase(totalSales, totalPeople) {
+function calcRepurchase(totalSales, totalPeople, effectiveRollup) {
   const n        = parseInt(document.getElementById('rec').value);
   const simDepth = parseInt(document.getElementById('gen-depth').value);
-  const baseMax  = me === 300 ? 1 : 5;
 
-  // $300 고정 단가로 대수별 데이터 빌드
+  // $300 고정 단가로 대수별 데이터 빌드 — 활성화 범위는 메인 시뮬과 동일한 effectiveRollup 사용
   const rpRows = [];
   for (let i = 0; i < simDepth; i++) {
     const g    = i + 1;
     const cnt  = Math.pow(n, g);
     const sales = cnt * 300;
-    let cond = 'locked';
-    if (g <= baseMax)            cond = 'auto';
-    else if (g <= 5)             cond = 'locked';
-    else if (n === 2 && g === 6) cond = 'auto';
-    else if (n === 3 && g >= 6)  cond = 'auto';
-    else if (g <= CFG.sponGens)  cond = 'level';
+    const cond  = g <= effectiveRollup ? 'auto' : 'locked';
     rpRows.push({ g, cnt, sales, cond });
   }
 
@@ -2217,7 +2211,7 @@ function calc() {
   const refLine    = calcRefLine(rows);
   const sponsor    = calcSponsor(rows, achievedRank, effectiveRollup);
   const share      = calcShare(rows);
-  const repurchase = calcRepurchase(totalSales, totalPeople);
+  const repurchase = calcRepurchase(totalSales, totalPeople, effectiveRollup);
   const awards     = calcAwards(totalSales);
 
   // 종합
