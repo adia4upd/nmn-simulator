@@ -1863,32 +1863,40 @@ const RANKS = [
 
 // ─── 공통: 대수별 데이터 빌드 ───
 function buildGenData(n, simDepth) {
-  // 1) 팀 누적 매출 선계산
-  let preTotalSales = 0;
-  for (let i = 0; i < simDepth; i++) preTotalSales += Math.pow(n, i + 1) * sub;
+  // $3,000 가입자는 1~5대 자동 보장 (누적매출 조건 없이)
+  const autoBase = me === 3000 ? 5 : 0;
 
-  // 2) 직급 달성 판정: 팀누적매출 >= min AND 직접추천(n) >= minRef 동시 충족
-  let achievedRank = null;
-  for (const r of RANKS) {
-    if (preTotalSales >= r.min && n >= r.minRef) achievedRank = r;
-  }
-
-  // $3,000 가입자는 최소 L5(5대) 보장
-  const earnedRollup   = achievedRank ? achievedRank.rollup : 0;
-  const effectiveRollup = me === 3000 ? Math.max(5, earnedRollup) : earnedRollup;
-
-  // 3) 대수별 데이터 빌드
   const rows = [];
   let totalPeople = 0, totalSales = 0;
+  let rankBroken = false; // 한 단계라도 조건 불충족 시 이후 단계 전부 잠금
+
   for (let i = 0; i < simDepth; i++) {
     const g    = i + 1;
     const cnt  = Math.pow(n, g);
     const sales = cnt * sub;
     totalPeople += cnt;
     totalSales  += sales;
-    const cond  = g <= effectiveRollup ? 'auto' : 'locked';
+
+    let cond;
+    if (g <= autoBase) {
+      // $3,000 가입자 자동 보장 구간
+      cond = 'auto';
+    } else {
+      // 단계별 누적매출 조건 체크: 이 대수까지의 누적매출로 해당 직급 달성 여부 판정
+      const rank = RANKS[g - 1];
+      if (!rankBroken && rank && totalSales >= rank.min && n >= rank.minRef) {
+        cond = 'auto';
+      } else {
+        cond = 'locked';
+        rankBroken = true; // 이후 단계도 전부 잠금
+      }
+    }
     rows.push({ g, cnt, sales, sponOn: cond === 'auto', cond });
   }
+
+  const effectiveRollup = rows.filter(r => r.cond === 'auto').length;
+  const achievedRank    = effectiveRollup > 0 ? RANKS[effectiveRollup - 1] : null;
+
   return { rows, totalPeople, totalSales, achievedRank, effectiveRollup };
 }
 
