@@ -1850,37 +1850,46 @@ const CFG = {
   awardCount:   4,     // ⑦~⑩ 시상 — 4개
 };
 
-// ─── 직급 달성조건 ───
+// ─── 직급 달성조건 (팀누적매출 + 최소 직접추천 인원) ───
 const RANKS = [
-  { level: 'L1', min: 300 },
-  { level: 'L2', min: 3000 },
-  { level: 'L3', min: 10000 },
-  { level: 'L4', min: 100000 },
-  { level: 'L5', min: 300000 },
-  { level: 'L6', min: 500000 },
-  { level: 'L7', min: 700000 },
+  { level: 'L1', rollup: 1, min: 300,    minRef: 1 },
+  { level: 'L2', rollup: 2, min: 3000,   minRef: 1 },
+  { level: 'L3', rollup: 3, min: 10000,  minRef: 1 },
+  { level: 'L4', rollup: 4, min: 100000, minRef: 1 },
+  { level: 'L5', rollup: 5, min: 300000, minRef: 1 },
+  { level: 'L6', rollup: 6, min: 500000, minRef: 2 },
+  { level: 'L7', rollup: 7, min: 700000, minRef: 3 },
 ];
 
 // ─── 공통: 대수별 데이터 빌드 ───
 function buildGenData(n, simDepth) {
-  const baseMax = me === 300 ? 1 : 5; // 후원롤업 자동적용 대수
+  // 1) 팀 누적 매출 선계산
+  let preTotalSales = 0;
+  for (let i = 0; i < simDepth; i++) preTotalSales += Math.pow(n, i + 1) * sub;
+
+  // 2) 직급 달성 판정: 팀누적매출 >= min AND 직접추천(n) >= minRef 동시 충족
+  let achievedRank = null;
+  for (const r of RANKS) {
+    if (preTotalSales >= r.min && n >= r.minRef) achievedRank = r;
+  }
+
+  // $3,000 가입자는 최소 L5(5대) 보장
+  const earnedRollup   = achievedRank ? achievedRank.rollup : 0;
+  const effectiveRollup = me === 3000 ? Math.max(5, earnedRollup) : earnedRollup;
+
+  // 3) 대수별 데이터 빌드
   const rows = [];
   let totalPeople = 0, totalSales = 0;
   for (let i = 0; i < simDepth; i++) {
-    const g = i + 1;
-    const cnt = Math.pow(n, g);
+    const g    = i + 1;
+    const cnt  = Math.pow(n, g);
     const sales = cnt * sub;
     totalPeople += cnt;
-    totalSales += sales;
-    let cond = 'locked';
-    if (g <= baseMax)            cond = 'auto';
-    else if (g <= 5)             cond = 'locked';
-    else if (n === 2 && g === 6) cond = 'auto';         // 2명 → 6대 자동적용
-    else if (n === 3 && g >= 6)  cond = 'auto';         // 3명 → 6·7대 모두 자동적용
-    else if (g <= CFG.sponGens)  cond = 'level';
+    totalSales  += sales;
+    const cond  = g <= effectiveRollup ? 'auto' : 'locked';
     rows.push({ g, cnt, sales, sponOn: cond === 'auto', cond });
   }
-  return { rows, totalPeople, totalSales };
+  return { rows, totalPeople, totalSales, achievedRank, effectiveRollup };
 }
 
 // ─── ① 직접추천 (30%) ───
@@ -1978,7 +1987,7 @@ function calcRefLine(rows) {
 }
 
 // ─── ③ 후원라인 롤업 (레벨매출 × 4% × 15%, 1대~7대, 조건부) ───
-function calcSponsor(rows) {
+function calcSponsor(rows, achievedRank, effectiveRollup) {
   const condFn = (r) => {
     if (r.cond === 'auto')   return { on: true,  cond: 'auto'   };
     if (r.cond === 'locked') return { on: false, cond: 'locked' };
@@ -1987,13 +1996,14 @@ function calcSponsor(rows) {
   const { tableHtml, myTotal, genRows } = renderRollupTable(rows, '4', '15', 1, 7, condFn, 'var(--hermes)');
   document.getElementById('calc-sponsor').innerHTML = tableHtml;
   {
-    const n_now = parseInt(document.getElementById('rec').value);
-    let extraNote = '';
-    if (n_now === 2) extraNote = ' · <strong style="color:#48DBFB;">2명 모집 → 6대 자동적용</strong>';
-    else if (n_now === 3) extraNote = ' · <strong style="color:#48DBFB;">3명 모집 → 7대 자동적용</strong>';
-    document.getElementById('spon-note').innerHTML = me === 300
-      ? `<strong style="color:var(--gold);">$300 가입 → 후원 롤업 1대까지 자동적용</strong><br>2~5대: 미해당 · 6~7대: 조건부 (팀누적매출+추천인원 달성 시)${extraNote}`
-      : `<strong style="color:var(--gold);">$3,000 가입 → 후원 롤업 1~5대까지 자동적용 (6개월 인정)</strong><br>6~7대: 조건부 (팀누적매출+추천인원 달성 시)${extraNote}`;
+    const rankStr = achievedRank
+      ? `<strong style="color:var(--gold);">${achievedRank.level} 달성 → 후원 롤업 ${effectiveRollup}대까지 자동적용</strong>`
+      : `<strong style="color:var(--text3);">직급 미달성 (팀누적매출 $300 미만)</strong>`;
+    const nextRank = RANKS.find(r => !achievedRank || r.rollup === achievedRank.rollup + 1);
+    const nextNote = nextRank
+      ? `<br><span style="color:var(--text3);font-size:0.78rem;">다음 단계: ${nextRank.level} → 팀누적매출 $${nextRank.min.toLocaleString()} + 직접추천 ${nextRank.minRef}명 이상</span>`
+      : '';
+    document.getElementById('spon-note').innerHTML = rankStr + nextNote;
   }
   const maxInc = Math.max(...genRows.map(r => r.myIncome), 1);
   document.getElementById('bars').innerHTML = genRows.map(r => {
@@ -2185,10 +2195,11 @@ function calc() {
   document.getElementById('rd').textContent = n + '명';
   document.getElementById('gd').textContent = simDepth + '대';
 
-  const { rows, totalPeople, totalSales } = buildGenData(n, simDepth);
+  const { rows, totalPeople, totalSales, achievedRank, effectiveRollup } = buildGenData(n, simDepth);
 
   // 요약 카드
-  document.getElementById('s1').textContent = me === 300 ? '롤업 1대' : '롤업 1~5대';
+  const rankLabel = achievedRank ? `${achievedRank.level} · 롤업 ${effectiveRollup}대` : '직급 미달성';
+  document.getElementById('s1').textContent = rankLabel;
   document.getElementById('s2').textContent = '$' + sub.toLocaleString();
   document.getElementById('s3').textContent = totalPeople.toLocaleString() + '명';
   document.getElementById('s5').textContent = '$' + totalSales.toLocaleString();
@@ -2196,7 +2207,7 @@ function calc() {
   // 각 수당 계산 (완전 분리)
   const direct     = calcDirect(n);
   const refLine    = calcRefLine(rows);
-  const sponsor    = calcSponsor(rows);
+  const sponsor    = calcSponsor(rows, achievedRank, effectiveRollup);
   const share      = calcShare(rows);
   const repurchase = calcRepurchase(totalSales, totalPeople);
   const awards     = calcAwards(totalSales);
