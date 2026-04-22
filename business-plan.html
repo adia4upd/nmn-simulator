@@ -272,10 +272,15 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', s
 }
 #lang-sw .lb:hover { transform: scale(1.2); opacity: 1; }
 #lang-sw .lb.on { background: rgba(254,202,87,0.15); outline: 1px solid rgba(254,202,87,0.4); opacity: 1; }
-.goog-te-banner-frame, .goog-te-balloon-frame { display: none !important; }
-body { top: 0 !important; }
-.skiptranslate { display: none !important; }
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+.VIpgJd-ZVi9od-l4eHX-hSRGPd,
+.VIpgJd-ZVi9od-ORHb-OEVmcd { display: none !important; }
+body { top: 0 !important; margin-top: 0 !important; }
+body.translated-ltr, body.translated-rtl { top: 0 !important; margin-top: 0 !important; }
+.skiptranslate { display: none !important; visibility: hidden !important; }
 #goog-gt-tt { display: none !important; }
+iframe.goog-te-menu-frame { display: none !important; }
 </style>
 </head>
 <body>
