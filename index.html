@@ -570,18 +570,19 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
 #quick-links a svg { flex-shrink: 0; opacity: 0.6; transition: opacity 0.18s; }
 #quick-links a:hover svg { opacity: 1; }
 @media (max-width: 480px) {
-  .wrap { padding-top: 5.5rem; }
-  /* 모바일: quick-links를 상단 전체 바로 변경 */
+  .wrap { padding-top: 6.2rem; }
+
+  /* 1번째 줄: 제품주문서 + 마이오피스 */
   #quick-links {
-    position: fixed; top: 3px; left: 0; right: 0; z-index: 9999;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
     display: flex; justify-content: center; gap: 8px;
-    padding: 8px 12px;
-    background: rgba(10,10,10,0.96);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 7px 12px 7px;
+    background: rgba(10,10,10,0.97);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
     backdrop-filter: blur(16px);
   }
   #quick-links a {
-    flex: 1; max-width: 160px;
+    flex: 1; max-width: 165px;
     justify-content: center; gap: 6px;
     padding: 8px 10px;
     font-size: 0.75rem; font-weight: 700; letter-spacing: 0.3px;
@@ -591,7 +592,18 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   }
   #quick-links a span { display: inline; }
   #quick-links a svg { opacity: 0.9; }
-  #lang-sw { top: 54px; right: 50%; transform: translateX(50%); }
+
+  /* 2번째 줄: 국기 언어 선택 (quick-links 높이 ≈ 46px 아래) */
+  #lang-sw {
+    position: fixed; top: 46px; left: 0; right: 0; z-index: 9998;
+    justify-content: center;
+    border-radius: 0;
+    background: rgba(8,8,8,0.97);
+    border: none; border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 5px 12px;
+    gap: 6px;
+    box-shadow: none;
+  }
 }
 
 #lang-sw {
