@@ -570,8 +570,28 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
 #quick-links a svg { flex-shrink: 0; opacity: 0.6; transition: opacity 0.18s; }
 #quick-links a:hover svg { opacity: 1; }
 @media (max-width: 480px) {
-  #quick-links a span { display: none; }
-  #quick-links a { padding: 6px 8px; }
+  .wrap { padding-top: 5.5rem; }
+  /* 모바일: quick-links를 상단 전체 바로 변경 */
+  #quick-links {
+    position: fixed; top: 3px; left: 0; right: 0; z-index: 9999;
+    display: flex; justify-content: center; gap: 8px;
+    padding: 8px 12px;
+    background: rgba(10,10,10,0.96);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(16px);
+  }
+  #quick-links a {
+    flex: 1; max-width: 160px;
+    justify-content: center; gap: 6px;
+    padding: 8px 10px;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.3px;
+    color: var(--gold);
+    border-color: rgba(254,202,87,0.3);
+    background: rgba(254,202,87,0.07);
+  }
+  #quick-links a span { display: inline; }
+  #quick-links a svg { opacity: 0.9; }
+  #lang-sw { top: 54px; right: 50%; transform: translateX(50%); }
 }
 
 #lang-sw {
