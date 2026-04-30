@@ -829,10 +829,20 @@ iframe.goog-te-menu-frame { display: none !important; }
             </div>
           </div>
         </div>
-        <!-- 짧은 인용 한 줄 -->
-        <div style="border-left:3px solid var(--gold);padding-left:0.9rem;font-size:0.83rem;line-height:1.5;color:var(--text);font-style:italic;">
-          "노화는 CD의 스크래치다. 닦아내면 <strong style="color:var(--gold);">다시 젊어진다.</strong>"
-          <span style="font-size:0.68rem;color:var(--text2);margin-left:0.4rem;">— 노화의 종말 中</span>
+        <!-- 인용 + 책 표지 가로 배치 -->
+        <div style="display:flex;gap:0.9rem;align-items:center;">
+          <div style="border-left:3px solid var(--gold);padding-left:0.9rem;font-size:0.83rem;line-height:1.55;color:var(--text);font-style:italic;flex:1;min-width:0;">
+            "노화는 CD의 스크래치다. 닦아내면 <strong style="color:var(--gold);">다시 젊어진다.</strong>"
+            <div style="font-size:0.68rem;color:var(--text2);margin-top:0.25rem;font-style:normal;">— 노화의 종말 中</div>
+          </div>
+          <div style="flex-shrink:0;text-align:center;">
+            <img src="https://i0.wp.com/ibookpark.com/wp-content/uploads/2020/08/Screen-Shot-2020-08-11-at-4.39.09-PM.jpg"
+              alt="노화의 종말 책 표지"
+              loading="lazy"
+              onerror="this.style.display='none'"
+              style="width:64px;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.5);display:block;">
+            <div style="font-size:0.6rem;color:var(--text2);margin-top:0.3rem;">「노화의 종말」</div>
+          </div>
         </div>
       </div>
     </div>
