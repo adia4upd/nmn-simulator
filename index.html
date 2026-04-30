@@ -497,44 +497,55 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   .main-tabs { border-radius: 10px; }
   .main-tab { font-size: 0.78rem; padding: 12px 8px; }
 
-  /* ── 고정 헤더: 1번째 줄 (제품주문서·마이오피스) ── */
-  #quick-links {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
-    display: flex; justify-content: center; gap: 8px;
-    padding: 10px 14px;
-    background: rgba(10,10,10,0.97);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    backdrop-filter: blur(16px);
-  }
-  #quick-links a {
-    flex: 1; max-width: 165px;
-    justify-content: center; gap: 6px;
-    padding: 10px 10px;
-    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.3px;
-    color: var(--gold);
-    border-color: rgba(254,202,87,0.3);
-    background: rgba(254,202,87,0.07);
-    border-radius: 50px;
-  }
-  #quick-links a span { display: inline; }
-  #quick-links a svg { opacity: 0.9; }
+  /* 모바일: 데스크탑 개별 헤더 숨기고 통합 헤더 표시 */
+  #quick-links { display: none !important; }
+  #lang-sw { display: none !important; }
 
-  /* ── 고정 헤더: 2번째 줄 (국기 언어 선택) ── */
-  #lang-sw {
-    position: fixed; top: 58px; left: 0; right: 0; z-index: 9998;
-    justify-content: center;
-    border-radius: 0;
-    background: rgba(8,8,8,0.97);
-    border: none; border-bottom: 1px solid rgba(255,255,255,0.06);
-    padding: 8px 14px;
-    gap: 10px;
-    box-shadow: none;
+  #mobile-header {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(10,10,10,0.98);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
   }
-  #lang-sw .lb {
-    font-size: 1.5rem;
-    padding: 4px 6px;
-    opacity: 0.75;
+  #mobile-header #quick-links {
+    display: flex !important;
+    flex: 1; gap: 6px; align-items: center;
+    position: static !important;
   }
+  #mobile-header #quick-links a {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    padding: 8px 6px;
+    font-size: 0.72rem; font-weight: 700;
+    color: var(--gold);
+    background: rgba(254,202,87,0.07);
+    border: 1px solid rgba(254,202,87,0.3);
+    border-radius: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  #mobile-header #quick-links a span { display: inline; }
+  #mobile-header #lang-sw {
+    display: flex !important;
+    position: static !important;
+    flex-shrink: 0;
+    gap: 2px; align-items: center;
+    background: transparent;
+    border: none; border-radius: 0;
+    padding: 0; box-shadow: none;
+  }
+  #mobile-header #lang-sw .lb {
+    font-size: 1.3rem;
+    padding: 3px 2px;
+    opacity: 0.85;
+  }
+  .wrap { padding: 1rem 0.8rem 3rem; }
 }
 
 /* Tablet tweaks */
@@ -591,7 +602,12 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
 .prod-card.active .prod-card-btn { background: rgba(212,175,55,0.12); border-color: rgba(212,175,55,0.35); color: var(--gold); }
 .prod-detail { animation: fadeUp 0.4s ease forwards; }
 
-/* ── LANG SWITCHER ── */
+/* ── 통합 헤더 (모바일: sticky 한 줄 / 데스크탑: 개별 fixed) ── */
+#mobile-header {
+  display: none; /* 데스크탑에서는 숨김 */
+}
+
+/* 데스크탑 전용 */
 #quick-links {
   position: fixed; top: 14px; left: 14px; z-index: 9999;
   display: flex; gap: 6px; align-items: center;
@@ -610,13 +626,13 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   white-space: nowrap;
 }
 #quick-links a:hover {
-  color: var(--gold);
-  border-color: rgba(254,202,87,0.35);
+  color: var(--gold); border-color: rgba(254,202,87,0.35);
   background: rgba(254,202,87,0.07);
 }
 #quick-links a svg { flex-shrink: 0; opacity: 0.6; transition: opacity 0.18s; }
 #quick-links a:hover svg { opacity: 1; }
-/* 국기 언어 선택 — 데스크탑 기본 */
+
+/* 국기 선택 — 데스크탑 기본 */
 #lang-sw {
   position: fixed; top: 14px; right: 14px; z-index: 9999;
   display: flex; gap: 3px; align-items: center;
@@ -649,26 +665,26 @@ iframe.goog-te-menu-frame { display: none !important; }
 </head>
 <body>
 
-<!-- Quick Links -->
-<div id="quick-links">
-  <a href="https://adia4upd.github.io/value-tree/" target="_blank">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
-    <span>제품주문서작성</span>
-  </a>
-  <a href="https://valuetree-mall.com/" target="_blank">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-    <span>마이오피스</span>
-  </a>
-</div>
-
-<!-- Language Switcher -->
-<div id="lang-sw" class="notranslate" translate="no">
-  <button class="lb" onclick="setLang('ko')" data-lang="ko" title="한국어">🇰🇷</button>
-  <button class="lb" onclick="setLang('en')" data-lang="en" title="English">🇺🇸</button>
-  <button class="lb" onclick="setLang('ja')" data-lang="ja" title="日本語">🇯🇵</button>
-  <button class="lb" onclick="setLang('zh-CN')" data-lang="zh-CN" title="中文">🇨🇳</button>
-  <button class="lb" onclick="setLang('vi')" data-lang="vi" title="Tiếng Việt">🇻🇳</button>
-  <button class="lb" onclick="setLang('hi')" data-lang="hi" title="हिन्दी">🇮🇳</button>
+<!-- 모바일 통합 헤더 (sticky 한 줄) -->
+<div id="mobile-header">
+  <div id="quick-links">
+    <a href="https://adia4upd.github.io/value-tree/" target="_blank">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+      <span>제품주문서작성</span>
+    </a>
+    <a href="https://valuetree-mall.com/" target="_blank">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span>마이오피스</span>
+    </a>
+  </div>
+  <div id="lang-sw" class="notranslate" translate="no">
+    <button class="lb" onclick="setLang('ko')" data-lang="ko" title="한국어">🇰🇷</button>
+    <button class="lb" onclick="setLang('en')" data-lang="en" title="English">🇺🇸</button>
+    <button class="lb" onclick="setLang('ja')" data-lang="ja" title="日本語">🇯🇵</button>
+    <button class="lb" onclick="setLang('zh-CN')" data-lang="zh-CN" title="中文">🇨🇳</button>
+    <button class="lb" onclick="setLang('vi')" data-lang="vi" title="Tiếng Việt">🇻🇳</button>
+    <button class="lb" onclick="setLang('hi')" data-lang="hi" title="हिन्दी">🇮🇳</button>
+  </div>
 </div>
 <div id="google_translate_element" style="display:none;"></div>
 
