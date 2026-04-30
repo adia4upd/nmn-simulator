@@ -828,14 +828,8 @@ iframe.goog-te-menu-frame { display: none !important; }
       </div>
     </div>
     <style>
-      /* 데스크탑(900px+)에서만 다열 복원 */
-      @media(min-width:900px){
-        .celeb-grid{grid-template-columns:repeat(3,1fr)!important;}
-        .alpha-card-grid{grid-template-columns:1fr 1fr!important;}
-        .alpha-spec-grid{grid-template-columns:1fr 1fr!important;}
-      }
-      /* 모바일/태블릿(~899px) 1열 강제 */
-      @media(max-width:899px){
+      /* 소형화면(~1024px) 1열 강제 */
+      @media(max-width:1024px){
         #tab-landing .dc.anim > div:last-child > div:first-child,
         #tab-landing .sinclair-grid{grid-template-columns:1fr!important;}
         .icd-grid{grid-template-columns:1fr!important;}
