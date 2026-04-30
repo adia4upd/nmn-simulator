@@ -821,6 +821,12 @@ iframe.goog-te-menu-frame { display: none !important; }
       </div>
     </div>
     <style>
+      /* 데스크탑에서만 다열 복원 */
+      @media(min-width:641px){
+        .celeb-grid{grid-template-columns:repeat(3,1fr)!important;}
+        .alpha-card-grid{grid-template-columns:1fr 1fr!important;}
+        .alpha-spec-grid{grid-template-columns:1fr 1fr!important;}
+      }
       @media(max-width:640px){
         #tab-landing .dc.anim > div:last-child > div:first-child,
         #tab-landing .sinclair-grid{grid-template-columns:1fr!important;}
@@ -1064,7 +1070,7 @@ iframe.goog-te-menu-frame { display: none !important; }
         <div style="font-size:0.9rem;color:var(--text2);margin-top:0.5rem;">억만장자부터 할리우드 탑스타까지, 그들의 젊음 비결</div>
       </div>
       <!-- 3x2 celebrity cards -->
-      <div class="celeb-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem;">
+      <div class="celeb-grid" style="display:grid;grid-template-columns:1fr;gap:1.2rem;">
 
         <!-- Card 1: 헤일리 비버 -->
         <div style="background:rgba(254,202,87,0.05);border:1px solid rgba(254,202,87,0.25);border-radius:16px;padding:1.4rem;position:relative;overflow:hidden;display:flex;flex-direction:column;">
