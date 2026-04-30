@@ -941,7 +941,7 @@ iframe.goog-te-menu-frame { display: none !important; }
       <!-- 셀럽 NAD+ 추종 카드 -->
       <div style="margin-bottom:1.8rem;">
         <div style="font-size:0.85rem;color:var(--text2);text-align:center;margin-bottom:1rem;">전 세계 최정상 셀럽들이 선택한 성분</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+        <div id="forbes-cards" style="display:flex;flex-direction:column;gap:1rem;">
 
           <!-- Card 1: 헤일리 비버 -->
           <div style="background:rgba(254,202,87,0.06);border:1px solid rgba(254,202,87,0.2);border-radius:14px;padding:1.4rem;display:flex;flex-direction:column;gap:0;">
@@ -2444,23 +2444,25 @@ function setLang(lang) {
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script>
-// 셀럽 카드 강제 1열 (캐시 무관)
+// 카드 그리드 강제 1열 (캐시 무관)
 (function(){
-  function fixCelebLayout(){
-    var el = document.getElementById('celeb-cards');
-    if(el){
-      el.style.cssText = 'display:flex!important;flex-direction:column!important;gap:1.2rem!important;width:100%!important;';
-      var cards = el.children;
-      for(var i=0;i<cards.length;i++){
-        cards[i].style.width = '100%';
-        cards[i].style.minWidth = '100%';
-        cards[i].style.boxSizing = 'border-box';
+  function fixLayouts(){
+    ['celeb-cards','forbes-cards'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el){
+        el.style.cssText = 'display:flex!important;flex-direction:column!important;gap:1.2rem!important;width:100%!important;';
+        var cards = el.children;
+        for(var i=0;i<cards.length;i++){
+          cards[i].style.width='100%';
+          cards[i].style.minWidth='100%';
+          cards[i].style.boxSizing='border-box';
+        }
       }
-    }
+    });
   }
-  document.addEventListener('DOMContentLoaded', fixCelebLayout);
-  window.addEventListener('load', fixCelebLayout);
-  setTimeout(fixCelebLayout, 300);
+  document.addEventListener('DOMContentLoaded', fixLayouts);
+  window.addEventListener('load', fixLayouts);
+  setTimeout(fixLayouts, 300);
 })();
 </script>
 </body>
