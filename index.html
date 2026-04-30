@@ -1091,7 +1091,7 @@ iframe.goog-te-menu-frame { display: none !important; }
         <div style="font-size:0.9rem;color:var(--text2);margin-top:0.5rem;">억만장자부터 할리우드 탑스타까지, 그들의 젊음 비결</div>
       </div>
       <!-- 3x2 celebrity cards -->
-      <div style="display:flex;flex-direction:column;gap:1.2rem;">
+      <div id="celeb-cards" style="display:flex;flex-direction:column;gap:1.2rem;">
 
         <!-- Card 1: 헤일리 비버 -->
         <div style="background:rgba(254,202,87,0.05);border:1px solid rgba(254,202,87,0.25);border-radius:16px;padding:1.4rem;position:relative;overflow:hidden;display:flex;flex-direction:column;">
@@ -2443,5 +2443,25 @@ function setLang(lang) {
 })();
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>
+// 셀럽 카드 강제 1열 (캐시 무관)
+(function(){
+  function fixCelebLayout(){
+    var el = document.getElementById('celeb-cards');
+    if(el){
+      el.style.cssText = 'display:flex!important;flex-direction:column!important;gap:1.2rem!important;width:100%!important;';
+      var cards = el.children;
+      for(var i=0;i<cards.length;i++){
+        cards[i].style.width = '100%';
+        cards[i].style.minWidth = '100%';
+        cards[i].style.boxSizing = 'border-box';
+      }
+    }
+  }
+  document.addEventListener('DOMContentLoaded', fixCelebLayout);
+  window.addEventListener('load', fixCelebLayout);
+  setTimeout(fixCelebLayout, 300);
+})();
+</script>
 </body>
 </html>
