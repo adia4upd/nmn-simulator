@@ -811,34 +811,34 @@ iframe.goog-te-menu-frame { display: none !important; }
     <div class="dc anim" style="margin-bottom:2rem;overflow:hidden;border-radius:16px;border:1px solid var(--border);">
       <div style="height:5px;background:linear-gradient(90deg,#FF6B6B,#FECA57,#48DBFB);"></div>
       <!-- 카드 본문: 좌(텍스트) + 우(책 표지 꽉참) -->
-      <div style="display:flex;align-items:stretch;">
+      <div style="display:flex;align-items:stretch;min-height:200px;">
         <!-- 좌: 텍스트 영역 -->
-        <div style="flex:1;min-width:0;padding:1.2rem;display:flex;flex-direction:column;gap:0.9rem;">
+        <div style="flex:1;min-width:0;padding:1.8rem;display:flex;flex-direction:column;gap:1.2rem;justify-content:center;">
           <!-- 사진 + 이름 + 괄호형 자격 태그 -->
-          <div style="display:flex;gap:0.9rem;align-items:center;">
+          <div style="display:flex;gap:1.1rem;align-items:center;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/David_Sinclair.jpg"
               alt="David Sinclair 하버드 교수"
               loading="lazy"
               onerror="this.style.display='none'"
-              style="width:56px;height:56px;border-radius:50%;border:2px solid var(--gold);box-shadow:0 0 14px rgba(212,175,55,0.4);object-fit:cover;flex-shrink:0;">
+              style="width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);box-shadow:0 0 22px rgba(212,175,55,0.5);object-fit:cover;flex-shrink:0;">
             <div style="min-width:0;">
-              <div style="font-size:0.93rem;font-weight:700;color:var(--gold);margin-bottom:0.35rem;">데이비드 싱클레어 박사</div>
-              <div style="display:flex;flex-wrap:wrap;gap:0.25rem 0.35rem;line-height:1.8;">
-                <span style="font-size:0.7rem;color:var(--text2);white-space:nowrap;">(하버드의대 교수)</span>
-                <span style="font-size:0.7rem;color:var(--text2);white-space:nowrap;">(노화의종말 저자)</span>
-                <span style="font-size:0.7rem;color:var(--text2);white-space:nowrap;">(노화연구센터장)</span>
-                <span style="font-size:0.7rem;color:#FF9F9F;white-space:nowrap;">(FDA 임상승인)</span>
+              <div style="font-size:1.05rem;font-weight:700;color:var(--gold);margin-bottom:0.5rem;">데이비드 싱클레어 박사</div>
+              <div style="display:flex;flex-wrap:wrap;gap:0.3rem 0.45rem;line-height:1.9;">
+                <span style="font-size:0.78rem;color:var(--text2);white-space:nowrap;">(하버드의대 교수)</span>
+                <span style="font-size:0.78rem;color:var(--text2);white-space:nowrap;">(노화의종말 저자)</span>
+                <span style="font-size:0.78rem;color:var(--text2);white-space:nowrap;">(노화연구센터장)</span>
+                <span style="font-size:0.78rem;color:#FF9F9F;white-space:nowrap;">(FDA 임상승인)</span>
               </div>
             </div>
           </div>
           <!-- 인용문 -->
-          <div style="border-left:3px solid var(--gold);padding-left:0.9rem;font-size:0.82rem;line-height:1.55;color:var(--text);font-style:italic;">
+          <div style="border-left:3px solid var(--gold);padding-left:1rem;font-size:0.9rem;line-height:1.6;color:var(--text);font-style:italic;">
             "노화는 CD의 스크래치다. 닦아내면 <strong style="color:var(--gold);">다시 젊어진다.</strong>"
-            <div style="font-size:0.67rem;color:var(--text2);margin-top:0.2rem;font-style:normal;">— 노화의 종말 中</div>
+            <div style="font-size:0.72rem;color:var(--text2);margin-top:0.3rem;font-style:normal;">— 노화의 종말 中</div>
           </div>
         </div>
         <!-- 우: 책 표지 — 카드 전체 높이 꽉 채움 -->
-        <div style="width:100px;flex-shrink:0;overflow:hidden;">
+        <div style="width:150px;flex-shrink:0;overflow:hidden;">
           <img src="https://i0.wp.com/ibookpark.com/wp-content/uploads/2020/08/Screen-Shot-2020-08-11-at-4.39.09-PM.jpg"
             alt="노화의 종말 책 표지"
             loading="lazy"
