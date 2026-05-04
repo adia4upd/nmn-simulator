@@ -500,55 +500,65 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   .main-tabs { border-radius: 10px; }
   .main-tab { font-size: 0.78rem; padding: 12px 8px; }
 
-  /* 모바일: 데스크탑 개별 헤더 숨기고 통합 헤더 표시 */
-  #quick-links { display: none !important; }
-  #lang-sw { display: none !important; }
-
+  /* 모바일: 통합 sticky 헤더 배경 */
   #mobile-header {
-    display: flex !important;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 10px;
-    background: rgba(10,10,10,0.98);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    position: -webkit-sticky;
+    display: block !important;
     position: sticky;
     top: 0;
-    z-index: 9999;
+    z-index: 9998;
+    height: 46px;
+    background: rgba(10,10,10,0.98);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
   }
-  #mobile-header #quick-links {
+
+  /* 모바일: 퀵링크 — 좌측 fixed */
+  #quick-links {
     display: flex !important;
-    flex: 1; gap: 6px; align-items: center;
-    position: static !important;
+    position: fixed !important;
+    top: 8px; left: 10px;
+    z-index: 9999;
+    gap: 6px; align-items: center;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
   }
-  #mobile-header #quick-links a {
-    flex: 1;
+  #quick-links a {
+    flex: 0 !important;
     display: flex; align-items: center; justify-content: center; gap: 5px;
-    padding: 8px 6px;
+    padding: 7px 10px !important;
     font-size: 0.72rem; font-weight: 700;
-    color: var(--gold);
-    background: rgba(254,202,87,0.07);
-    border: 1px solid rgba(254,202,87,0.3);
-    border-radius: 8px;
+    color: var(--gold) !important;
+    background: rgba(254,202,87,0.07) !important;
+    border: 1px solid rgba(254,202,87,0.3) !important;
+    border-radius: 8px !important;
     text-decoration: none;
     white-space: nowrap;
   }
-  #mobile-header #quick-links a span { display: inline; }
-  #mobile-header #lang-sw {
+  #quick-links a span { display: inline !important; }
+
+  /* 모바일: 국기 — 우측 fixed */
+  #lang-sw {
     display: flex !important;
-    position: static !important;
-    flex-shrink: 0;
+    position: fixed !important;
+    top: 8px; right: 10px;
+    z-index: 9999;
     gap: 2px; align-items: center;
-    background: transparent;
-    border: none; border-radius: 0;
-    padding: 0; box-shadow: none;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
   }
-  #mobile-header #lang-sw .lb {
-    font-size: 1.3rem;
-    padding: 3px 2px;
+  #lang-sw .lb {
+    font-size: 1.3rem !important;
+    padding: 3px 2px !important;
     opacity: 0.85;
   }
-  .wrap { padding: 1rem 0.8rem 3rem; }
+  .wrap { padding: 4rem 0.8rem 3rem; }
 }
 
 /* Tablet tweaks */
@@ -668,27 +678,28 @@ iframe.goog-te-menu-frame { display: none !important; }
 </head>
 <body>
 
-<!-- 모바일 통합 헤더 (sticky 한 줄) -->
-<div id="mobile-header">
-  <div id="quick-links">
-    <a href="https://adia4upd.github.io/value-tree/" target="_blank">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
-      <span>제품주문서작성</span>
-    </a>
-    <a href="https://valuetree-mall.com/" target="_blank">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-      <span>마이오피스</span>
-    </a>
-  </div>
-  <div id="lang-sw" class="notranslate" translate="no">
-    <button class="lb" onclick="setLang('ko')" data-lang="ko" title="한국어">🇰🇷</button>
-    <button class="lb" onclick="setLang('en')" data-lang="en" title="English">🇺🇸</button>
-    <button class="lb" onclick="setLang('ja')" data-lang="ja" title="日本語">🇯🇵</button>
-    <button class="lb" onclick="setLang('zh-CN')" data-lang="zh-CN" title="中文">🇨🇳</button>
-    <button class="lb" onclick="setLang('vi')" data-lang="vi" title="Tiếng Việt">🇻🇳</button>
-    <button class="lb" onclick="setLang('hi')" data-lang="hi" title="हिन्दी">🇮🇳</button>
-  </div>
+<!-- 퀵링크 (데스크탑: fixed / 모바일: mobile-header 안에서 재배치) -->
+<div id="quick-links">
+  <a href="https://adia4upd.github.io/value-tree/" target="_blank">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+    <span>제품주문서작성</span>
+  </a>
+  <a href="https://valuetree-mall.com/" target="_blank">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    <span>마이오피스</span>
+  </a>
 </div>
+<div id="lang-sw" class="notranslate" translate="no">
+  <button class="lb" onclick="setLang('ko')" data-lang="ko" title="한국어">🇰🇷</button>
+  <button class="lb" onclick="setLang('en')" data-lang="en" title="English">🇺🇸</button>
+  <button class="lb" onclick="setLang('ja')" data-lang="ja" title="日本語">🇯🇵</button>
+  <button class="lb" onclick="setLang('zh-CN')" data-lang="zh-CN" title="中文">🇨🇳</button>
+  <button class="lb" onclick="setLang('vi')" data-lang="vi" title="Tiếng Việt">🇻🇳</button>
+  <button class="lb" onclick="setLang('hi')" data-lang="hi" title="हिन्दी">🇮🇳</button>
+</div>
+
+<!-- 모바일 통합 헤더 배경 (sticky bar) -->
+<div id="mobile-header"></div>
 <div id="google_translate_element" style="display:none;"></div>
 
 <div class="bg-texture"></div>
