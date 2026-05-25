@@ -531,19 +531,29 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
     opacity: 0.85;
   }
 
-  /* 모바일: 퀵링크 박스 — 컴팩트 */
+  /* 모바일: 퀵링크 박스 — 세로 분리 */
   #quick-links {
-    border-radius: 9px !important;
-    background: rgba(14,14,14,0.88) !important;
-    border: 1px solid rgba(255,255,255,0.09) !important;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.4) !important;
+    flex-direction: column !important;
+    border-radius: 10px !important;
+    background: rgba(14,14,14,0.92) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+    overflow: hidden !important;
+    min-width: 130px !important;
   }
   #quick-links a {
-    padding: 6px 10px !important;
-    font-size: 0.65rem !important;
-    color: rgba(255,255,255,0.55) !important;
-    gap: 4px !important;
+    padding: 8px 12px !important;
+    font-size: 0.68rem !important;
+    font-weight: 700 !important;
+    color: rgba(255,255,255,0.6) !important;
+    gap: 6px !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    justify-content: flex-start !important;
   }
+  #quick-links a:last-child { border-bottom: none !important; }
+  #quick-links a:hover { color: var(--gold) !important; }
+  #quick-links a svg { opacity: 0.7 !important; }
   #quick-links a span { display: inline !important; }
 
   .wrap { padding: 4rem 0.8rem 3rem; }
