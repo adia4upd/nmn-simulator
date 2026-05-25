@@ -45,7 +45,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
     radial-gradient(ellipse 500px 400px at 90% 100%, rgba(224,120,48,0.02), transparent);
 }
 
-.wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+.wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 110px; }
 .wrap::before { content: ''; position: fixed; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF); z-index: 999; }
 
 /* Header */
@@ -500,33 +500,6 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   .main-tabs { border-radius: 10px; }
   .main-tab { font-size: 0.78rem; padding: 12px 8px; }
 
-  /* 모바일: header-actions — 헤더 우상단, 세로 스택 */
-  #header-actions {
-    gap: 5px !important;
-  }
-  #lang-sw {
-    padding: 4px 6px !important;
-    gap: 1px !important;
-  }
-  #lang-sw .lb {
-    font-size: 1.1rem !important;
-    padding: 2px 2px !important;
-  }
-  #quick-links {
-    flex-direction: column !important;
-    border-radius: 10px !important;
-    min-width: 112px !important;
-  }
-  #quick-links a {
-    padding: 7px 10px !important;
-    font-size: 0.66rem !important;
-    border-right: none !important;
-    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-    justify-content: flex-start !important;
-  }
-  #quick-links a:last-child { border-bottom: none !important; }
-  #quick-links a span { display: inline !important; }
-
   .wrap { padding: 1rem 0.8rem 3rem; }
 }
 
@@ -589,49 +562,8 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   display: none; /* 데스크탑에서는 숨김 */
 }
 
-/* 헤더 — relative 기준점 */
+/* 헤더 — 심플 */
 header { position: relative; }
-
-/* 국기 + 퀵링크 묶음 — 헤더 우상단 */
-#header-actions {
-  position: absolute; top: 0; right: 0;
-  display: flex; flex-direction: column; align-items: flex-end; gap: 7px;
-}
-
-/* 국기 선택 */
-#lang-sw {
-  display: flex; gap: 3px; align-items: center;
-  background: rgba(14,14,14,0.92);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 50px; padding: 5px 8px;
-  backdrop-filter: blur(14px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.45);
-}
-
-/* 퀵링크 박스 */
-#quick-links {
-  display: flex; align-items: stretch;
-  background: rgba(14,14,14,0.92);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px;
-  backdrop-filter: blur(14px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.45);
-  overflow: hidden;
-}
-#quick-links a {
-  display: flex; align-items: center; gap: 6px;
-  padding: 8px 14px;
-  text-decoration: none;
-  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.3px;
-  color: rgba(255,255,255,0.5);
-  transition: color 0.18s, background 0.18s;
-  white-space: nowrap;
-  border-right: 1px solid rgba(255,255,255,0.07);
-}
-#quick-links a:last-child { border-right: none; }
-#quick-links a:hover { color: var(--gold); background: rgba(254,202,87,0.07); }
-#quick-links a svg { flex-shrink: 0; opacity: 0.55; transition: opacity 0.18s; }
-#quick-links a:hover svg { opacity: 1; }
 
 #lang-sw .lb {
   background: none; border: none; cursor: pointer;
@@ -665,26 +597,6 @@ iframe.goog-te-menu-frame { display: none !important; }
 <div class="wrap">
 
   <header class="anim">
-    <div id="header-actions">
-      <div id="lang-sw" class="notranslate" translate="no">
-        <button class="lb" onclick="setLang('ko')" data-lang="ko" title="한국어">🇰🇷</button>
-        <button class="lb" onclick="setLang('en')" data-lang="en" title="English">🇺🇸</button>
-        <button class="lb" onclick="setLang('ja')" data-lang="ja" title="日本語">🇯🇵</button>
-        <button class="lb" onclick="setLang('zh-CN')" data-lang="zh-CN" title="中文">🇨🇳</button>
-        <button class="lb" onclick="setLang('vi')" data-lang="vi" title="Tiếng Việt">🇻🇳</button>
-        <button class="lb" onclick="setLang('hi')" data-lang="hi" title="हिन्दी">🇮🇳</button>
-      </div>
-      <div id="quick-links">
-        <a href="https://adia4upd.github.io/value-tree/" target="_blank">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
-          <span>제품주문서작성</span>
-        </a>
-        <a href="https://valuetree-mall.com/" target="_blank">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-          <span>마이오피스</span>
-        </a>
-      </div>
-    </div>
     <div class="logo-row">
       <div class="logo-icon">
         <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -714,11 +626,10 @@ iframe.goog-te-menu-frame { display: none !important; }
     <div style="font-size:0.78rem;color:var(--text3);letter-spacing:2px;margin-top:4px;">가치가 열리는 나무, "Value Tree"</div>
   </header>
 
-  <!-- Main Tabs -->
-  <div class="main-tabs anim" style="animation-delay:0.03s">
+  <!-- Main Tabs (숨김 — JS 호환용 유지) -->
+  <div class="main-tabs" style="display:none">
     <button class="main-tab active" onclick="switchTab('landing')">제품소개</button>
     <button class="main-tab" onclick="switchTab('sim')">수익 시뮬레이터</button>
-
   </div>
 
   <!-- Tab 0: 랜딩페이지 -->
@@ -2486,6 +2397,168 @@ function setLang(lang) {
   window.addEventListener('load', fixLayouts);
   setTimeout(fixLayouts, 300);
 })();
+</script>
+
+<!-- ══ 하단 내비게이션 바 ══ -->
+<nav id="bottom-nav">
+  <!-- 언어 팝업 (버튼 위로 뜸) -->
+  <div id="lang-panel" class="notranslate" translate="no">
+    <button class="lp-btn" onclick="setLang('ko');closeLang()" data-lang="ko">🇰🇷 한국어</button>
+    <button class="lp-btn" onclick="setLang('en');closeLang()" data-lang="en">🇺🇸 English</button>
+    <button class="lp-btn" onclick="setLang('ja');closeLang()" data-lang="ja">🇯🇵 日本語</button>
+    <button class="lp-btn" onclick="setLang('zh-CN');closeLang()" data-lang="zh-CN">🇨🇳 中文</button>
+    <button class="lp-btn" onclick="setLang('vi');closeLang()" data-lang="vi">🇻🇳 Tiếng Việt</button>
+    <button class="lp-btn" onclick="setLang('hi');closeLang()" data-lang="hi">🇮🇳 हिन्दी</button>
+  </div>
+
+  <!-- 주문서 -->
+  <a href="https://adia4upd.github.io/value-tree/" target="_blank" class="bn-item">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+    <span>주문서</span>
+  </a>
+
+  <!-- 마이오피스 -->
+  <a href="https://valuetree-mall.com/" target="_blank" class="bn-item">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    <span>마이오피스</span>
+  </a>
+
+  <!-- 제품소개 -->
+  <button class="bn-item active" id="bn-landing" onclick="bnSwitch('landing')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    <span>제품소개</span>
+  </button>
+
+  <!-- 시뮬레이터 -->
+  <button class="bn-item" id="bn-sim" onclick="bnSwitch('sim')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <span>시뮬레이터</span>
+  </button>
+
+  <!-- 언어 -->
+  <button class="bn-item" id="bn-lang" onclick="toggleLang()">
+    <span id="bn-lang-flag" style="font-size:20px;line-height:1">🌍</span>
+    <span>언어</span>
+  </button>
+</nav>
+
+<style>
+/* ══ Bottom Nav ══ */
+#bottom-nav {
+  position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+  z-index: 9999;
+  display: flex; align-items: center;
+  background: rgba(12,12,12,0.96);
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 24px;
+  padding: 6px 8px;
+  gap: 2px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  white-space: nowrap;
+}
+.bn-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 8px 16px; border-radius: 18px;
+  border: none; background: transparent;
+  color: rgba(255,255,255,0.45);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.3px;
+  cursor: pointer; text-decoration: none;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.bn-item:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.06); }
+.bn-item.active {
+  color: var(--gold);
+  background: rgba(254,202,87,0.12);
+}
+.bn-item svg { flex-shrink: 0; transition: stroke 0.2s; }
+.bn-item.active svg { stroke: var(--gold); }
+
+/* 언어 팝업 */
+#lang-panel {
+  display: none;
+  position: absolute; bottom: calc(100% + 12px); right: 0;
+  background: rgba(12,12,12,0.97);
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+  backdrop-filter: blur(20px);
+  min-width: 150px;
+  gap: 2px;
+  flex-direction: column;
+}
+#lang-panel.open { display: flex; }
+.lp-btn {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.6); font-size: 0.82rem; font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif;
+  padding: 8px 14px; border-radius: 10px; text-align: left;
+  transition: all 0.15s; white-space: nowrap;
+}
+.lp-btn:hover { background: rgba(255,255,255,0.07); color: var(--text); }
+.lp-btn.on { background: rgba(254,202,87,0.12); color: var(--gold); }
+
+/* 모바일: 꽉 차게 */
+@media (max-width: 480px) {
+  #bottom-nav {
+    bottom: 12px; left: 12px; right: 12px;
+    transform: none; justify-content: space-around;
+    border-radius: 20px; padding: 5px 4px;
+  }
+  .bn-item { padding: 7px 8px; font-size: 0.58rem; gap: 3px; }
+  .bn-item svg { width: 18px; height: 18px; }
+  #lang-panel { right: 0; left: auto; }
+}
+
+/* 콘텐츠가 nav에 가리지 않게 */
+.wrap { padding-bottom: 100px; }
+</style>
+
+<script>
+// 하단 탭 전환
+function bnSwitch(tab) {
+  switchTab(tab);
+  document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('bn-' + tab).classList.add('active');
+  closeLang();
+}
+
+// 언어 팝업 토글
+function toggleLang() {
+  document.getElementById('lang-panel').classList.toggle('open');
+}
+function closeLang() {
+  document.getElementById('lang-panel').classList.remove('open');
+}
+
+// 외부 클릭 시 언어 팝업 닫기
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#bn-lang') && !e.target.closest('#lang-panel')) {
+    closeLang();
+  }
+});
+
+// 현재 언어 → 국기 아이콘 동기화
+const langFlags = { ko:'🇰🇷', en:'🇺🇸', ja:'🇯🇵', 'zh-CN':'🇨🇳', vi:'🇻🇳', hi:'🇮🇳' };
+const _origSetLang = typeof setLang === 'function' ? setLang : null;
+function updateLangFlag(lang) {
+  const el = document.getElementById('bn-lang-flag');
+  if (el && langFlags[lang]) el.textContent = langFlags[lang];
+  document.querySelectorAll('.lp-btn').forEach(b => {
+    b.classList.toggle('on', b.dataset.lang === lang);
+  });
+}
+// setLang 호출 후 국기 동기화 (래핑)
+const _bnOrigSetLang = window.setLang;
+window.setLang = function(lang) { _bnOrigSetLang(lang); updateLangFlag(lang); };
+// 초기 국기
+document.addEventListener('DOMContentLoaded', function() {
+  const saved = localStorage.getItem('siteLang') || 'ko';
+  updateLangFlag(saved);
+});
 </script>
 </body>
 </html>
