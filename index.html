@@ -567,45 +567,76 @@ header { position: relative; }
 
 /* ══ 사이드바 (데스크탑) ══ */
 #sidebar {
-  position: fixed; left: 0; top: 0; bottom: 0; width: 210px;
+  position: fixed; left: 0; top: 0; bottom: 0;
+  width: 200px;
   z-index: 9990;
-  display: flex; flex-direction: column; gap: 4px;
-  padding: 24px 12px 28px;
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 18px 10px 24px;
   background: rgba(8,8,8,0.97);
   border-right: 1px solid rgba(255,255,255,0.07);
   backdrop-filter: blur(20px);
+  transition: width 0.25s cubic-bezier(0.4,0,0.2,1);
+  overflow: hidden;
 }
+#sidebar.collapsed { width: 58px; }
+
+/* 토글 버튼 */
+#sb-toggle {
+  display: flex; align-items: center; justify-content: flex-end;
+  padding: 0 4px 10px; flex-shrink: 0;
+}
+#sb-toggle button {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.3); padding: 5px;
+  border-radius: 8px; transition: all 0.2s; line-height: 1;
+}
+#sb-toggle button:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.7); }
+#sidebar.collapsed #sb-toggle { justify-content: center; }
+
+/* 로고 */
 .sb-logo {
   display: flex; align-items: center; gap: 10px;
-  padding: 6px 8px 16px; margin-bottom: 4px;
+  padding: 4px 6px 14px; flex-shrink: 0; white-space: nowrap;
 }
+.sb-logo-icon { flex-shrink: 0; }
+.sb-logo-text { overflow: hidden; transition: opacity 0.2s, width 0.25s; }
+#sidebar.collapsed .sb-logo-text { opacity: 0; width: 0; }
 .sb-brand {
-  font-family: 'Outfit', sans-serif; font-size: 0.85rem;
+  font-family: 'Outfit', sans-serif; font-size: 0.78rem;
   font-weight: 800; letter-spacing: 2px; color: #fff;
 }
 .sb-sub {
-  font-size: 0.6rem; font-weight: 600; letter-spacing: 3px;
+  font-size: 0.55rem; font-weight: 600; letter-spacing: 3px;
   background: linear-gradient(90deg,#FF6B6B,#FECA57,#48DBFB);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   margin-top: 1px;
 }
 .sb-divider {
   height: 1px; background: rgba(255,255,255,0.07);
-  margin: 6px 8px;
+  margin: 4px 6px; flex-shrink: 0;
 }
+
+/* 사이드바 아이템 */
 .sb-item {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; border-radius: 12px;
+  padding: 9px 10px; border-radius: 11px;
   border: none; background: transparent;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.4);
   font-family: 'Noto Sans KR', sans-serif;
-  font-size: 0.82rem; font-weight: 600;
+  font-size: 0.75rem; font-weight: 600;
   cursor: pointer; text-decoration: none;
   transition: all 0.2s; text-align: left; width: 100%;
+  white-space: nowrap; flex-shrink: 0;
 }
+.sb-item svg { flex-shrink: 0; }
+.sb-item span { overflow: hidden; transition: opacity 0.2s; }
+#sidebar.collapsed .sb-item { justify-content: center; padding: 10px; }
+#sidebar.collapsed .sb-item span { opacity: 0; width: 0; overflow: hidden; display: none; }
 .sb-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
-.sb-item.active { background: rgba(254,202,87,0.12); color: var(--gold); }
+.sb-item.active { background: rgba(254,202,87,0.11); color: var(--gold); }
 .sb-item.active svg { stroke: var(--gold); }
+
+/* 언어 팝업 */
 .sb-lang-wrap { position: relative; }
 #sb-lang-panel {
   display: none; flex-direction: column;
@@ -615,10 +646,16 @@ header { position: relative; }
   margin-top: 4px; gap: 2px;
 }
 #sb-lang-panel.open { display: flex; }
+#sidebar.collapsed #sb-lang-panel {
+  position: absolute; left: 58px; bottom: 0;
+  margin-top: 0; min-width: 150px;
+}
 
 /* 데스크탑: 콘텐츠 우측 밀기, 하단바 숨김 */
 @media (min-width: 781px) {
-  .wrap { margin-left: 210px; padding: 2rem 2rem 4rem; }
+  .wrap { margin-left: 200px; padding: 2rem 2rem 4rem;
+    transition: margin-left 0.25s cubic-bezier(0.4,0,0.2,1); }
+  .wrap.sb-collapsed { margin-left: 58px; }
   #bottom-nav { display: none !important; }
 }
 
@@ -658,10 +695,19 @@ iframe.goog-te-menu-frame { display: none !important; }
 
 <!-- ══ 데스크탑 좌측 사이드바 ══ -->
 <nav id="sidebar">
+  <!-- 토글 버튼 -->
+  <div id="sb-toggle">
+    <button onclick="toggleSidebar()" title="사이드바 접기/펼치기">
+      <svg id="sb-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+
   <!-- 로고 -->
   <div class="sb-logo">
-    <svg width="28" height="28" viewBox="0 0 44 44" fill="none"><defs><linearGradient id="sgGrad" x1="22" y1="2" x2="22" y2="42" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FECA57"/><stop offset="100%" stop-color="#D4AF37"/></linearGradient></defs><line x1="22" y1="30" x2="22" y2="41" stroke="url(#sgGrad)" stroke-width="3" stroke-linecap="round"/><polygon points="22,20 9,34 35,34" fill="none" stroke="url(#sgGrad)" stroke-width="1.8" stroke-linejoin="round" opacity="0.8"/><polygon points="22,12 11,27 33,27" fill="none" stroke="url(#sgGrad)" stroke-width="1.8" stroke-linejoin="round" opacity="0.9"/><polygon points="22,2 14,17 30,17" fill="none" stroke="url(#sgGrad)" stroke-width="1.8" stroke-linejoin="round"/></svg>
-    <div>
+    <div class="sb-logo-icon">
+      <svg width="26" height="26" viewBox="0 0 44 44" fill="none"><defs><linearGradient id="sgGrad" x1="22" y1="2" x2="22" y2="42" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FECA57"/><stop offset="100%" stop-color="#D4AF37"/></linearGradient></defs><line x1="22" y1="30" x2="22" y2="41" stroke="url(#sgGrad)" stroke-width="3" stroke-linecap="round"/><polygon points="22,20 9,34 35,34" fill="none" stroke="url(#sgGrad)" stroke-width="1.8" stroke-linejoin="round" opacity="0.8"/><polygon points="22,12 11,27 33,27" fill="none" stroke="url(#sgGrad)" stroke-width="1.8" stroke-linejoin="round" opacity="0.9"/><polygon points="22,2 14,17 30,17" fill="none" stroke="url(#sgGrad)" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="sb-logo-text">
       <div class="sb-brand">VALUE TREE</div>
       <div class="sb-sub">NMN</div>
     </div>
@@ -2635,6 +2681,23 @@ function setLang(lang) {
 
 <script>
 // 하단 탭 전환
+// 사이드바 접기/펼치기
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const wrap = document.querySelector('.wrap');
+  const collapsed = sb.classList.toggle('collapsed');
+  wrap.classList.toggle('sb-collapsed', collapsed);
+  localStorage.setItem('sbCollapsed', collapsed ? '1' : '0');
+  closeLang();
+}
+// 초기 상태 복원
+document.addEventListener('DOMContentLoaded', function() {
+  if (localStorage.getItem('sbCollapsed') === '1') {
+    document.getElementById('sidebar')?.classList.add('collapsed');
+    document.querySelector('.wrap')?.classList.add('sb-collapsed');
+  }
+});
+
 // 탭 전환 + 모바일 하단바 & 데스크탑 사이드바 active 동기화
 function bnSwitch(tab) {
   switchTab(tab);
