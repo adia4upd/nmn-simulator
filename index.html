@@ -587,14 +587,17 @@ header { position: relative; }
 /* 토글 버튼 */
 #sb-toggle {
   display: flex; align-items: center; justify-content: flex-end;
-  padding: 0 4px 10px; flex-shrink: 0;
+  padding: 0 4px 12px; flex-shrink: 0;
 }
 #sb-toggle button {
   background: none; border: none; cursor: pointer;
-  color: rgba(255,255,255,0.3); padding: 5px;
-  border-radius: 8px; transition: all 0.2s; line-height: 1;
+  color: rgba(255,255,255,0.2); padding: 5px;
+  border-radius: 50%; transition: all 0.25s; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
 }
-#sb-toggle button:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.7); }
+#sb-toggle button:hover { color: rgba(255,255,255,0.6); transform: scale(1.15); }
+/* 펼쳐진 상태: 골드 */
+#sidebar:not(.collapsed) #sb-toggle button { color: var(--gold); }
 #sidebar.collapsed #sb-toggle { justify-content: center; }
 
 /* 로고 */
@@ -699,8 +702,8 @@ iframe.goog-te-menu-frame { display: none !important; }
 <nav id="sidebar" class="collapsed">
   <!-- 토글 버튼 -->
   <div id="sb-toggle">
-    <button onclick="toggleSidebar()" title="사이드바 접기/펼치기">
-      <svg id="sb-toggle-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <button id="sb-toggle-btn" onclick="toggleSidebar()" title="사이드바 접기/펼치기">
+      <svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="currentColor"/></svg>
     </button>
   </div>
 
