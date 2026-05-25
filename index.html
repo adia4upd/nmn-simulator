@@ -658,9 +658,9 @@ header { position: relative; }
   margin-top: 0; min-width: 150px;
 }
 
-/* 데스크탑: 기본 접힘(58px) 기준 여백, 콘텐츠 고정 */
+/* 데스크탑: 사이드바 옆부터 우측 끝까지 꽉 채움 */
 @media (min-width: 781px) {
-  .wrap { margin-left: 58px; margin-right: 0; padding: 2rem 2rem 4rem; }
+  .wrap { margin-left: 58px; margin-right: 0; max-width: none; padding: 2rem 2.5rem 4rem; }
   #bottom-nav { display: none !important; }
 }
 
