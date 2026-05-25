@@ -655,9 +655,9 @@ header { position: relative; }
   margin-top: 0; min-width: 150px;
 }
 
-/* 데스크탑: 사이드바 옆 고정 여백, 콘텐츠 움직이지 않음 */
+/* 데스크탑: 기본 접힘(58px) 기준 여백, 콘텐츠 고정 */
 @media (min-width: 781px) {
-  .wrap { margin-left: 200px; margin-right: 0; padding: 2rem 2rem 4rem; }
+  .wrap { margin-left: 58px; margin-right: 0; padding: 2rem 2rem 4rem; }
   #bottom-nav { display: none !important; }
 }
 
@@ -696,7 +696,7 @@ iframe.goog-te-menu-frame { display: none !important; }
 <div class="bg-texture"></div>
 
 <!-- ══ 데스크탑 좌측 사이드바 ══ -->
-<nav id="sidebar">
+<nav id="sidebar" class="collapsed">
   <!-- 토글 버튼 -->
   <div id="sb-toggle">
     <button onclick="toggleSidebar()" title="사이드바 접기/펼치기">
@@ -2690,10 +2690,10 @@ function toggleSidebar() {
   localStorage.setItem('sbCollapsed', collapsed ? '1' : '0');
   closeLang();
 }
-// 초기 상태 복원
+// 초기 상태 복원 (기본값: 접힘)
 document.addEventListener('DOMContentLoaded', function() {
-  if (localStorage.getItem('sbCollapsed') === '1') {
-    document.getElementById('sidebar')?.classList.add('collapsed');
+  if (localStorage.getItem('sbCollapsed') === '0') {
+    document.getElementById('sidebar')?.classList.remove('collapsed');
   }
 });
 
