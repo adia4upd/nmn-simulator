@@ -655,11 +655,9 @@ header { position: relative; }
   margin-top: 0; min-width: 150px;
 }
 
-/* 데스크탑: 콘텐츠 우측 밀기, 하단바 숨김 */
+/* 데스크탑: 사이드바 overlay, 콘텐츠는 고정 (접기/펼치기 영향 없음) */
 @media (min-width: 781px) {
-  .wrap { margin-left: 200px; padding: 2rem 2rem 4rem;
-    transition: margin-left 0.25s cubic-bezier(0.4,0,0.2,1); }
-  .wrap.sb-collapsed { margin-left: 58px; }
+  .wrap { margin-left: 58px; padding: 2rem 2rem 4rem; }
   #bottom-nav { display: none !important; }
 }
 
@@ -2688,9 +2686,7 @@ function setLang(lang) {
 // 사이드바 접기/펼치기
 function toggleSidebar() {
   const sb = document.getElementById('sidebar');
-  const wrap = document.querySelector('.wrap');
   const collapsed = sb.classList.toggle('collapsed');
-  wrap.classList.toggle('sb-collapsed', collapsed);
   localStorage.setItem('sbCollapsed', collapsed ? '1' : '0');
   closeLang();
 }
@@ -2698,7 +2694,6 @@ function toggleSidebar() {
 document.addEventListener('DOMContentLoaded', function() {
   if (localStorage.getItem('sbCollapsed') === '1') {
     document.getElementById('sidebar')?.classList.add('collapsed');
-    document.querySelector('.wrap')?.classList.add('sb-collapsed');
   }
 });
 
