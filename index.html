@@ -500,46 +500,31 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   .main-tabs { border-radius: 10px; }
   .main-tab { font-size: 0.78rem; padding: 12px 8px; }
 
-  /* 모바일: 국기 — 우측 fixed, 컴팩트 */
-  #top-right-panel {
-    top: 10px; right: 10px; gap: 0;
+  /* 모바일: header-actions — 헤더 우상단, 세로 스택 */
+  #header-actions {
+    gap: 5px !important;
   }
   #lang-sw {
-    background: rgba(14,14,14,0.88) !important;
-    border: 1px solid rgba(255,255,255,0.09) !important;
     padding: 4px 6px !important;
     gap: 1px !important;
   }
   #lang-sw .lb {
-    font-size: 1.15rem !important;
+    font-size: 1.1rem !important;
     padding: 2px 2px !important;
-    opacity: 0.85;
   }
-
-  /* 모바일: 퀵링크 — 헤더 우상단, 세로 스택 박스 */
   #quick-links {
-    position: absolute !important;
-    top: 0 !important; right: 0 !important;
     flex-direction: column !important;
     border-radius: 10px !important;
-    overflow: hidden !important;
-    background: rgba(14,14,14,0.92) !important;
-    border: 1px solid rgba(255,255,255,0.11) !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.45) !important;
-    min-width: 118px !important;
+    min-width: 112px !important;
   }
   #quick-links a {
-    padding: 8px 11px !important;
-    font-size: 0.67rem !important;
-    font-weight: 700 !important;
-    color: rgba(255,255,255,0.6) !important;
-    gap: 6px !important;
+    padding: 7px 10px !important;
+    font-size: 0.66rem !important;
     border-right: none !important;
     border-bottom: 1px solid rgba(255,255,255,0.08) !important;
     justify-content: flex-start !important;
   }
   #quick-links a:last-child { border-bottom: none !important; }
-  #quick-links a svg { opacity: 0.65 !important; }
   #quick-links a span { display: inline !important; }
 
   .wrap { padding: 1rem 0.8rem 3rem; }
@@ -604,9 +589,12 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   display: none; /* 데스크탑에서는 숨김 */
 }
 
-/* 우측 상단: 국기만 */
-#top-right-panel {
-  position: fixed; top: 14px; right: 14px; z-index: 9999;
+/* 헤더 — relative 기준점 */
+header { position: relative; }
+
+/* 국기 + 퀵링크 묶음 — 헤더 우상단 */
+#header-actions {
+  position: absolute; top: 0; right: 0;
   display: flex; flex-direction: column; align-items: flex-end; gap: 7px;
 }
 
@@ -620,12 +608,8 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   box-shadow: 0 4px 20px rgba(0,0,0,0.45);
 }
 
-/* 헤더 — relative 로 quick-links absolute 기준점 */
-header { position: relative; }
-
-/* 퀵링크 — 데스크탑: 헤더 우상단 absolute */
+/* 퀵링크 박스 */
 #quick-links {
-  position: absolute; top: 0; right: 0;
   display: flex; align-items: stretch;
   background: rgba(14,14,14,0.92);
   border: 1px solid rgba(255,255,255,0.1);
@@ -671,17 +655,6 @@ iframe.goog-te-menu-frame { display: none !important; }
 </head>
 <body>
 
-<!-- 우측 상단: 국기만 -->
-<div id="top-right-panel">
-  <div id="lang-sw" class="notranslate" translate="no">
-    <button class="lb" onclick="setLang('ko')" data-lang="ko" title="한국어">🇰🇷</button>
-    <button class="lb" onclick="setLang('en')" data-lang="en" title="English">🇺🇸</button>
-    <button class="lb" onclick="setLang('ja')" data-lang="ja" title="日本語">🇯🇵</button>
-    <button class="lb" onclick="setLang('zh-CN')" data-lang="zh-CN" title="中文">🇨🇳</button>
-    <button class="lb" onclick="setLang('vi')" data-lang="vi" title="Tiếng Việt">🇻🇳</button>
-    <button class="lb" onclick="setLang('hi')" data-lang="hi" title="हिन्दी">🇮🇳</button>
-  </div>
-</div>
 
 <!-- 모바일 통합 헤더 배경 (sticky bar) -->
 <div id="mobile-header"></div>
@@ -692,15 +665,25 @@ iframe.goog-te-menu-frame { display: none !important; }
 <div class="wrap">
 
   <header class="anim">
-    <div id="quick-links">
-      <a href="https://adia4upd.github.io/value-tree/" target="_blank">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
-        <span>제품주문서작성</span>
-      </a>
-      <a href="https://valuetree-mall.com/" target="_blank">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-        <span>마이오피스</span>
-      </a>
+    <div id="header-actions">
+      <div id="lang-sw" class="notranslate" translate="no">
+        <button class="lb" onclick="setLang('ko')" data-lang="ko" title="한국어">🇰🇷</button>
+        <button class="lb" onclick="setLang('en')" data-lang="en" title="English">🇺🇸</button>
+        <button class="lb" onclick="setLang('ja')" data-lang="ja" title="日本語">🇯🇵</button>
+        <button class="lb" onclick="setLang('zh-CN')" data-lang="zh-CN" title="中文">🇨🇳</button>
+        <button class="lb" onclick="setLang('vi')" data-lang="vi" title="Tiếng Việt">🇻🇳</button>
+        <button class="lb" onclick="setLang('hi')" data-lang="hi" title="हिन्दी">🇮🇳</button>
+      </div>
+      <div id="quick-links">
+        <a href="https://adia4upd.github.io/value-tree/" target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+          <span>제품주문서작성</span>
+        </a>
+        <a href="https://valuetree-mall.com/" target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span>마이오피스</span>
+        </a>
+      </div>
     </div>
     <div class="logo-row">
       <div class="logo-icon">
