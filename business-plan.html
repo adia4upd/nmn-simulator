@@ -15,14 +15,15 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  background:
-    radial-gradient(ellipse 230% 190% at -10% -10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 30%, rgba(255,255,255,0.04) 55%, rgba(255,255,255,0.01) 75%, transparent 95%),
-    #0d0d0d;
-  background-attachment: fixed;
+  background: #0d0d0d;
   color: var(--text); font-family: 'Noto Sans KR', sans-serif; padding-bottom: 80px;
 }
-@supports (-webkit-touch-callout: none) {
-  body { background-attachment: scroll; }
+
+.bg-texture {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 230% 190% at -10% -10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 30%, rgba(255,255,255,0.04) 55%, rgba(255,255,255,0.01) 75%, transparent 95%),
+    radial-gradient(ellipse 180% 150% at -8% -5%, rgba(255,255,255,0.08), transparent);
 }
 
 /* ── TOP NAV ── */
@@ -50,7 +51,7 @@ body {
 .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 700; }
 
 /* ── TAB PANELS ── */
-.tab-panel { display: none; }
+.tab-panel { display: none; position: relative; z-index: 1; }
 .tab-panel.active { display: block; }
 
 /* ── SHARED ── */
@@ -64,7 +65,7 @@ body {
 .hs-val { font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 900; color: var(--gold); }
 .hs-lbl { font-size: 0.66rem; color: var(--text2); margin-top: 3px; }
 
-.wrap { max-width: 780px; margin: 0 auto; padding: 0 20px; }
+.wrap { max-width: 780px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
 .sec-title { font-family: 'Outfit', sans-serif; font-size: 0.67rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 2.5px; margin: 32px 0 14px; }
 
 /* ── WAVE CARDS (Tab 1) ── */
@@ -293,6 +294,7 @@ iframe.goog-te-menu-frame { display: none !important; }
 </style>
 </head>
 <body>
+<div class="bg-texture"></div>
 
 <!-- Language Switcher -->
 <div id="lang-sw" class="notranslate" translate="no">

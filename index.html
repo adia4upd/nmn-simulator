@@ -38,22 +38,16 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Noto Sans KR', sans-serif;
-  background:
-    radial-gradient(ellipse 230% 190% at -10% -10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 30%, rgba(255,255,255,0.04) 55%, rgba(255,255,255,0.01) 75%, transparent 95%),
-    #0d0d0d;
-  background-attachment: fixed;
+  background: #0d0d0d;
   color: var(--text); min-height: 100vh; font-size: 16px; -webkit-font-smoothing: antialiased;
 }
-/* iOS Safari: background-attachment:fixed 미지원 → scroll로 대체 */
-@supports (-webkit-touch-callout: none) {
-  body { background-attachment: scroll; }
-}
 
+/* 스크롤과 독립된 고정 배경 레이어 — 끊김 없음 */
 .bg-texture {
-  position: fixed; inset: 0; pointer-events: none;
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(ellipse 180% 150% at -8% -5%, rgba(255,255,255,0.08), transparent),
-    radial-gradient(ellipse 30% 25% at 110% 110%, rgba(0,0,0,0.5), transparent);
+    radial-gradient(ellipse 230% 190% at -10% -10%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.10) 30%, rgba(255,255,255,0.04) 55%, rgba(255,255,255,0.01) 75%, transparent 95%),
+    radial-gradient(ellipse 180% 150% at -8% -5%, rgba(255,255,255,0.08), transparent);
 }
 
 .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 110px; }
