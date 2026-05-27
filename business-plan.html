@@ -7,8 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #020812; --card: rgba(8,18,52,0.75); --card2: rgba(6,14,42,0.70);
-  --border: rgba(80,120,255,0.15);
+  --bg: #0a0908; --card: rgba(28,22,16,0.80); --card2: rgba(20,16,12,0.75);
+  --border: rgba(200,160,90,0.10);
   --gold: #FECA57; --cyan: #48DBFB; --pink: #FF9FF3;
   --orange: #FF9F43; --green: #1DD1A1; --red: #FF6B6B; --purple: #A29BFE;
   --text: #F0F0F0; --text2: #999; --text3: #555;
@@ -16,7 +16,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   background:
-    radial-gradient(ellipse 120% 70% at 50% -5%, #1a3fa0 0%, #0b2260 25%, #050f35 55%, #020812 100%);
+    radial-gradient(ellipse 110% 80% at -8% -8%, #332618 0%, #1e1710 28%, #110f0b 58%, #0a0908 100%);
   background-attachment: fixed;
   color: var(--text); font-family: 'Noto Sans KR', sans-serif; padding-bottom: 80px;
 }
@@ -24,7 +24,7 @@ body {
 /* ── TOP NAV ── */
 .top-nav {
   position: sticky; top: 0; z-index: 100;
-  background: rgba(6,15,48,0.92);
+  background: rgba(14,11,8,0.93);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   padding: 0 20px;
@@ -50,7 +50,7 @@ body {
 .tab-panel.active { display: block; }
 
 /* ── SHARED ── */
-.hdr { background: linear-gradient(160deg,rgba(8,22,70,0.6),rgba(2,8,18,0.4)); border-bottom: 1px solid var(--border); padding: 48px 24px 36px; text-align: center; }
+.hdr { background: linear-gradient(160deg,rgba(35,27,18,0.55),rgba(12,10,8,0.35)); border-bottom: 1px solid var(--border); padding: 48px 24px 36px; text-align: center; }
 .hdr-badge { display: inline-block; border-radius: 100px; padding: 5px 18px; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 18px; }
 .hdr h1 { font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 900; line-height: 1.2; margin-bottom: 10px; }
 .hdr h1 span { color: var(--gold); }
