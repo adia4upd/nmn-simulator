@@ -2244,7 +2244,7 @@ function calcSponsor(rows, achievedRank, effectiveRollup) {
     if (r.cond === 'locked') return { on: false, cond: 'locked' };
     return                          { on: false, cond: 'level'  };
   };
-  const { tableHtml, myTotal, genRows } = renderRollupTable(rows, '4', '15', 1, 7, condFn, 'var(--hermes)');
+  const { tableHtml, myTotal, genRows } = renderRollupTable(rows, '4', '15', 2, 7, condFn, 'var(--hermes)');
   document.getElementById('calc-sponsor').innerHTML = tableHtml;
   {
     const rankStr = achievedRank
@@ -2317,7 +2317,7 @@ function calcRepurchase(totalSales, totalPeople, effectiveRollup) {
   // ③ 후원라인: gen 1~7, auto 대수만, lvSales × 4% × 15%
   let rp3 = 0;
   for (const r of rpRows) {
-    if (r.g < 1 || r.g > CFG.sponGens) continue;
+    if (r.g < 2 || r.g > CFG.sponGens) continue;
     if (r.cond !== 'auto') continue;
     rp3 += Math.round(Math.round(r.sales * 4 / 100) * 15 / 100);
   }
