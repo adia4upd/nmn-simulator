@@ -10,10 +10,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0a0908;
-  --bg-card: rgba(28,22,16,0.80);
-  --bg-card2: rgba(20,16,12,0.75);
-  --bg-input: rgba(24,19,14,0.80);
+  --bg: #0d0d0d;
+  --bg-card: rgba(22,22,22,0.85);
+  --bg-card2: rgba(16,16,16,0.80);
+  --bg-input: rgba(20,20,20,0.85);
   --gold: #FECA57;
   --gold-light: #FEE089;
   --gold-dim: rgba(254,202,87,0.10);
@@ -39,7 +39,8 @@
 body {
   font-family: 'Noto Sans KR', sans-serif;
   background:
-    radial-gradient(ellipse 110% 80% at -8% -8%, #332618 0%, #1e1710 28%, #110f0b 58%, #0a0908 100%);
+    radial-gradient(ellipse 90% 70% at -5% -5%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 40%, transparent 65%),
+    #0d0d0d;
   background-attachment: fixed;
   color: var(--text); min-height: 100vh; font-size: 16px; -webkit-font-smoothing: antialiased;
 }
@@ -47,8 +48,8 @@ body {
 .bg-texture {
   position: fixed; inset: 0; pointer-events: none;
   background:
-    radial-gradient(ellipse 65% 55% at -8% -6%, rgba(210,165,85,0.13), transparent),
-    radial-gradient(ellipse 35% 25% at 110% 110%, rgba(8,6,4,0.45), transparent);
+    radial-gradient(ellipse 60% 50% at -5% -3%, rgba(255,255,255,0.06), transparent),
+    radial-gradient(ellipse 30% 25% at 110% 110%, rgba(0,0,0,0.5), transparent);
 }
 
 .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 110px; }
@@ -88,7 +89,7 @@ header .line {
 @media (max-width: 680px) { .product-cards { grid-template-columns: 1fr; } }
 
 .p-card {
-  border-radius: 14px; overflow: hidden; background: rgba(22,18,13,0.75);
+  border-radius: 14px; overflow: hidden; background: rgba(20,20,20,0.75);
 }
 .p-card.card-a { border: 1px solid rgba(255,255,255,0.08); }
 .p-card.card-b { border: 1px solid rgba(255,255,255,0.08); }
@@ -116,7 +117,7 @@ header .line {
 .p-body {
   display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border);
 }
-.p-cell { background: rgba(25,20,14,0.88); border-top: 3px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF) 1; padding: 1rem 1.2rem; }
+.p-cell { background: rgba(22,22,22,0.88); border-top: 3px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF) 1; padding: 1rem 1.2rem; }
 .p-lbl {
   font-size: 0.62rem; color: var(--text3); text-transform: uppercase;
   letter-spacing: 1.5px; font-weight: 500;
@@ -133,13 +134,13 @@ header .line {
   display: grid; grid-template-columns: 1fr 1fr;
   gap: 1px; background: var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 2.5rem;
 }
-.is-cell { background: rgba(25,20,14,0.88); border-top: 3px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF) 1; padding: 0.9rem 1.2rem; }
+.is-cell { background: rgba(22,22,22,0.88); border-top: 3px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF) 1; padding: 0.9rem 1.2rem; }
 .is-lbl { font-size: 0.6rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500; }
 .is-val { font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 600; margin-top: 4px; color: var(--text); }
 
 /* Example box */
 .example-box {
-  background: rgba(25,20,14,0.88); border-top: 3px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF) 1; border: 1px solid var(--border); border-radius: 14px;
+  background: rgba(22,22,22,0.88); border-top: 3px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF) 1; border: 1px solid var(--border); border-radius: 14px;
   padding: 1.5rem; margin-bottom: 2.5rem;
 }
 .section-title {
@@ -171,7 +172,7 @@ header .line {
 @media (max-width: 780px) { .config-grid { grid-template-columns: 1fr; } }
 
 .cfg-card {
-  background: rgba(22,18,13,0.75); border: 1px solid rgba(200,160,90,0.10); border-radius: 14px; padding: 1.5rem; backdrop-filter: blur(8px);
+  background: rgba(20,20,20,0.75); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 1.5rem; backdrop-filter: blur(8px);
   transition: border-color 0.3s;
 }
 .cfg-card:hover { border-color: var(--border2); }
@@ -216,7 +217,7 @@ input[type=range]::-webkit-slider-thumb {
   gap: 1px; background: var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 2.5rem; }
 
 @media (max-width: 680px) { .summary { grid-template-columns: repeat(2, 1fr); } }
-.sc { background: rgba(25,20,14,0.88); border-top: 3px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF) 1; padding: 1.2rem 1rem; text-align: center; }
+.sc { background: rgba(22,22,22,0.88); border-top: 3px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF) 1; padding: 1.2rem 1rem; text-align: center; }
 .sc .sl { font-size: 0.62rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-weight: 500; }
 .sc .sv { font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 700; }
 .sv.c-gold { background: linear-gradient(90deg, #48DBFB, #FF9FF3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -229,7 +230,7 @@ input[type=range]::-webkit-slider-thumb {
 }
 @media (max-width: 780px) { .detail-grid { grid-template-columns: 1fr; } }
 .dc {
-  background: rgba(22,18,13,0.75); border: 1px solid rgba(200,160,90,0.10); border-radius: 14px; padding: 1.5rem; backdrop-filter: blur(8px);
+  background: rgba(20,20,20,0.75); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 1.5rem; backdrop-filter: blur(8px);
 }
 
 /* Table */
@@ -289,7 +290,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   border: 1px solid var(--border);
 }
 .main-tab {
-  flex: 1; padding: 14px 16px; background: rgba(25,20,14,0.88); border-top: 3px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF) 1; border: none;
+  flex: 1; padding: 14px 16px; background: rgba(22,22,22,0.88); border-top: 3px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF) 1; border: none;
   color: var(--text3); font-family: 'Noto Sans KR', sans-serif; font-size: 0.88rem;
   font-weight: 600; cursor: pointer; transition: all 0.3s; text-align: center;
   border-right: 1px solid var(--border); letter-spacing: 0.5px;
@@ -373,7 +374,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem;
 }
 .feat-card {
-  background: rgba(22,18,13,0.75); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px;
+  background: rgba(20,20,20,0.75); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px;
   padding: 1.5rem; transition: all 0.3s;
 }
 .feat-card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-2px); border-top: 2px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB) 1; }
@@ -389,7 +390,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
 }
 
 .science-section {
-  background: rgba(25,20,14,0.88); border-top: 3px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF) 1; border: 1px solid var(--border); border-radius: 14px;
+  background: rgba(22,22,22,0.88); border-top: 3px solid; border-image: linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB, #FF9FF3, #54A0FF) 1; border: 1px solid var(--border); border-radius: 14px;
   padding: 2rem; margin-bottom: 2.5rem;
 }
 .science-section h3 {
@@ -539,7 +540,7 @@ td.mono { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem
 @media (max-width: 580px) { .prod-catalog { grid-template-columns: 1fr; gap: 0.8rem; } }
 
 .prod-card {
-  background: rgba(22,18,13,0.75); border: 1.5px solid rgba(255,255,255,0.07);
+  background: rgba(20,20,20,0.75); border: 1.5px solid rgba(255,255,255,0.07);
   border-radius: 14px; overflow: hidden; cursor: pointer; transition: all 0.25s;
   display: grid; grid-template-columns: 1fr 1fr; align-items: stretch;
 }
@@ -582,7 +583,7 @@ header { position: relative; }
   z-index: 9990;
   display: flex; flex-direction: column; gap: 2px;
   padding: 18px 10px 24px;
-  background: rgba(14,11,8,0.97);
+  background: rgba(10,10,10,0.97);
   border-right: 1px solid rgba(255,255,255,0.07);
   backdrop-filter: blur(20px);
   transition: width 0.25s cubic-bezier(0.4,0,0.2,1);
@@ -1644,7 +1645,7 @@ iframe.goog-te-menu-frame { display: none !important; }
       <!-- ===== NHK 방송 영상 ===== -->
       <div style="margin-bottom:2rem;">
         <div class="catalog-label" style="margin-bottom:1rem;">📺 NHK 방송 · 알파-GPC 과학적 근거</div>
-        <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(72,219,251,0.25);background:rgba(25,20,14,0.88);">
+        <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(72,219,251,0.25);background:rgba(22,22,22,0.88);">
           <div style="padding:0.8rem 1.2rem;background:rgba(72,219,251,0.06);border-bottom:1px solid rgba(72,219,251,0.15);display:flex;align-items:center;gap:0.6rem;">
             <span style="font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);">NHK 과학 다큐멘터리</span>
             <span style="font-size:0.6rem;color:var(--text3);">· 일본 국영방송 공식 보도</span>
@@ -1661,32 +1662,32 @@ iframe.goog-te-menu-frame { display: none !important; }
       <div style="margin-bottom:2rem;">
         <div class="catalog-label" style="margin-bottom:1rem;">핵심 효능 · 6 Core Benefits</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.9rem;" class="alpha-card-grid">
-          <div style="background:rgba(22,18,13,0.75);border:1px solid rgba(72,219,251,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #48DBFB;">
+          <div style="background:rgba(20,20,20,0.75);border:1px solid rgba(72,219,251,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #48DBFB;">
             <div style="font-size:1.6rem;margin-bottom:0.5rem;">🧠</div>
             <div style="font-size:0.88rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">학습·기억력 향상</div>
             <div style="font-size:0.72rem;color:var(--text2);line-height:1.6;">아세틸콜린(ACh) 즉각 합성으로 뇌 신호 전달 속도 향상</div>
           </div>
-          <div style="background:rgba(22,18,13,0.75);border:1px solid rgba(255,159,243,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #FF9FF3;">
+          <div style="background:rgba(20,20,20,0.75);border:1px solid rgba(255,159,243,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #FF9FF3;">
             <div style="font-size:1.6rem;margin-bottom:0.5rem;">🔗</div>
             <div style="font-size:0.88rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">신경가소성 강화</div>
             <div style="font-size:0.72rem;color:var(--text2);line-height:1.6;">뇌 기능 감퇴 특유의 델타파(여파) 발현 감소</div>
           </div>
-          <div style="background:rgba(22,18,13,0.75);border:1px solid rgba(84,160,255,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #54A0FF;">
+          <div style="background:rgba(20,20,20,0.75);border:1px solid rgba(84,160,255,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #54A0FF;">
             <div style="font-size:1.6rem;margin-bottom:0.5rem;">⏳</div>
             <div style="font-size:0.88rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">두뇌 노화 지연</div>
             <div style="font-size:0.72rem;color:var(--text2);line-height:1.6;">뇌 혈관성 기능 저하 회복 지원</div>
           </div>
-          <div style="background:rgba(22,18,13,0.75);border:1px solid rgba(254,202,87,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #FECA57;">
+          <div style="background:rgba(20,20,20,0.75);border:1px solid rgba(254,202,87,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #FECA57;">
             <div style="font-size:1.6rem;margin-bottom:0.5rem;">💪</div>
             <div style="font-size:0.88rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">파워 출력 +14%</div>
             <div style="font-size:0.72rem;color:var(--text2);line-height:1.6;">저항 운동 등 고강도 훈련 시 파워 출력 14% 증가</div>
           </div>
-          <div style="background:rgba(22,18,13,0.75);border:1px solid rgba(255,107,107,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #FF6B6B;">
+          <div style="background:rgba(20,20,20,0.75);border:1px solid rgba(255,107,107,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #FF6B6B;">
             <div style="font-size:1.6rem;margin-bottom:0.5rem;">🔥</div>
             <div style="font-size:0.88rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">지방 산화 촉진</div>
             <div style="font-size:0.72rem;color:var(--text2);line-height:1.6;">내장 지방 감소 및 체형 개선 지원</div>
           </div>
-          <div style="background:rgba(22,18,13,0.75);border:1px solid rgba(255,159,243,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #FF9FF3;">
+          <div style="background:rgba(20,20,20,0.75);border:1px solid rgba(255,159,243,0.2);border-radius:14px;padding:1.2rem;border-top:3px solid #FF9FF3;">
             <div style="font-size:1.6rem;margin-bottom:0.5rem;">✨</div>
             <div style="font-size:0.88rem;font-weight:800;color:var(--text);margin-bottom:0.4rem;">세포 재생·피부 개선</div>
             <div style="font-size:0.72rem;color:var(--text2);line-height:1.6;">일생에 걸친 기관 조직 재생 및 기미·주름 개선</div>
@@ -1703,11 +1704,11 @@ iframe.goog-te-menu-frame { display: none !important; }
             <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:800;color:var(--accent);margin-bottom:0.6rem;margin-top:0.3rem;">Alpha-GPC 99%</div>
             <div style="font-size:0.72rem;color:var(--text2);line-height:1.7;">콜린 함량 <strong style="color:var(--text);">40~41%</strong><br>BBB 통과 <strong style="color:var(--accent);">✓ 우수</strong><br>1일 권장량 500~1200mg<br><span style="color:var(--accent);font-weight:700;">두뇌 ACh 급증 + 퍼포먼스 향상</span></div>
           </div>
-          <div style="background:rgba(22,18,13,0.75);border:1px solid var(--border);border-radius:14px;padding:1.2rem;">
+          <div style="background:rgba(20,20,20,0.75);border:1px solid var(--border);border-radius:14px;padding:1.2rem;">
             <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:800;color:var(--text2);margin-bottom:0.6rem;">시티콜린(CDP)</div>
             <div style="font-size:0.72rem;color:var(--text3);line-height:1.7;">콜린 함량 18.5%<br>BBB 통과 ✓ 통과<br>1일 권장량 500~2000mg<br><span style="color:var(--text4);">동일 효과 위해 2배 용량 필요</span></div>
           </div>
-          <div style="background:rgba(22,18,13,0.75);border:1px solid var(--border);border-radius:14px;padding:1.2rem;">
+          <div style="background:rgba(20,20,20,0.75);border:1px solid var(--border);border-radius:14px;padding:1.2rem;">
             <div style="font-family:'Outfit',sans-serif;font-size:1rem;font-weight:800;color:var(--text2);margin-bottom:0.6rem;">콜린 바이타르트</div>
             <div style="font-size:0.72rem;color:var(--text3);line-height:1.7;">콜린 함량 41%<br>BBB 통과 <strong style="color:#FF6B6B;">✗ 불가</strong><br>최대 2000mg<br><span style="color:var(--text4);">뇌 기능 효과 미미</span></div>
           </div>
@@ -1718,22 +1719,22 @@ iframe.goog-te-menu-frame { display: none !important; }
       <div style="margin-bottom:2rem;">
         <div class="catalog-label" style="margin-bottom:1rem;">Product Spec</div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.9rem;" class="alpha-spec-grid">
-          <div style="background:rgba(22,18,13,0.75);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center;">
+          <div style="background:rgba(20,20,20,0.75);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center;">
             <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.4rem;">주성분</div>
             <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:800;color:var(--accent);">400mg</div>
             <div style="font-size:0.68rem;color:var(--text2);margin-top:0.2rem;">α-GPC</div>
           </div>
-          <div style="background:rgba(22,18,13,0.75);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center;">
+          <div style="background:rgba(20,20,20,0.75);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center;">
             <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.4rem;">순도</div>
             <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:800;color:var(--gold);">99%</div>
             <div style="font-size:0.68rem;color:var(--text2);margin-top:0.2rem;">Pharmaceutical Grade</div>
           </div>
-          <div style="background:rgba(22,18,13,0.75);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center;">
+          <div style="background:rgba(20,20,20,0.75);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center;">
             <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.4rem;">용량</div>
             <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:800;color:var(--text);">570mg</div>
             <div style="font-size:0.68rem;color:var(--text2);margin-top:0.2rem;">× 60캡슐</div>
           </div>
-          <div style="background:rgba(22,18,13,0.75);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center;">
+          <div style="background:rgba(20,20,20,0.75);border:1px solid var(--border);border-radius:14px;padding:1.1rem;text-align:center;">
             <div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:0.4rem;">섭취 기간</div>
             <div style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:800;color:var(--pink);">1개월</div>
             <div style="font-size:0.68rem;color:var(--text2);margin-top:0.2rem;">Biotin 30μg 포함</div>
@@ -2046,7 +2047,7 @@ iframe.goog-te-menu-frame { display: none !important; }
   <div class="dc anim" style="margin-bottom:1.5rem;overflow-x:auto;">
     <div class="section-title" style="color:var(--hermes);">③ 후원라인 롤업 (전체매출 4% · 15%×7대 · 1대~7대)</div>
     <table id="calc-sponsor"></table>
-    <div style="font-size:0.7rem;color:var(--text2);margin-top:10px;padding:10px 12px;background:rgba(20,16,11,0.70);border-radius:8px;line-height:1.6;" id="spon-note"></div>
+    <div style="font-size:0.7rem;color:var(--text2);margin-top:10px;padding:10px 12px;background:rgba(18,18,18,0.70);border-radius:8px;line-height:1.6;" id="spon-note"></div>
     <div class="bar-chart" id="bars" style="margin-top:1rem;"></div>
   </div>
 
@@ -2059,7 +2060,7 @@ iframe.goog-te-menu-frame { display: none !important; }
   <!-- 5. 센터 지원금 -->
   <div class="dc anim" style="margin-bottom:1.5rem;opacity:0.6;">
     <div class="section-title" style="color:var(--text3);">⑤ 센터 지원금</div>
-    <div style="font-size:0.78rem;color:var(--text3);padding:1rem;background:rgba(20,16,11,0.70);border-radius:8px;">조건부 충족 협의</div>
+    <div style="font-size:0.78rem;color:var(--text3);padding:1rem;background:rgba(18,18,18,0.70);border-radius:8px;">조건부 충족 협의</div>
   </div>
 
   <!-- 6. 재구매/오토쉽 보너스 -->
@@ -2165,15 +2166,15 @@ function calcDirect(n) {
   const total    = cnt * perPerson;
   document.getElementById('calc-referral').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">직접추천 인원</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">${cnt}명</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">1인당 수익</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${perPerson.toLocaleString()}</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">추천 수익 합계</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${total.toLocaleString()}</div>
       </div>
@@ -2233,20 +2234,20 @@ function calcRefLine(rows) {
   const { tableHtml, myTotal } = renderRollupTable(rows, '6', '15', 2, 7, null, 'var(--gold)');
   document.getElementById('calc-refline').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">계산 공식</div>
         <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:800;color:var(--text);margin-top:4px;">레벨매출 × 6% × 15%</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">적용 대수</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">2대 ~ 7대</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">내 총 수익</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${myTotal.toLocaleString()}</div>
       </div>
     </div>
-    <div style="font-size:0.75rem;color:var(--text2);margin-bottom:10px;padding:8px 12px;background:rgba(20,16,11,0.50);border-radius:8px;">
+    <div style="font-size:0.75rem;color:var(--text2);margin-bottom:10px;padding:8px 12px;background:rgba(18,18,18,0.50);border-radius:8px;">
       대수 깊어질수록 인원↑ → 레벨매출↑ → 내 수익↑
     </div>` + tableHtml;
   return myTotal;
@@ -2285,20 +2286,20 @@ function calcShare(rows) {
   const { tableHtml, myTotal } = renderRollupTable(rows, '5', '20', CFG.shareStart, CFG.shareEnd, null, '#FF9FF3');
   document.getElementById('calc-share').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;">
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">계산 공식</div>
         <div style="font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:800;color:var(--text);margin-top:4px;">레벨매출 × 5% × 20%</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">적용 대수</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--text);margin-top:4px;">L${CFG.shareStart} ~ L${CFG.shareEnd}</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">내 총 수익</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:#FF9FF3;margin-top:4px;">$${myTotal.toLocaleString()}</div>
       </div>
     </div>
-    <div style="font-size:0.75rem;color:var(--text2);margin-bottom:10px;padding:8px 12px;background:rgba(20,16,11,0.50);border-radius:8px;">
+    <div style="font-size:0.75rem;color:var(--text2);margin-bottom:10px;padding:8px 12px;background:rgba(18,18,18,0.50);border-radius:8px;">
       대수 깊어질수록 인원↑ → 레벨매출↑ → 내 수익↑
     </div>` + tableHtml;
   return myTotal;
@@ -2348,19 +2349,19 @@ function calcRepurchase(totalSales, totalPeople, effectiveRollup) {
 
   document.getElementById('calc-repurchase').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">① 직접추천 (30%)</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${rp1.toLocaleString()}</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">② 추천라인 (6%×15%)</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--gold);margin-top:4px;">$${rp2.toLocaleString()}</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">③ 후원라인 (4%×15%)</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:var(--hermes);margin-top:4px;">$${rp3.toLocaleString()}</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);border-radius:8px;padding:12px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);border-radius:8px;padding:12px;text-align:center;">
         <div style="font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;">④ 공유수당 (5%×20%)</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.35rem;font-weight:800;color:#FF9FF3;margin-top:4px;">$${rp4.toLocaleString()}</div>
       </div>
@@ -2379,7 +2380,7 @@ function calcRepurchase(totalSales, totalPeople, effectiveRollup) {
 function calcAwards(totalSales) {
   const pool1 = Math.round(totalSales * CFG.awardRate);
   const mkAward = (title, color, pool) => `
-    <div style="background:rgba(20,16,11,0.70);border:1px solid var(--border);border-radius:10px;padding:12px;">
+    <div style="background:rgba(18,18,18,0.70);border:1px solid var(--border);border-radius:10px;padding:12px;">
       <div style="font-size:0.68rem;color:${color};font-weight:700;margin-bottom:8px;">${title} (1%)</div>
       <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:${color};margin-bottom:8px;">$${pool.toLocaleString()}</div>
       <div style="display:flex;gap:4px;">
@@ -2407,37 +2408,37 @@ function renderTotal(totalSales, direct, refLine, sponsor, share, repurchase, aw
   document.getElementById('s4').textContent = '$' + grandTotal.toLocaleString();
   document.getElementById('calc-total').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:8px;">
-      <div style="background:rgba(20,16,11,0.70);padding:10px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">① 직접추천 30%</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);margin-top:3px;">$${direct.toLocaleString()}</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);padding:10px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">② 추천롤업 6%</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);margin-top:3px;">$${refLine.toLocaleString()}</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);padding:10px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">③ 후원롤업 4%</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--hermes);margin-top:3px;">$${sponsor.toLocaleString()}</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);padding:10px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">④ 공유 5%</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:#FF9FF3;margin-top:3px;">$${share.toLocaleString()}</div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;">
-      <div style="background:rgba(20,16,11,0.70);padding:10px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">⑥ 재구매(신규반영)</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);margin-top:3px;">$${repurchase.toLocaleString()}</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);padding:10px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">⑦~⑩ 시상 4%</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--hermes);margin-top:3px;">$${awards.toLocaleString()}</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);padding:10px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--text2);letter-spacing:1px;">⑤ 센터 (협의)</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text4);margin-top:3px;">—</div>
       </div>
-      <div style="background:rgba(20,16,11,0.70);padding:10px;text-align:center;">
+      <div style="background:rgba(18,18,18,0.70);padding:10px;text-align:center;">
         <div style="font-size:0.6rem;color:var(--gold);letter-spacing:1px;font-weight:700;">총 수익</div>
         <div style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:var(--gold);margin-top:3px;">$${grandTotal.toLocaleString()}</div>
       </div>
